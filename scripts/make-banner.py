@@ -134,7 +134,7 @@ html = f"""<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><style>
   h1 {{ font-family: "Songti SC", "SimSun", "Noto Serif SC", serif; font-size: 66px; line-height: 1.16;
         font-weight: 700; margin: 18px 0 14px; letter-spacing: .01em; }}
   .sub {{ font-size: 23px; line-height: 1.55; color: #4a4842; max-width: 24ch; }}
-  .lede {{ font-size: 15.5px; line-height: 1.85; color: #6e6b63; max-width: 38ch; margin-top: 22px;
+  .lede {{ font-size: 15px; line-height: 1.9; color: #6e6b63; margin-top: 22px;
            padding-left: 13px; border-left: 2px solid #a82d22; }}
   .sub em {{ font-style: normal; color: #a82d22; }}
   .stats {{ display: flex; gap: 34px; position: absolute; left: 56px; bottom: 92px; padding-top: 18px;
@@ -156,11 +156,13 @@ html = f"""<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><style>
   body::after {{ content: ""; position: absolute; right: 0; bottom: 0; width: 300px; height: 300px; }}
 </style></head><body>
   <div>
-    <div class="eyebrow"><i></i>Awesome Atlas · 数据索引</div>
+    <div class="eyebrow"><svg viewBox="0 0 32 32" width="22" height="22" style="flex:none">
+      <rect x="3.4" y="3.4" width="25.2" height="25.2" fill="none" stroke="#141413" stroke-width="1.7"/>
+      <path d="M17.2 3.4v25.2M17.2 15.6h11.4" stroke="#141413" stroke-width="1.2" opacity=".45"/>
+      <rect x="18.4" y="16.8" width="9" height="10.6" fill="#a82d22"/></svg>Awesome Atlas · 数据索引</div>
     <h1>精选清单地图</h1>
     <p class="sub">把 {catalog['stats']['items']} 份清单<br>变成一张<em>看得懂的地图</em></p>
-    <p class="lede">源 README 是一份线性列表，看不出结构。这里补上原文没有的四个维度——层级、热度、
-      活跃度与时间演化，并把 466 条描述译成中文。不重复列表，只让结构显形。</p>
+    <p class="lede">一份 866 行的英文 README，从头滚到尾，才知道自己漏了什么。<br>译成中文、补上 Star 与最近提交——列表一份没少，只是终于有了形状。</p>
     <div class="stats">{stat_html}</div>
   </div>
   <div class="plate">

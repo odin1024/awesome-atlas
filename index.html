@@ -21,7 +21,7 @@
 <script>/* Browsers restore the previous scroll offset on reload, which drops the reader
    into the middle of a view with no context. Own the position explicitly. */
 if ('scrollRestoration' in history) history.scrollRestoration = 'manual';</script>
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%23faf9f5'/%3E%3Cpath d='M7 23 16 7l9 16' fill='none' stroke='%23141413' stroke-width='2.2' stroke-linejoin='round'/%3E%3Cpath d='M11.5 18h9' stroke='%23a82d22' stroke-width='2.4' stroke-linecap='round'/%3E%3C/svg%3E">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%23faf9f5'/%3E%3Crect x='3.2' y='3.2' width='25.6' height='25.6' fill='none' stroke='%23141413' stroke-width='2.4'/%3E%3Cpath d='M17.2 3.2v25.6M17.2 15.4h11.6' stroke='%23141413' stroke-width='1.9'/%3E%3Crect x='18.4' y='16.6' width='8.8' height='10.4' fill='%23a82d22'/%3E%3C/svg%3E">
 <link rel="stylesheet" href="./assets/styles.css">
 </head>
 <body>
@@ -29,7 +29,14 @@ if ('scrollRestoration' in history) history.scrollRestoration = 'manual';</scrip
   <div class="topbar-inner">
     <a class="brand" href="./" aria-label="返回首页">
       <span class="brand-mark" aria-hidden="true">
-        <svg viewBox="0 0 32 32" width="30" height="30"><rect x="0.5" y="0.5" width="31" height="31" fill="none" stroke="currentColor"/><path d="M7 23 16 7l9 16" fill="none" stroke="var(--accent)" stroke-width="2.2" stroke-linejoin="round"/><path d="M11.5 18h9" stroke="var(--accent)" stroke-width="2.2" stroke-linecap="round"/></svg>
+        <!-- The mark is a plate, not a monogram: the same frame-and-tiles glyph the
+             workspace is built from, at 30px. One region is filled — the tile you
+             are looking at. A letter A in a box was the previous placeholder. -->
+        <svg viewBox="0 0 32 32" width="30" height="30" focusable="false">
+          <rect x="3.4" y="3.4" width="25.2" height="25.2" fill="none" stroke="currentColor" stroke-width="1.7"/>
+          <path d="M17.2 3.4v25.2M17.2 15.6h11.4" stroke="currentColor" stroke-width="1.2" opacity=".45"/>
+          <rect class="mark-tile" x="18.4" y="16.8" width="9" height="10.6" fill="var(--accent)"/>
+        </svg>
       </span>
       <span class="brand-text"><strong data-ui="brandName">精选清单地图</strong><small data-ui="brandSub">AWESOME ATLAS</small></span>
     </a>
@@ -58,9 +65,9 @@ if ('scrollRestoration' in history) history.scrollRestoration = 'manual';</scrip
 <section class="hero">
   <div class="hero-inner">
     <div class="hero-copy">
-      <div class="eyebrow"><span class="eyebrow-line"></span><span data-ui="eyebrow1">一个 README 的另一种读法</span><span class="eyebrow-sep">·</span><span class="eyebrow-extra" data-ui="eyebrow2">全量中文译述</span><span class="eyebrow-sep">·</span><span class="eyebrow-extra" data-ui="eyebrow3">CC0 数据</span></div>
+      <div class="eyebrow"><span class="eyebrow-line"></span><span data-ui="eyebrow1">按结构读，不按顺序读</span><span class="eyebrow-sep">·</span><span class="eyebrow-extra" data-ui="eyebrow2">466 条中文译述</span><span class="eyebrow-sep">·</span><span class="eyebrow-extra" data-ui="eyebrow3">CC0 数据</span></div>
       <h1 id="heroTitle">把 <span class="hero-num" id="heroCount">678</span> 份清单<br>变成一张<span class="hero-accent">看得懂的地图</span></h1>
-      <p class="hero-sub" id="heroSub">一份英文 README 里藏着 27 个技术分类、近七百份人工策展的资源索引。这里把它译成中文，再补上层级、热度、活跃度与演化四个维度——不重复列表，只让结构显形。</p>
+      <p class="hero-sub" id="heroSub">一份 866 行的英文 README，从头滚到尾，才知道自己漏了什么。<br class="wrap-only">译成中文、补上 Star 与最近提交——列表一份没少，只是终于有了形状。</p>
 
       <div class="search-wrap">
         <div class="search-box">

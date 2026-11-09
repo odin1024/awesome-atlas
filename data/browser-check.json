@@ -1,6 +1,6 @@
 {
-  "passed": 115,
-  "total": 115,
+  "passed": 119,
+  "total": 119,
   "allPassed": true,
   "checks": [
     {
@@ -111,7 +111,7 @@
     {
       "name": "点预览板真的落到分类地图",
       "ok": true,
-      "detail": "{'y': 821, 'top': 152, 'map': True}"
+      "detail": "{'y': 791, 'top': 152, 'map': True}"
     },
     {
       "name": "分享卡片图已声明",
@@ -122,6 +122,26 @@
       "name": "品牌副标题不再出现「中文版」",
       "ok": true,
       "detail": "精选清单地图 / AWESOME ATLAS"
+    },
+    {
+      "name": "品牌标记为方形图幅（30×30）",
+      "ok": true,
+      "detail": "30×30"
+    },
+    {
+      "name": "品牌标记有且仅有一格实色瓦片",
+      "ok": true,
+      "detail": "瓦片 rgb(168, 45, 34) / 图幅 none"
+    },
+    {
+      "name": "首屏副标题两行、断在句号后",
+      "ok": true,
+      "detail": "2 行，首行止于「。」"
+    },
+    {
+      "name": "首屏副标题不含罗列式四维术语",
+      "ok": true,
+      "detail": "一份 866 行的英文 README，从头滚到尾，才知道…"
     },
     {
       "name": "顶栏不再放外链按钮",
@@ -136,12 +156,12 @@
     {
       "name": "顶栏三个锚点都真的滚到对应区块",
       "ok": true,
-      "detail": "[('#workspace', 152, 821), ('#insights', 152, 617), ('#about', 401, 1457)]"
+      "detail": "[('#workspace', 152, 791), ('#insights', 152, 587), ('#about', 400, 1428)]"
     },
     {
       "name": "刷新后自动回到页面顶部",
       "ok": true,
-      "detail": "scrollY 1457 → 0"
+      "detail": "scrollY 1428 → 0"
     },
     {
       "name": "页脚「回到顶部」按钮生效",

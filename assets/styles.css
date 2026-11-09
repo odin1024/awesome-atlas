@@ -602,6 +602,13 @@ td { padding: 10px 10px; vertical-align: middle; }
   .hero-inner { grid-template-columns: minmax(0, 1fr); }
   .hero-plate { display: none; }
 }
+/* The lede's line break is set for the 547px measure of `.hero-sub` (60ch). It
+   holds from a 600px viewport upward; below that the column is narrower than the
+   measure, the first sentence needs two lines on its own, and a fixed break
+   would leave a stub. Let the browser choose there. */
+@media (max-width: 600px) {
+  .hero-sub br.wrap-only { display: none; }
+}
 @media (max-width: 1080px) {
   :root { --gut: 24px; }
   .workspace { grid-template-columns: minmax(0, 1fr) 292px; }

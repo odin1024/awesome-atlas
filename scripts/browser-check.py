@@ -122,6 +122,59 @@ with sync_playwright() as p:
     check('品牌副标题不再出现「中文版」',
           '中文版' not in page.locator('.brand-text').inner_text(),
           page.locator('.brand-text').inner_text().replace('\n', ' / '))
+
+    # The mark must be the plate, not a monogram: one accent-filled tile inside a
+    # frame, drawn at a square 30px box so it aligns with the icon buttons.
+    mark = page.evaluate("""() => {
+      const svg = document.querySelector('.brand-mark svg');
+      if (!svg) return null;
+      const box = svg.getBoundingClientRect();
+      const tile = svg.querySelector('.mark-tile');
+      const frame = svg.querySelector('rect:not(.mark-tile)');
+      return {
+        w: Math.round(box.width), h: Math.round(box.height),
+        tileFill: tile ? getComputedStyle(tile).fill : null,
+        tileArea: tile ? (tile.width.baseVal.value * tile.height.baseVal.value) : 0,
+        frameFill: frame ? getComputedStyle(frame).fill : null,
+        accent: getComputedStyle(document.documentElement).getPropertyValue('--accent').trim(),
+        paths: svg.querySelectorAll('path').length,
+      };
+    }""")
+    accent_rgb = page.evaluate("""() => {
+      const d = document.createElement('div');
+      d.style.color = getComputedStyle(document.documentElement).getPropertyValue('--accent').trim();
+      document.body.appendChild(d);
+      const c = getComputedStyle(d).color; d.remove(); return c;
+    }""")
+    check('品牌标记为方形图幅（30×30）',
+          mark and abs(mark['w'] - 30) <= 1 and abs(mark['h'] - 30) <= 1,
+          f"{mark['w']}×{mark['h']}" if mark else '缺失')
+    check('品牌标记有且仅有一格实色瓦片',
+          mark and mark['tileFill'] == accent_rgb and 60 <= mark['tileArea'] <= 130
+          and mark['frameFill'] in ('none', 'rgba(0, 0, 0, 0)'),
+          f"瓦片 {mark['tileFill']} / 图幅 {mark['frameFill']}" if mark else '缺失')
+
+    lede = page.evaluate("""() => {
+      const el = document.querySelector('#heroSub');
+      const s = getComputedStyle(el);
+      const br = el.querySelector('br.wrap-only');
+      const r = document.createRange();
+      r.setStart(el.firstChild, 0); r.setEnd(el.firstChild, el.firstChild.length);
+      const rects = [...r.getClientRects()].filter(x => x.width > 1);
+      return {
+        lines: Math.round(el.clientHeight / parseFloat(s.lineHeight)),
+        brShown: br ? getComputedStyle(br).display !== 'none' : false,
+        firstLineEnd: el.firstChild.textContent.trim().slice(-1),
+        text: el.textContent.trim(),
+      };
+    }""")
+    check('首屏副标题两行、断在句号后',
+          lede['lines'] == 2 and lede['brShown'] and lede['firstLineEnd'] == '。',
+          f"{lede['lines']} 行，首行止于「{lede['firstLineEnd']}」")
+    check('首屏副标题不含罗列式四维术语',
+          not any(w in lede['text'] for w in ('四个维度', '层级、热度', '不重复列表')),
+          lede['text'][:28] + '…')
+
     check('顶栏不再放外链按钮', page.locator('.topbar a[href^="http"]').count() == 0,
           page.locator('.topbar a[href^="http"]').count())
     upstream = page.locator('#upstreamLink')

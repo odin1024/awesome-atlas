@@ -1,7 +1,7 @@
 {
-  "validatedAt": "2026-11-09T07:11:50.421Z",
-  "passed": 69,
-  "total": 69,
+  "validatedAt": "2026-11-09T09:02:47.891Z",
+  "passed": 74,
+  "total": 74,
   "allPassed": true,
   "source": {
     "sha256": "465cd781335e44587d238f666800104b63d4fc8ba2395d6422974dcba421c616",
@@ -327,6 +327,36 @@
     },
     {
       "group": "界面",
+      "name": "品牌标记为图幅式而非字母 A",
+      "ok": true,
+      "detail": "图幅 + 三格区划 + 一格实色"
+    },
+    {
+      "group": "界面",
+      "name": "favicon 与品牌标记同源",
+      "ok": true,
+      "detail": "同一套坐标，仅按 16px 加粗描边"
+    },
+    {
+      "group": "界面",
+      "name": "首屏副标题两行在句末断行",
+      "ok": true,
+      "detail": "桌面显式断点，600px 以下交还浏览器"
+    },
+    {
+      "group": "界面",
+      "name": "首屏文案在静态 HTML 与运行时逐字一致",
+      "ok": true,
+      "detail": "静态首屏不会被脚本改写，避免闪一版旧文案"
+    },
+    {
+      "group": "界面",
+      "name": "文案里的数字与数据一致",
+      "ok": true,
+      "detail": "466 条译述 / 866 行源文件"
+    },
+    {
+      "group": "界面",
       "name": "首屏地图预览板由真实数据渲染",
       "ok": true,
       "detail": "预览板复用同一套 treemap 与色阶"
@@ -341,7 +371,7 @@
       "group": "界面",
       "name": "社交卡片图已生成并被 og:image 引用",
       "ok": true,
-      "detail": "200 KB"
+      "detail": "189 KB"
     },
     {
       "group": "界面",

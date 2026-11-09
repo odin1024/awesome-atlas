@@ -107,9 +107,9 @@
     zh: {
       brandName: '精选清单地图', brandSub: 'AWESOME ATLAS',
       navStart: '开始探索', navInsight: '今日发现', navAbout: '数据说明',
-      eyebrow1: '一个 README 的另一种读法', eyebrow2: '全量中文译述', eyebrow3: 'CC0 数据',
+      eyebrow1: '按结构读，不按顺序读', eyebrow2: '466 条中文译述', eyebrow3: 'CC0 数据',
       heroTitle: '把 <span class="hero-num" id="heroCount">678</span> 份清单<br>变成一张<span class="hero-accent">看得懂的地图</span>',
-      heroSub: '一份英文 README 里藏着 27 个技术分类、近七百份人工策展的资源索引。这里把它译成中文，再补上层级、热度、活跃度与演化四个维度——不重复列表，只让结构显形。',
+      heroSub: '一份 866 行的英文 README，从头滚到尾，才知道自己漏了什么。<br class="wrap-only">译成中文、补上 Star 与最近提交——列表一份没少，只是终于有了形状。',
       footerNote: '为国内读者优化：中文检索 · 万位计数 · 无外部 CDN · 外链已标注',
       footerCreditA: '· 基于', footerCreditB: '（CC0-1.0）结构化与中文译述',
       insightsKicker: '今日发现', insightsTitle: '这份数据自己会说话',
@@ -147,9 +147,9 @@
     en: {
       brandName: 'Awesome Atlas', brandSub: 'CURATED INDEX',
       navStart: 'Explore', navInsight: 'Insights', navAbout: 'About',
-      eyebrow1: 'Another way to read one README', eyebrow2: 'Fully translated', eyebrow3: 'CC0 data',
+      eyebrow1: 'Read by structure, not by order', eyebrow2: '673 repos scored', eyebrow3: 'CC0 data',
       heroTitle: 'Turn <span class="hero-num" id="heroCount">678</span> curated lists<br>into a <span class="hero-accent">readable map</span>',
-      heroSub: 'One English README hides 27 technical categories and nearly seven hundred hand-curated indexes. This atlas keeps every source, then adds four dimensions — hierarchy, popularity, activity and evolution — so the structure becomes visible instead of being repeated as a list.',
+      heroSub: 'An 866-line README — you only learn what you missed at the bottom. Stars, last push, and a map: the same lists, finally given a shape.',
       footerNote: 'Built for readers in mainland China: Chinese search · no external CDN · external links labelled',
       footerCreditA: '· structure and Chinese translation based on', footerCreditB: '(CC0-1.0)',
       insightsKicker: 'Insights', insightsTitle: 'This dataset speaks for itself',
@@ -387,7 +387,10 @@
     if (chromeLang !== lang) {
       chromeLang = lang;
       $('#heroTitle').innerHTML = ui('heroTitle');
-      $('#heroSub').textContent = ui('heroSub');
+      /* innerHTML, not textContent: the Chinese lede carries a deliberate line break.
+       CJK wraps between any two characters, so the browser was splitting 「补上」
+       across lines at desktop width. The <br> is a composition decision, not data. */
+    $('#heroSub').innerHTML = ui('heroSub');
       $('#upstreamLink').title = isEn() ? 'Open the upstream repository on GitHub' : '打开上游仓库（境外站点，可能较慢）';
       $('#backToTop').title = isEn() ? 'Back to the top of the page' : '回到页面顶部';
       $('#heroPlate').setAttribute('aria-label', isEn() ? 'Open the full category map' : '查看完整的分类地图');

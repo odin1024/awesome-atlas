@@ -77,5 +77,8 @@ console.log(JSON.stringify({
   bytes: Buffer.byteLength(out, 'utf8'),
   kb: Math.round(Buffer.byteLength(out, 'utf8') / 102.4) / 10,
   parts: { css: css.length, data: data.length, app: app.length },
-  externalRequests: (out.match(/(?:src|href)="\.\//g) || []).length,
+/* The old field name here was `externalRequests`, which measured `src="./…"` —
+   the exact opposite of what it claimed, and it always reported 1 because the
+   brand link keeps `href="./"`. Name what is actually counted. */
+  localRefsLeft: (out.match(/(?:src|href)="\.\//g) || []).length,
 }, null, 2));

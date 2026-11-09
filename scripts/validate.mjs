@@ -160,6 +160,22 @@ add('界面', '刷新页面不恢复旧滚动位置', /'scrollRestoration' in hi
 add('界面', '回到顶部按钮有真实事件绑定', /id="backToTop"/.test(footerHtml) && /\$\('#backToTop'\)\.addEventListener\('click'/.test(js), '页脚按钮 → scrollTo(0)');
 add('界面', '语言切换仅保留中文与 EN 两态', (html.match(/data-lang="/g) || []).length === 2, `${(html.match(/data-lang="/g) || []).length} 个语言按钮`);
 
+/* The brand mark is a plate of tiles, not a monogram. A letter A inside a square
+   is the default placeholder every project starts with; this asserts the mark
+   actually carries the product's own geometry, and that the favicon is cut from
+   the same plate rather than drawn separately. */
+const brandBlock = (html.match(/<span class="brand-mark"[\s\S]*?<\/span>/) || [''])[0];
+const favicon = (html.match(/<link rel="icon" href="([^"]+)"/) || ['', ''])[1];
+add('界面', '品牌标记为图幅式而非字母 A', /class="mark-tile"/.test(brandBlock) && /fill="var\(--accent\)"/.test(brandBlock) && !/M7 23/.test(brandBlock) && (brandBlock.match(/<rect/g) || []).length === 2, '图幅 + 三格区划 + 一格实色');
+add('界面', 'favicon 与品牌标记同源', /%23a82d22/.test(favicon) && /M17\.2 3\.2v25\.6/.test(favicon) && !/M7 23/.test(favicon), '同一套坐标，仅按 16px 加粗描边');
+add('界面', '首屏副标题两行在句末断行', /漏了什么。<br class="wrap-only">译成中文/.test(html) && /\.hero-sub br\.wrap-only \{ display: none; \}/.test(css), '桌面显式断点，600px 以下交还浏览器');
+add('界面', '首屏文案在静态 HTML 与运行时逐字一致', (() => {
+  const a = (html.match(/id="heroSub">([\s\S]*?)<\/p>/) || ['', ''])[1].trim();
+  const b = (js.match(/heroSub: '([^']*)'/) || ['', ''])[1].trim();
+  return a.length > 40 && a === b;
+})(), '静态首屏不会被脚本改写，避免闪一版旧文案');
+add('界面', '文案里的数字与数据一致', /466 条中文译述/.test(js) && /866 行的英文 README/.test(js) && Object.keys(i18n.descriptions).length === 466 && lines.length - 1 === 866, `466 条译述 / 866 行源文件`);
+
 /* --- 7c. first screen, share card and README as the project home --- */
 const readme = read('README.md');
 const readmeHead = readme.split('\n').slice(0, 16).join('\n');
