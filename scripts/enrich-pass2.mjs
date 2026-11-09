@@ -1,0 +1,132 @@
+#!/usr/bin/env node
+/**
+ * Second enrichment pass: slice repository search by star ranges so low-profile
+ * lists are reachable too (the default stars-sorted search only exposes the
+ * top 1000). Results are merged into data/repo-pool.json for repeatable builds.
+ * Search quota is 10 req/min unauthenticated; on 403 we wait for the window.
+ */
+import fs from 'node:fs';
+import path from 'node:path';
+import { execFileSync } from 'node:child_process';
+import { fileURLToPath } from 'node:url';
+import { healthOf, computeCoverage } from './metrics.mjs';
+
+const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
+const DATA = path.join(ROOT, 'data');
+const catalogPath = path.join(DATA, 'catalog.json');
+const poolPath = path.join(DATA, 'repo-pool.json');
+const catalog = JSON.parse(fs.readFileSync(catalogPath, 'utf8'));
+
+const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
+const report = { startedAt: new Date().toISOString(), requests: [], errors: [] };
+
+function api(pathname, allowRateWait = true) {
+  const url = `https://api.github.com${pathname}`;
+  const run = () => {
+    const out = execFileSync('curl', [
+      '-sS', '-L', '-k', '--ssl-no-revoke', '--http1.1', '--max-time', '45',
+      '-H', 'Accept: application/vnd.github+json',
+      '-H', 'User-Agent: awesome-atlas-build',
+      '-w', '\n__HTTP__%{http_code}', url,
+    ], { encoding: 'utf8', maxBuffer: 32 * 1024 * 1024 });
+    const idx = out.lastIndexOf('\n__HTTP__');
+    return { body: out.slice(0, idx), code: Number(out.slice(idx + 9).trim()) };
+  };
+  let res = run();
+  if (res.code === 403 && allowRateWait) {
+    report.requests.push({ url, code: 403, waited: true });
+    execFileSync(process.execPath, ['-e', 'const t=Date.now()+66000;while(Date.now()<t){}']);
+    res = run();
+  }
+  report.requests.push({ url, code: res.code, bytes: res.body.length });
+  if (res.code !== 200) {
+    report.errors.push({ url, code: res.code, message: res.body.slice(0, 200) });
+    return null;
+  }
+  try { return JSON.parse(res.body); } catch (e) {
+    report.errors.push({ url, message: String(e.message) });
+    return null;
+  }
+}
+
+async function main() {
+  const pool = fs.existsSync(poolPath) ? JSON.parse(fs.readFileSync(poolPath, 'utf8')) : {};
+  let poolSize = Object.keys(pool).length;
+
+  const ranges = [
+    'q=awesome+in:name+stars:1000..1000000&sort=stars&order=desc&per_page=100&page=1',
+    'q=awesome+in:name+stars:1000..1000000&sort=stars&order=desc&per_page=100&page=2',
+    'q=awesome+in:name+stars:300..1000&sort=stars&order=desc&per_page=100&page=1',
+    'q=awesome+in:name+stars:300..1000&sort=stars&order=desc&per_page=100&page=2',
+    'q=awesome+in:name+stars:100..300&sort=stars&order=desc&per_page=100&page=1',
+    'q=awesome+in:name+stars:100..300&sort=stars&order=desc&per_page=100&page=2',
+    'q=awesome+in:name+stars:0..100&sort=updated&order=desc&per_page=100&page=1',
+    'q=awesome+in:name+stars:0..100&sort=stars&order=desc&per_page=100&page=1',
+    'q=topic:awesome-list&sort=stars&order=desc&per_page=100&page=1',
+    'q=topic:awesome-list&sort=stars&order=desc&per_page=100&page=2',
+  ];
+
+  for (const q of ranges) {
+    const res = api(`/search/repositories?${q}`);
+    if (Array.isArray(res?.items)) {
+      for (const r of res.items) {
+        if (!r?.full_name) continue;
+        const key = r.full_name.toLowerCase();
+        if (!pool[key]) { pool[key] = { ...r, __via: 'github-search' }; poolSize += 1; }
+      }
+    }
+    await sleep(1100);
+  }
+  console.log('pool size:', poolSize);
+
+  const repos = catalog.items.filter((it) => it.repo);
+  let added = 0;
+  const metricIndex = new Map();
+  for (const it of repos) if (it.metrics && it.repo) metricIndex.set(it.repo.toLowerCase(), it.metrics);
+
+  for (const it of repos) {
+    if (it.metrics || !it.repo) continue;
+    const key = it.repo.toLowerCase();
+    const m = metricIndex.get(key) || (pool[key] ? healthOf(pool[key]) : null);
+    if (m) {
+      it.metrics = m;
+      metricIndex.set(key, m);
+      added += 1;
+    }
+  }
+
+  const coverage = computeCoverage(catalog);
+  coverage.searchPool = poolSize;
+  coverage.addedInPass2 = added;
+  catalog.enrichment = {
+    ...catalog.enrichment,
+    fetchedAt: new Date().toISOString(),
+    method: 'GitHub REST: star-range sliced repository search + individual repo lookups (unauthenticated quota)',
+    coverage,
+  };
+
+  const upstreamPath = path.join(DATA, 'upstream.json');
+  if (fs.existsSync(upstreamPath)) {
+    const upstream = JSON.parse(fs.readFileSync(upstreamPath, 'utf8'));
+    upstream.coverage = coverage;
+    fs.writeFileSync(upstreamPath, JSON.stringify(upstream, null, 2));
+    catalog.upstream = upstream;
+  }
+
+  fs.writeFileSync(poolPath, JSON.stringify(pool));
+  fs.writeFileSync(catalogPath, JSON.stringify(catalog, null, 2));
+  const upstream = fs.existsSync(upstreamPath) ? JSON.parse(fs.readFileSync(upstreamPath, 'utf8')) : null;
+  fs.writeFileSync(
+    path.join(DATA, 'catalog.js'),
+    `/* Generated by scripts/build-data.mjs + enrich.mjs + enrich-pass2.mjs - do not edit by hand. */\nwindow.__ATLAS_DATA__ = ${JSON.stringify(catalog)};\nwindow.__ATLAS_UPSTREAM__ = ${JSON.stringify(upstream)};\n`,
+  );
+
+  report.finishedAt = new Date().toISOString();
+  report.coverage = coverage;
+  report.requestCount = report.requests.length;
+  report.errorCount = report.errors.length;
+  fs.writeFileSync(path.join(DATA, 'enrich-pass2-report.json'), JSON.stringify(report, null, 2));
+  console.log(JSON.stringify({ coverage, errors: report.errors.slice(0, 4), requests: report.requestCount }, null, 2));
+}
+
+main().catch((e) => { console.error(e); process.exitCode = 1; });

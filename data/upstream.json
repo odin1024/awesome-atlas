@@ -1,0 +1,108 @@
+{
+  "fetchedAt": "2026-11-08T18:30:52.984Z",
+  "repository": {
+    "fullName": "sindresorhus/awesome",
+    "stars": 533710,
+    "forks": 38236,
+    "pushedAt": "2026-09-02T02:10:47Z",
+    "description": "😎 Awesome lists about all kinds of interesting topics [NOTE: Pull requests are temporarily disabled until I have a chance to catch up with the existing ones]",
+    "url": "https://github.com/sindresorhus/awesome"
+  },
+  "commits": [
+    {
+      "sha": "bc98e51",
+      "date": "2026-09-02T02:10:42Z",
+      "message": "Meta tweaks",
+      "author": "Sindre Sorhus",
+      "url": "https://github.com/sindresorhus/awesome/commit/bc98e517ddca672f55f9857d714fc3ea3c3540b2"
+    },
+    {
+      "sha": "d35bcd9",
+      "date": "2026-08-21T12:39:13Z",
+      "message": "Fix invalid space character (#4393)",
+      "author": "Akash Gowda n c",
+      "url": "https://github.com/sindresorhus/awesome/commit/d35bcd9c5c83f2652b0d2b5f91a320009c8f29a3"
+    },
+    {
+      "sha": "d2c9dbb",
+      "date": "2026-08-18T13:28:49Z",
+      "message": "Remove 8 archived awesome lists (#4390)",
+      "author": "morning-verlu",
+      "url": "https://github.com/sindresorhus/awesome/commit/d2c9dbbbf85207cdf629a6e66a4f2186a7b4fbd3"
+    },
+    {
+      "sha": "3750609",
+      "date": "2026-06-25T12:00:39Z",
+      "message": "Remove 17 archived awesome lists (#4278)",
+      "author": "Subba Reddy Palagiri",
+      "url": "https://github.com/sindresorhus/awesome/commit/375060916969103e8e4889fbfbf6088929d0dffd"
+    },
+    {
+      "sha": "ad02f86",
+      "date": "2026-06-23T21:15:39Z",
+      "message": "Add RSS link",
+      "author": "Sindre Sorhus",
+      "url": "https://github.com/sindresorhus/awesome/commit/ad02f86dc41610f707d75c94800c1cc1073b2c7f"
+    },
+    {
+      "sha": "24da1c6",
+      "date": "2026-06-02T12:50:12Z",
+      "message": "Update link (#4229)",
+      "author": "Tianyu Hu",
+      "url": "https://github.com/sindresorhus/awesome/commit/24da1c60ba400087006af9ff02accdb4a53472b6"
+    },
+    {
+      "sha": "f5d5b00",
+      "date": "2026-05-03T08:18:28Z",
+      "message": "Meta tweaks",
+      "author": "Sindre Sorhus",
+      "url": "https://github.com/sindresorhus/awesome/commit/f5d5b00480ce3201bef6248f673d2ec734d73732"
+    },
+    {
+      "sha": "893fc57",
+      "date": "2026-04-02T16:29:56Z",
+      "message": "Meta tweaks",
+      "author": "Sindre Sorhus",
+      "url": "https://github.com/sindresorhus/awesome/commit/893fc57bdc6c37b0ff6f90c7aa3cdb4eca348543"
+    },
+    {
+      "sha": "2f3c272",
+      "date": "2026-04-01T08:25:16Z",
+      "message": "Update link for `Transit` (#3818)",
+      "author": "Jannis",
+      "url": "https://github.com/sindresorhus/awesome/commit/2f3c2725bff8bfa53e2d00fe55dd3d9564e13aef"
+    },
+    {
+      "sha": "c86551f",
+      "date": "2026-02-03T15:55:03Z",
+      "message": "Improve some descriptions",
+      "author": "Sindre Sorhus",
+      "url": "https://github.com/sindresorhus/awesome/commit/c86551ff54e5e432ceec9212b5b97bbe93f72998"
+    },
+    {
+      "sha": "da0892f",
+      "date": "2026-01-28T14:08:49Z",
+      "message": "Fix: Remove duplicate paragraph tag in readme (#3897)",
+      "author": "Jeevan",
+      "url": "https://github.com/sindresorhus/awesome/commit/da0892f292cc83968630ff81ea573c0d28358b87"
+    },
+    {
+      "sha": "1345b0a",
+      "date": "2025-11-22T10:35:25Z",
+      "message": "Meta tweaks",
+      "author": "Sindre Sorhus",
+      "url": "https://github.com/sindresorhus/awesome/commit/1345b0a348d0abb20189b5154159a7cc08bbd35f"
+    }
+  ],
+  "coverage": {
+    "reposTotal": 673,
+    "reposEnriched": 673,
+    "coveragePct": 100,
+    "totalStarsSampled": 5979356,
+    "archived": 3,
+    "verified": 673,
+    "unavailable": 0,
+    "renamed": 0,
+    "requests": 14
+  }
+}

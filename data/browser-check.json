@@ -1,0 +1,343 @@
+{
+  "passed": 67,
+  "total": 67,
+  "allPassed": true,
+  "checks": [
+    {
+      "name": "页面标题为中文",
+      "ok": true,
+      "detail": "精选清单地图 · Awesome 中文可视化索引"
+    },
+    {
+      "name": "四张指标卡渲染",
+      "ok": true,
+      "detail": "4"
+    },
+    {
+      "name": "侧栏 28 行（全部 + 27 分类）",
+      "ok": true,
+      "detail": "28"
+    },
+    {
+      "name": "地图默认 27 个分类瓦片",
+      "ok": true,
+      "detail": "27"
+    },
+    {
+      "name": "瓦片标签无截断残词",
+      "ok": true,
+      "detail": "[]"
+    },
+    {
+      "name": "窄瓦片改用竖排标签",
+      "ok": true,
+      "detail": "3"
+    },
+    {
+      "name": "默认无空状态",
+      "ok": true,
+      "detail": "0"
+    },
+    {
+      "name": "分类显示为中文",
+      "ok": true,
+      "detail": "全部分类 / 678 / 平台与运行环境 / 57 / 编程语言 / 77 / 前端开发 / 85 / 后端开发 / 32 / 计算机科学 / 38 / 大数据 / 9 / 理"
+    },
+    {
+      "name": "四条数据洞察已算出",
+      "ok": true,
+      "detail": "4"
+    },
+    {
+      "name": "详情空态给出当前范围 Top 3",
+      "ok": true,
+      "detail": "3"
+    },
+    {
+      "name": "快捷分类行有「全部 27 类」出口",
+      "ok": true,
+      "detail": "['全部 27 类 →']"
+    },
+    {
+      "name": "五个视图标签",
+      "ok": true,
+      "detail": "5"
+    },
+    {
+      "name": "数据说明已填充",
+      "ok": true,
+      "detail": "中文为本站译述，非官方译本；专有名词保留英文原名，方便直接去 GitHub 搜索。466 条原始描述已译为中文，另有 2"
+    },
+    {
+      "name": "覆盖率标注为全量",
+      "ok": true,
+      "detail": "Star / Fork / 最近 push / 语言 / 归档状态来自带授权的 GitHub API 全量核验，覆盖 673 / 673 个仓库（100%）。健康分 = 0.45 "
+    },
+    {
+      "name": "点击瓦片可下钻到分类内部",
+      "ok": true,
+      "detail": "132 个条目瓦片"
+    },
+    {
+      "name": "下钻后出现返回面包屑",
+      "ok": true,
+      "detail": "1"
+    },
+    {
+      "name": "可返回全部分类",
+      "ok": true,
+      "detail": "27"
+    },
+    {
+      "name": "关系图谱渲染出节点与 27 条主轴",
+      "ok": true,
+      "detail": "259 个节点 / 27 条主轴"
+    },
+    {
+      "name": "图谱有两层轨道环",
+      "ok": true,
+      "detail": "2"
+    },
+    {
+      "name": "27 个分类标签全部渲染",
+      "ok": true,
+      "detail": "27"
+    },
+    {
+      "name": "分类标签之间零重叠",
+      "ok": true,
+      "detail": "0"
+    },
+    {
+      "name": "标签不被圆点遮挡（≤2 且已由底色描边覆盖）",
+      "ok": true,
+      "detail": "2"
+    },
+    {
+      "name": "标签未溢出视口",
+      "ok": true,
+      "detail": "0"
+    },
+    {
+      "name": "中心圆给出读图说明",
+      "ok": true,
+      "detail": "3"
+    },
+    {
+      "name": "榜单默认每页 40 行",
+      "ok": true,
+      "detail": "40"
+    },
+    {
+      "name": "分页控件存在",
+      "ok": true,
+      "detail": "2"
+    },
+    {
+      "name": "榜单描述为中文",
+      "ok": true,
+      "detail": "☆\t / Awesome / 清单里列着清单自己，一个递归的示例。 / \t综合与其他\t53.4 万\t2026-09-02\t / 93 / \t"
+    },
+    {
+      "name": "榜单不横向溢出",
+      "ok": true,
+      "detail": "0"
+    },
+    {
+      "name": "健康分数值可见",
+      "ok": true,
+      "detail": "93 / inside=True"
+    },
+    {
+      "name": "外链列在容器内",
+      "ok": true,
+      "detail": "True"
+    },
+    {
+      "name": "空结果不崩溃并显示引导",
+      "ok": true,
+      "detail": "1"
+    },
+    {
+      "name": "空结果提供重置按钮",
+      "ok": true,
+      "detail": "1"
+    },
+    {
+      "name": "重置后恢复 40 行",
+      "ok": true,
+      "detail": "40"
+    },
+    {
+      "name": "中文关键词可检索",
+      "ok": true,
+      "detail": "匹配 38 条"
+    },
+    {
+      "name": "可一键清空搜索",
+      "ok": true,
+      "detail": "cleared"
+    },
+    {
+      "name": "搜索实时过滤",
+      "ok": true,
+      "detail": "匹配 44 条"
+    },
+    {
+      "name": "搜索状态写入 URL",
+      "ok": true,
+      "detail": "view=table&q=python"
+    },
+    {
+      "name": "点击行打开详情画像",
+      "ok": true,
+      "detail": "Awesome"
+    },
+    {
+      "name": "详情显示中文描述",
+      "ok": true,
+      "detail": "清单里列着清单自己，一个递归的示例。"
+    },
+    {
+      "name": "详情显示健康分环形图",
+      "ok": true,
+      "detail": "1"
+    },
+    {
+      "name": "收藏可写入并即时反馈",
+      "ok": true,
+      "detail": "is-on"
+    },
+    {
+      "name": "侧栏收藏计数更新",
+      "ok": true,
+      "detail": "1 条"
+    },
+    {
+      "name": "收藏可导出为 Markdown",
+      "ok": true,
+      "detail": "我的精选清单.md"
+    },
+    {
+      "name": "时间轴含真实上游变更",
+      "ok": true,
+      "detail": "12"
+    },
+    {
+      "name": "时间轴两张直方图（推送 18 个月 + 创建年份）",
+      "ok": true,
+      "detail": "32 柱 / 2 图"
+    },
+    {
+      "name": "收录量增长曲线来自历史版本",
+      "ok": true,
+      "detail": "1"
+    },
+    {
+      "name": "增删事件带真实清单名",
+      "ok": true,
+      "detail": "14"
+    },
+    {
+      "name": "切换视图后详情画像保持",
+      "ok": true,
+      "detail": "detail persists"
+    },
+    {
+      "name": "数据洞察四张图卡",
+      "ok": true,
+      "detail": "4"
+    },
+    {
+      "name": "健康分分布 10 个分桶",
+      "ok": true,
+      "detail": "10"
+    },
+    {
+      "name": "语言标签云非空",
+      "ok": true,
+      "detail": "18"
+    },
+    {
+      "name": "双语模式显示英文副标题",
+      "ok": true,
+      "detail": "27"
+    },
+    {
+      "name": "语言状态写入 URL",
+      "ok": true,
+      "detail": "view=insight&id=miscellaneous%2Fawesome-548&lang=both"
+    },
+    {
+      "name": "英文模式恢复英文分类",
+      "ok": true,
+      "detail": "All categories / 678 / Platforms / 57 / Programming Languages / 77 / Fro"
+    },
+    {
+      "name": "英文模式界面文案切换",
+      "ok": true,
+      "detail": "05\nData Insights"
+    },
+    {
+      "name": "可切回中文",
+      "ok": true,
+      "detail": "zh restored"
+    },
+    {
+      "name": "Ctrl+K 打开命令面板",
+      "ok": true,
+      "detail": "True"
+    },
+    {
+      "name": "命令面板实时检索",
+      "ok": true,
+      "detail": "8"
+    },
+    {
+      "name": "命令面板可跳转到条目",
+      "ok": true,
+      "detail": "jumped"
+    },
+    {
+      "name": "深浅色主题可切换",
+      "ok": true,
+      "detail": "light→dark / rgb(250, 249, 245) → rgb(12, 12, 11)"
+    },
+    {
+      "name": "浅色主题可显式选中",
+      "ok": true,
+      "detail": "light"
+    },
+    {
+      "name": "URL 参数可还原视图与筛选",
+      "ok": true,
+      "detail": "view=graph&cat=security&q=web"
+    },
+    {
+      "name": "移动端无横向溢出",
+      "ok": true,
+      "detail": "overflow=0px"
+    },
+    {
+      "name": "移动端地图仍渲染",
+      "ok": true,
+      "detail": "27"
+    },
+    {
+      "name": "移动端底部视图栏",
+      "ok": true,
+      "detail": "5"
+    },
+    {
+      "name": "移动端可切换榜单",
+      "ok": true,
+      "detail": "40"
+    },
+    {
+      "name": "浏览器控制台无 JS 异常",
+      "ok": true,
+      "detail": "0 errors"
+    }
+  ],
+  "consoleErrors": []
+}

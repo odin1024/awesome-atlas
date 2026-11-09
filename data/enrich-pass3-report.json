@@ -1,0 +1,17 @@
+{
+  "coverage": {
+    "reposTotal": 674,
+    "reposEnriched": 209,
+    "coveragePct": 31,
+    "totalStarsSampled": 4720576,
+    "archived": 2
+  },
+  "results": {
+    "tried": 21,
+    "ok": 21,
+    "moved": 2,
+    "failed": 0,
+    "failures": []
+  },
+  "budget": 21
+}

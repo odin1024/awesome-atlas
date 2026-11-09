@@ -1,0 +1,551 @@
+{
+  "generatedAt": "2026-11-08T18:35:23.939Z",
+  "source": "sindresorhus/awesome readme.md historical revisions via GitHub Contents API",
+  "method": "Parse list items per revision, diff against the next older revision",
+  "note": "Added/removed counts come from real README diffs, not from commit message guesses.",
+  "summary": {
+    "revisions": 24,
+    "firstDate": "2025-10-27T17:41:40Z",
+    "lastDate": "2026-09-02T02:10:42Z",
+    "firstTotal": 694,
+    "lastTotal": 676,
+    "netChange": -18,
+    "additions": 9,
+    "removals": 27,
+    "relinks": 2,
+    "spanDays": 309
+  },
+  "series": [
+    {
+      "date": "2025-10-27T17:41:40Z",
+      "total": 694
+    },
+    {
+      "date": "2025-10-27T17:54:03Z",
+      "total": 695
+    },
+    {
+      "date": "2025-10-27T17:57:31Z",
+      "total": 696
+    },
+    {
+      "date": "2025-10-28T13:27:08Z",
+      "total": 695
+    },
+    {
+      "date": "2025-10-28T13:47:54Z",
+      "total": 696
+    },
+    {
+      "date": "2025-10-28T15:08:26Z",
+      "total": 697
+    },
+    {
+      "date": "2025-10-28T15:32:56Z",
+      "total": 698
+    },
+    {
+      "date": "2025-10-28T17:47:10Z",
+      "total": 699
+    },
+    {
+      "date": "2025-10-28T17:49:43Z",
+      "total": 700
+    },
+    {
+      "date": "2025-11-09T09:55:31Z",
+      "total": 701
+    },
+    {
+      "date": "2025-11-12T08:51:33Z",
+      "total": 702
+    },
+    {
+      "date": "2025-11-18T11:44:09Z",
+      "total": 701
+    },
+    {
+      "date": "2025-11-22T10:35:25Z",
+      "total": 701
+    },
+    {
+      "date": "2026-01-28T14:08:49Z",
+      "total": 701
+    },
+    {
+      "date": "2026-02-03T15:55:03Z",
+      "total": 701
+    },
+    {
+      "date": "2026-04-01T08:25:16Z",
+      "total": 701
+    },
+    {
+      "date": "2026-04-02T16:29:56Z",
+      "total": 701
+    },
+    {
+      "date": "2026-05-03T08:18:28Z",
+      "total": 701
+    },
+    {
+      "date": "2026-06-02T12:50:12Z",
+      "total": 701
+    },
+    {
+      "date": "2026-06-23T21:15:39Z",
+      "total": 701
+    },
+    {
+      "date": "2026-06-25T12:00:39Z",
+      "total": 684
+    },
+    {
+      "date": "2026-08-18T13:28:49Z",
+      "total": 676
+    },
+    {
+      "date": "2026-08-21T12:39:13Z",
+      "total": 676
+    },
+    {
+      "date": "2026-09-02T02:10:42Z",
+      "total": 676
+    }
+  ],
+  "snapshots": [
+    {
+      "sha": "bc98e51",
+      "date": "2026-09-02T02:10:42Z",
+      "author": "Sindre Sorhus",
+      "message": "Meta tweaks",
+      "messageZh": "调整元信息与排版",
+      "total": 676,
+      "added": [],
+      "removed": [],
+      "relinked": []
+    },
+    {
+      "sha": "d35bcd9",
+      "date": "2026-08-21T12:39:13Z",
+      "author": "Akash Gowda n c",
+      "message": "Fix invalid space character (#4393)",
+      "messageZh": "修正非法空格字符（#4393）",
+      "total": 676,
+      "added": [],
+      "removed": [],
+      "relinked": []
+    },
+    {
+      "sha": "d2c9dbb",
+      "date": "2026-08-18T13:28:49Z",
+      "author": "morning-verlu",
+      "message": "Remove 8 archived awesome lists (#4390)",
+      "messageZh": "移除 8 份已归档的清单（#4390）",
+      "total": 676,
+      "added": [],
+      "removed": [
+        {
+          "name": "Xamarin",
+          "url": "https://github.com/xamsome/awesome-xamarin"
+        },
+        {
+          "name": "Qt",
+          "url": "https://github.com/jessetg/awesome-qt"
+        },
+        {
+          "name": "Google Cloud",
+          "url": "https://github.com/googlecloudplatform/awesome-google-cloud"
+        },
+        {
+          "name": "Unity",
+          "url": "https://github.com/ryannielson/awesome-unity"
+        },
+        {
+          "name": "Cassandra",
+          "url": "https://github.com/anant/awesome-cassandra"
+        },
+        {
+          "name": "Programming Interviews",
+          "url": "https://github.com/dopplerhq/awesome-interview-questions"
+        },
+        {
+          "name": "Software-Defined Networking",
+          "url": "https://github.com/sdnds-tw/awesome-sdn"
+        },
+        {
+          "name": "Sketch",
+          "url": "https://github.com/diessica/awesome-sketch"
+        }
+      ],
+      "relinked": []
+    },
+    {
+      "sha": "3750609",
+      "date": "2026-06-25T12:00:39Z",
+      "author": "Subba Reddy Palagiri",
+      "message": "Remove 17 archived awesome lists (#4278)",
+      "messageZh": "移除 17 份已归档的清单（#4278）",
+      "total": 684,
+      "added": [],
+      "removed": [
+        {
+          "name": "Linux",
+          "url": "https://github.com/inputsh/awesome-linux"
+        },
+        {
+          "name": "Amazon Alexa",
+          "url": "https://github.com/miguelmota/awesome-amazon-alexa"
+        },
+        {
+          "name": "Robot Operating System 2.0",
+          "url": "https://github.com/fkromer/awesome-ros2"
+        },
+        {
+          "name": "C",
+          "url": "https://github.com/inputsh/awesome-c"
+        },
+        {
+          "name": "Frege",
+          "url": "https://github.com/sfischer13/awesome-frege"
+        },
+        {
+          "name": "Eta",
+          "url": "https://github.com/sfischer13/awesome-eta"
+        },
+        {
+          "name": "TALL Stack",
+          "url": "https://github.com/livewire/awesome-tall-stack"
+        },
+        {
+          "name": "Atom",
+          "url": "https://github.com/mehcode/awesome-atom"
+        },
+        {
+          "name": "PowerShell",
+          "url": "https://github.com/janikvonrotz/awesome-powershell"
+        },
+        {
+          "name": "Alfred Workflows",
+          "url": "https://github.com/alfred-workflows/awesome-alfred-workflows"
+        },
+        {
+          "name": "TDengine",
+          "url": "https://github.com/taosdata/awesome-tdengine"
+        },
+        {
+          "name": "Dive into Machine Learning",
+          "url": "https://github.com/hangtwenty/dive-into-machine-learning"
+        },
+        {
+          "name": "Internships",
+          "url": "https://github.com/lodthe/awesome-internships"
+        },
+        {
+          "name": "Humane Technology",
+          "url": "https://github.com/humanetech-community/awesome-humane-tech"
+        },
+        {
+          "name": "Datasets",
+          "url": "https://github.com/jdorfman/awesome-json-datasets"
+        },
+        {
+          "name": "Answers",
+          "url": "https://github.com/cyberglot/awesome-answers"
+        },
+        {
+          "name": "SaltStack",
+          "url": "https://github.com/hbokh/awesome-saltstack"
+        }
+      ],
+      "relinked": []
+    },
+    {
+      "sha": "ad02f86",
+      "date": "2026-06-23T21:15:39Z",
+      "author": "Sindre Sorhus",
+      "message": "Add RSS link",
+      "messageZh": "新增 RSS 订阅链接",
+      "total": 701,
+      "added": [],
+      "removed": [],
+      "relinked": []
+    },
+    {
+      "sha": "24da1c6",
+      "date": "2026-06-02T12:50:12Z",
+      "author": "Tianyu Hu",
+      "message": "Update link (#4229)",
+      "messageZh": "更新一处链接（#4229）",
+      "total": 701,
+      "added": [],
+      "removed": [],
+      "relinked": [
+        {
+          "name": "AppImage",
+          "from": "https://github.com/appimage/awesome-appimage",
+          "to": "https://github.com/appimagecommunity/awesome-appimage"
+        }
+      ]
+    },
+    {
+      "sha": "f5d5b00",
+      "date": "2026-05-03T08:18:28Z",
+      "author": "Sindre Sorhus",
+      "message": "Meta tweaks",
+      "messageZh": "调整元信息与排版",
+      "total": 701,
+      "added": [],
+      "removed": [],
+      "relinked": []
+    },
+    {
+      "sha": "893fc57",
+      "date": "2026-04-02T16:29:56Z",
+      "author": "Sindre Sorhus",
+      "message": "Meta tweaks",
+      "messageZh": "调整元信息与排版",
+      "total": 701,
+      "added": [],
+      "removed": [],
+      "relinked": []
+    },
+    {
+      "sha": "2f3c272",
+      "date": "2026-04-01T08:25:16Z",
+      "author": "Jannis",
+      "message": "Update link for `Transit` (#3818)",
+      "messageZh": "更新 Transit 的链接（#3818）",
+      "total": 701,
+      "added": [],
+      "removed": [],
+      "relinked": [
+        {
+          "name": "Transit",
+          "from": "https://github.com/cutr-at-usf/awesome-transit",
+          "to": "https://github.com/mobilitydata/awesome-transit"
+        }
+      ]
+    },
+    {
+      "sha": "c86551f",
+      "date": "2026-02-03T15:55:03Z",
+      "author": "Sindre Sorhus",
+      "message": "Improve some descriptions",
+      "messageZh": "优化部分条目描述",
+      "total": 701,
+      "added": [],
+      "removed": [],
+      "relinked": []
+    },
+    {
+      "sha": "da0892f",
+      "date": "2026-01-28T14:08:49Z",
+      "author": "Jeevan",
+      "message": "Fix: Remove duplicate paragraph tag in readme (#3897)",
+      "messageZh": "删除 README 中重复的段落标签（#3897）",
+      "total": 701,
+      "added": [],
+      "removed": [],
+      "relinked": []
+    },
+    {
+      "sha": "1345b0a",
+      "date": "2025-11-22T10:35:25Z",
+      "author": "Sindre Sorhus",
+      "message": "Meta tweaks",
+      "messageZh": "调整元信息与排版",
+      "total": 701,
+      "added": [],
+      "removed": [],
+      "relinked": []
+    },
+    {
+      "sha": "fa5128c",
+      "date": "2025-11-18T11:44:09Z",
+      "author": "Sindre Sorhus",
+      "message": "Remove Zig",
+      "messageZh": "移除 Zig",
+      "total": 701,
+      "added": [],
+      "removed": [
+        {
+          "name": "Zig",
+          "url": "https://github.com/catdevnull/awesome-zig"
+        }
+      ],
+      "relinked": []
+    },
+    {
+      "sha": "ff69727",
+      "date": "2025-11-12T08:51:33Z",
+      "author": "Colby Timm",
+      "message": "Add Copilot Agents (#3554)",
+      "messageZh": "新增 Copilot Agents（#3554）",
+      "total": 702,
+      "added": [
+        {
+          "name": "Copilot Agents",
+          "url": "https://github.com/code-and-sorts/awesome-copilot-agents"
+        }
+      ],
+      "removed": [],
+      "relinked": []
+    },
+    {
+      "sha": "a52fe1c",
+      "date": "2025-11-09T09:55:31Z",
+      "author": "Emmanuel Gautier",
+      "message": "Add OpenID Connect (#2607)",
+      "messageZh": "新增 OpenID Connect（#2607）",
+      "total": 701,
+      "added": [
+        {
+          "name": "OpenID Connect",
+          "url": "https://github.com/cerberauth/awesome-openid-connect"
+        }
+      ],
+      "removed": [],
+      "relinked": []
+    },
+    {
+      "sha": "6095f21",
+      "date": "2025-10-28T17:49:43Z",
+      "author": "Al",
+      "message": "Add Omarchy (#3658)",
+      "messageZh": "新增 Omarchy（#3658）",
+      "total": 700,
+      "added": [
+        {
+          "name": "Omarchy",
+          "url": "https://github.com/aorumbayev/awesome-omarchy"
+        }
+      ],
+      "removed": [],
+      "relinked": []
+    },
+    {
+      "sha": "6dc0576",
+      "date": "2025-10-28T17:47:10Z",
+      "author": "Mo_",
+      "message": "Add Audio Over IP (#3535)",
+      "messageZh": "新增 Audio Over IP（#3535）",
+      "total": 699,
+      "added": [
+        {
+          "name": "Audio Over IP",
+          "url": "https://github.com/mo-way/awesome-aoip"
+        }
+      ],
+      "removed": [],
+      "relinked": []
+    },
+    {
+      "sha": "75f98d4",
+      "date": "2025-10-28T15:32:56Z",
+      "author": "bl-ue",
+      "message": "Add Gemini CLI (#3621)",
+      "messageZh": "新增 Gemini CLI（#3621）",
+      "total": 698,
+      "added": [
+        {
+          "name": "Gemini CLI",
+          "url": "https://github.com/piebald-ai/awesome-gemini-cli"
+        }
+      ],
+      "removed": [],
+      "relinked": []
+    },
+    {
+      "sha": "64fefe7",
+      "date": "2025-10-28T15:08:26Z",
+      "author": "Sam Partington",
+      "message": "Add Tech Ethics (#3560)",
+      "messageZh": "新增 Tech Ethics（#3560）",
+      "total": 697,
+      "added": [
+        {
+          "name": "Tech Ethics",
+          "url": "https://github.com/sampart/awesome-tech-ethics"
+        }
+      ],
+      "removed": [],
+      "relinked": []
+    },
+    {
+      "sha": "777c215",
+      "date": "2025-10-28T13:47:54Z",
+      "author": "rellaner",
+      "message": "Add Position-Based Quantum Cryptography (#3390)",
+      "messageZh": "新增 Position-Based Quantum Cryptography（#3390）",
+      "total": 696,
+      "added": [
+        {
+          "name": "Position-Based Quantum Cryptography",
+          "url": "https://github.com/renaller/awesome-position-based-quantum-cryptography"
+        }
+      ],
+      "removed": [],
+      "relinked": []
+    },
+    {
+      "sha": "f961036",
+      "date": "2025-10-28T13:27:08Z",
+      "author": "Sindre Sorhus",
+      "message": "Remove broken link",
+      "messageZh": "移除失效链接",
+      "total": 695,
+      "added": [],
+      "removed": [
+        {
+          "name": "Awesome Viewer",
+          "url": "https://awesome.digitalbunker.dev"
+        }
+      ],
+      "relinked": []
+    },
+    {
+      "sha": "b8d1877",
+      "date": "2025-10-27T17:57:31Z",
+      "author": "Shane Dowling",
+      "message": "Add Backstage (#3305)",
+      "messageZh": "新增 Backstage（#3305）",
+      "total": 696,
+      "added": [
+        {
+          "name": "Backstage",
+          "url": "https://github.com/shano/awesome-backstage"
+        }
+      ],
+      "removed": [],
+      "relinked": []
+    },
+    {
+      "sha": "e659e60",
+      "date": "2025-10-27T17:54:03Z",
+      "author": "Friedrich von Never",
+      "message": "Add F# (#3259)",
+      "messageZh": "新增 F#（#3259）",
+      "total": 695,
+      "added": [
+        {
+          "name": "F#",
+          "url": "https://github.com/fsprojects/awesome-fsharp"
+        }
+      ],
+      "removed": [],
+      "relinked": []
+    },
+    {
+      "sha": "6f6545c",
+      "date": "2025-10-27T17:41:40Z",
+      "author": "Emin Yagiz",
+      "message": "Add SAP Commerce (#2925)",
+      "messageZh": "新增 SAP Commerce（#2925）",
+      "total": 694,
+      "added": [],
+      "removed": [],
+      "relinked": []
+    }
+  ]
+}

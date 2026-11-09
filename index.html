@@ -1,0 +1,176 @@
+<!doctype html>
+<html lang="zh-CN" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="color-scheme" content="light dark">
+<title>精选清单地图 · Awesome 中文可视化索引</title>
+<meta name="description" content="把 sindresorhus/awesome 的 678 份精选清单翻译成中文，用分类地图、关系图谱、检索榜单、生态时间轴与数据洞察重新组织。全量 673 个仓库指标，可查、可看、可追溯。">
+<meta property="og:title" content="精选清单地图 · Awesome 中文可视化索引">
+<meta property="og:description" content="678 份清单、27 个分类、673 个仓库全量指标，中文可读、结构可见、来源可追溯。">
+<meta name="theme-color" content="#faf9f5">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%23faf9f5'/%3E%3Cpath d='M7 23 16 7l9 16' fill='none' stroke='%23141413' stroke-width='2.2' stroke-linejoin='round'/%3E%3Cpath d='M11.5 18h9' stroke='%23a82d22' stroke-width='2.4' stroke-linecap='round'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="./assets/styles.css">
+</head>
+<body>
+<header class="topbar">
+  <div class="topbar-inner">
+    <a class="brand" href="./" aria-label="返回首页">
+      <span class="brand-mark" aria-hidden="true">
+        <svg viewBox="0 0 32 32" width="30" height="30"><rect x="0.5" y="0.5" width="31" height="31" fill="none" stroke="currentColor"/><path d="M7 23 16 7l9 16" fill="none" stroke="var(--accent)" stroke-width="2.2" stroke-linejoin="round"/><path d="M11.5 18h9" stroke="var(--accent)" stroke-width="2.2" stroke-linecap="round"/></svg>
+      </span>
+      <span class="brand-text"><strong>精选清单地图</strong><small>AWESOME ATLAS · 中文版</small></span>
+    </a>
+    <nav class="topnav" aria-label="页面导航">
+      <a href="#workspace" class="topnav-link">开始探索</a>
+      <a href="#insights" class="topnav-link">今日发现</a>
+      <a href="#about" class="topnav-link">数据说明</a>
+    </nav>
+    <div class="topbar-right">
+      <span class="status-pill" id="statusPill" title="数据快照日期"><span class="status-dot"></span><span id="statusText">数据加载中</span></span>
+      <div class="lang-switch" id="langSwitch" role="group" aria-label="界面语言">
+        <button type="button" data-lang="zh" class="is-on">中文</button>
+        <button type="button" data-lang="both">双语</button>
+        <button type="button" data-lang="en">EN</button>
+      </div>
+      <button class="icon-btn" id="cmdkOpen" type="button" aria-label="打开快捷命令面板" title="快捷搜索（Ctrl+K）">
+        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m15.5 15.5 4.5 4.5" stroke-linecap="round"/></svg>
+      </button>
+      <button class="icon-btn" id="themeToggle" type="button" aria-label="切换深浅色主题" title="切换主题">
+        <svg class="icon-moon" viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M20 14.5A8.5 8.5 0 0 1 9.5 4 8.5 8.5 0 1 0 20 14.5Z" stroke-linejoin="round"/></svg>
+        <svg class="icon-sun" viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="12" cy="12" r="4"/><path d="M12 2v2m0 16v2M2 12h2m16 0h2M4.9 4.9l1.4 1.4m11.4 11.4 1.4 1.4M19.1 4.9l-1.4 1.4M6.3 17.7l-1.4 1.4" stroke-linecap="round"/></svg>
+      </button>
+      <a class="ghost-btn" href="https://github.com/sindresorhus/awesome" target="_blank" rel="noopener noreferrer" title="打开上游仓库（境外站点）">
+        <svg viewBox="0 0 24 24" width="15" height="15" fill="currentColor" aria-hidden="true"><path d="M12 .5A11.5 11.5 0 0 0 .5 12a11.5 11.5 0 0 0 7.86 10.92c.58.1.79-.25.79-.56v-2c-3.2.7-3.88-1.37-3.88-1.37-.52-1.33-1.28-1.68-1.28-1.68-1.05-.72.08-.7.08-.7 1.16.08 1.77 1.19 1.77 1.19 1.03 1.77 2.7 1.26 3.36.96.1-.75.4-1.26.73-1.55-2.55-.29-5.24-1.28-5.24-5.68 0-1.25.45-2.28 1.18-3.08-.12-.29-.51-1.46.11-3.05 0 0 .96-.31 3.15 1.18a10.9 10.9 0 0 1 5.74 0c2.19-1.49 3.15-1.18 3.15-1.18.62 1.59.23 2.76.11 3.05.74.8 1.18 1.83 1.18 3.08 0 4.41-2.69 5.38-5.25 5.67.41.36.78 1.06.78 2.14v3.17c0 .31.21.67.8.56A11.5 11.5 0 0 0 23.5 12 11.5 11.5 0 0 0 12 .5Z"/></svg>
+        <span>上游仓库</span>
+      </a>
+    </div>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="hero-inner">
+    <div class="eyebrow"><span class="eyebrow-line"></span><span>一个 README 的另一种读法</span><span class="eyebrow-sep">·</span><span class="eyebrow-extra">全量中文译述</span><span class="eyebrow-sep">·</span><span class="eyebrow-extra">CC0 数据</span></div>
+    <h1>把 <span class="hero-num" id="heroCount">678</span> 份清单<br>变成一张<span class="hero-accent">看得懂的地图</span></h1>
+    <p class="hero-sub">一份英文 README 里藏着 27 个技术分类、近七百份人工策展的资源索引。这里把它译成中文，再补上层级、热度、活跃度与演化四个维度——不重复列表，只让结构显形。</p>
+
+    <div class="search-wrap">
+      <div class="search-box">
+        <svg class="search-icon" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="10.8" cy="10.8" r="6.6"/><path d="m16 16 4.4 4.4" stroke-linecap="round"/></svg>
+        <input id="searchInput" type="search" autocomplete="off" spellcheck="false" placeholder="搜中文或英文：前端、安全、响应式、React…" aria-label="搜索清单">
+        <button id="searchClear" class="search-clear" type="button" aria-label="清除搜索" hidden>×</button>
+        <kbd class="kbd">/</kbd>
+      </div>
+      <div class="search-meta"><span id="searchCount">—</span><span class="search-hint" id="searchHint">支持中文分类、中文描述、名称与仓库名</span></div>
+    </div>
+
+    <div class="quick-chips" id="quickChips" aria-label="快捷分类"></div>
+  </div>
+</section>
+
+<section class="metrics" id="metrics" aria-label="数据概览"></section>
+
+<section class="insights" id="insights" aria-label="从数据中读出的结论">
+  <div class="insights-inner">
+    <div class="insights-head"><span class="insights-kicker">今日发现</span><h2>这份数据自己会说话</h2><p>以下结论全部由当前快照实时计算，点击可直接跳到对应条目。</p></div>
+    <div class="insight-grid" id="insightGrid"></div>
+  </div>
+</section>
+
+<section class="viewbar-wrap" id="workspace">
+  <div class="viewbar">
+    <div class="view-tabs" role="tablist" aria-label="可视化视图">
+      <span class="tab-glider" id="tabGlider" aria-hidden="true"></span>
+      <button class="view-tab is-active" role="tab" data-view="map" aria-selected="true"><span class="tab-idx">01</span><span data-ui="tabMap">分类地图</span></button>
+      <button class="view-tab" role="tab" data-view="graph" aria-selected="false"><span class="tab-idx">02</span><span data-ui="tabGraph">关系图谱</span></button>
+      <button class="view-tab" role="tab" data-view="table" aria-selected="false"><span class="tab-idx">03</span><span data-ui="tabTable">检索榜单</span></button>
+      <button class="view-tab" role="tab" data-view="timeline" aria-selected="false"><span class="tab-idx">04</span><span data-ui="tabTimeline">生态时间轴</span></button>
+      <button class="view-tab" role="tab" data-view="insight" aria-selected="false"><span class="tab-idx">05</span><span data-ui="tabInsight">数据洞察</span></button>
+    </div>
+    <p class="view-caption" id="viewCaption"></p>
+    <button class="share-btn" id="shareBtn" type="button" aria-label="复制当前视图链接">
+      <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="18" cy="5" r="2.5"/><circle cx="6" cy="12" r="2.5"/><circle cx="18" cy="19" r="2.5"/><path d="m8.2 10.8 7.6-4.4M8.2 13.2l7.6 4.4"/></svg>
+      <span>分享此视图</span>
+    </button>
+  </div>
+</section>
+
+<main class="workspace">
+  <aside class="sidebar" id="sidebar" aria-label="分类与筛选">
+    <div class="side-head"><span data-ui="sideNav">分类导航</span><button class="link-btn" id="resetFilters" type="button" data-ui="reset">重置</button></div>
+    <div class="side-search"><input id="catSearch" type="search" placeholder="筛选分类…" aria-label="筛选分类" autocomplete="off"></div>
+    <div class="side-list" id="categoryList"></div>
+    <div class="side-block">
+      <div class="side-title" data-ui="scopeTitle">数据范围</div>
+      <label class="switch-row"><input type="checkbox" id="enrichedOnly"><span class="switch"></span><span data-ui="enrichedOnly">仅显示已验证仓库</span></label>
+      <label class="switch-row"><input type="checkbox" id="favoritesOnly"><span class="switch"></span><span data-ui="favoritesOnly">仅显示我的收藏</span></label>
+      <label class="switch-row"><input type="checkbox" id="hideArchived"><span class="switch"></span><span data-ui="hideArchived">隐藏已归档仓库</span></label>
+    </div>
+    <div class="side-block">
+      <div class="side-title" data-ui="favTitle">我的收藏</div>
+      <div class="fav-summary"><span id="favCount">0 条</span><button class="link-btn" id="exportFav" type="button" data-ui="exportFav">导出清单</button></div>
+    </div>
+    <div class="side-block legend-block">
+      <div class="side-title" data-ui="legendTitle">健康分图例</div>
+      <div class="legend-scale"></div>
+      <div class="legend-labels"><span id="legendLow">低</span><span id="legendHigh">高</span></div>
+      <p class="legend-note" id="legendNote"></p>
+    </div>
+  </aside>
+
+  <section class="canvas" id="canvas" aria-live="polite">
+    <div class="canvas-toolbar" id="canvasToolbar"></div>
+    <div class="canvas-body" id="canvasBody"></div>
+  </section>
+
+  <aside class="detail" id="detail" aria-label="条目的详情">
+    <div class="detail-empty" id="detailEmpty">
+      <div class="empty-orbit" aria-hidden="true"><span></span><span></span><span></span></div>
+      <h3 data-ui="detailEmptyTitle">点一个节点看看</h3>
+      <p data-ui="detailEmptyText">地图上任意瓦片、图谱里的圆点或榜单中的一行，都会在这里展开它的仓库画像、健康分构成与上下游关系。</p>
+      <div class="empty-context" id="detailEmptyContext"></div>
+    </div>
+    <div class="detail-content" id="detailContent" hidden></div>
+  </aside>
+</main>
+
+<section class="about" id="about">
+  <div class="about-inner">
+    <div class="about-head"><span class="eyebrow-line"></span><h2 data-ui="aboutTitle">关于这份数据</h2><p data-ui="aboutLead">每个数字都能追溯到源 README 或 GitHub 公开 API，没有估算值混入展示。</p></div>
+    <div class="about-grid">
+      <div class="about-card"><h3 data-ui="aboutSource">来源与许可</h3><p id="aboutSourceText"></p></div>
+      <div class="about-card"><h3 data-ui="aboutParseTitle">解析口径</h3><p id="aboutParse">—</p></div>
+      <div class="about-card"><h3 data-ui="aboutMetricTitle">指标与健康分</h3><p id="aboutMetricText"></p></div>
+      <div class="about-card"><h3 data-ui="aboutBoundaryTitle">诚实的边界</h3><p id="aboutCoverage">—</p></div>
+    </div>
+    <div class="about-foot"><span id="aboutStamp">—</span><span data-ui="aboutFoot">纯静态站点 · 无后端 · 无追踪脚本 · 数据快照可复现</span></div>
+  </div>
+</section>
+
+<footer class="footer">
+  <div class="footer-inner">
+    <span>精选清单地图 · 基于 <a href="https://github.com/sindresorhus/awesome" target="_blank" rel="noopener noreferrer">sindresorhus/awesome</a>（CC0-1.0）结构化与中文译述</span>
+    <span>为国内读者优化：中文检索 · 万位计数 · 无外部 CDN · 外链已标注</span>
+  </div>
+</footer>
+
+<div class="cmdk-backdrop" id="cmdk" hidden>
+  <div class="cmdk-panel" role="dialog" aria-modal="true" aria-label="快捷命令面板">
+    <div class="cmdk-input-row">
+      <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="10.8" cy="10.8" r="6.6"/><path d="m16 16 4.4 4.4" stroke-linecap="round"/></svg>
+      <input id="cmdkInput" type="text" placeholder="搜索清单、跳转视图、切换分类…" autocomplete="off" aria-label="命令面板输入">
+      <kbd>ESC</kbd>
+    </div>
+    <div class="cmdk-results" id="cmdkResults"></div>
+    <div class="cmdk-foot"><span>↑↓ 选择 · Enter 打开 · Esc 关闭</span><span id="cmdkCount"></span></div>
+  </div>
+</div>
+
+<div class="tooltip" id="tooltip" role="tooltip" hidden></div>
+<div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
+<div class="mobile-tabs" id="mobileTabs" aria-label="移动端视图切换"></div>
+
+<script src="./data/catalog.js"></script>
+<script src="./assets/app.js"></script>
+</body>
+</html>

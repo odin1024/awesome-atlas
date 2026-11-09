@@ -1,0 +1,68 @@
+{
+  "startedAt": "2026-11-08T17:49:19.705Z",
+  "requests": [
+    {
+      "url": "https://api.github.com/search/repositories?q=awesome+in:name+stars:1000..1000000&sort=stars&order=desc&per_page=100&page=1",
+      "code": 200,
+      "bytes": 576624
+    },
+    {
+      "url": "https://api.github.com/search/repositories?q=awesome+in:name+stars:1000..1000000&sort=stars&order=desc&per_page=100&page=2",
+      "code": 200,
+      "bytes": 571637
+    },
+    {
+      "url": "https://api.github.com/search/repositories?q=awesome+in:name+stars:300..1000&sort=stars&order=desc&per_page=100&page=1",
+      "code": 200,
+      "bytes": 577810
+    },
+    {
+      "url": "https://api.github.com/search/repositories?q=awesome+in:name+stars:300..1000&sort=stars&order=desc&per_page=100&page=2",
+      "code": 200,
+      "bytes": 575100
+    },
+    {
+      "url": "https://api.github.com/search/repositories?q=awesome+in:name+stars:100..300&sort=stars&order=desc&per_page=100&page=1",
+      "code": 200,
+      "bytes": 591104
+    },
+    {
+      "url": "https://api.github.com/search/repositories?q=awesome+in:name+stars:100..300&sort=stars&order=desc&per_page=100&page=2",
+      "code": 200,
+      "bytes": 582143
+    },
+    {
+      "url": "https://api.github.com/search/repositories?q=awesome+in:name+stars:0..100&sort=updated&order=desc&per_page=100&page=1",
+      "code": 200,
+      "bytes": 622598
+    },
+    {
+      "url": "https://api.github.com/search/repositories?q=awesome+in:name+stars:0..100&sort=stars&order=desc&per_page=100&page=1",
+      "code": 200,
+      "bytes": 579470
+    },
+    {
+      "url": "https://api.github.com/search/repositories?q=topic:awesome-list&sort=stars&order=desc&per_page=100&page=1",
+      "code": 200,
+      "bytes": 580711
+    },
+    {
+      "url": "https://api.github.com/search/repositories?q=topic:awesome-list&sort=stars&order=desc&per_page=100&page=2",
+      "code": 200,
+      "bytes": 577544
+    }
+  ],
+  "errors": [],
+  "finishedAt": "2026-11-08T17:50:04.177Z",
+  "coverage": {
+    "reposTotal": 674,
+    "reposEnriched": 188,
+    "coveragePct": 27.9,
+    "totalStarsSampled": 4666583,
+    "archived": 2,
+    "searchPool": 887,
+    "addedInPass2": 35
+  },
+  "requestCount": 10,
+  "errorCount": 0
+}

@@ -1,0 +1,347 @@
+{
+  "validatedAt": "2026-11-09T02:50:57.805Z",
+  "passed": 51,
+  "total": 51,
+  "allPassed": true,
+  "source": {
+    "sha256": "465cd781335e44587d238f666800104b63d4fc8ba2395d6422974dcba421c616",
+    "lines": 866,
+    "bytes": 78330
+  },
+  "coverage": {
+    "reposTotal": 673,
+    "reposEnriched": 673,
+    "coveragePct": 100,
+    "totalStarsSampled": 5979356,
+    "archived": 3,
+    "verified": 673,
+    "unavailable": 0,
+    "renamed": 0,
+    "requests": 14
+  },
+  "localisation": {
+    "descriptions": 466,
+    "hints": 224,
+    "categories": 27
+  },
+  "history": {
+    "revisions": 24,
+    "firstDate": "2025-10-27T17:41:40Z",
+    "lastDate": "2026-09-02T02:10:42Z",
+    "firstTotal": 694,
+    "lastTotal": 676,
+    "netChange": -18,
+    "additions": 9,
+    "removals": 27,
+    "relinks": 2,
+    "spanDays": 309
+  },
+  "checks": [
+    {
+      "group": "来源",
+      "name": "README sha256 与 catalog 记录一致",
+      "ok": true,
+      "detail": "465cd781335e4458…"
+    },
+    {
+      "group": "来源",
+      "name": "README 行数与字节数一致",
+      "ok": true,
+      "detail": "866 行 / 78330 字节"
+    },
+    {
+      "group": "解析",
+      "name": "H2 章节数一致",
+      "ok": true,
+      "detail": "28 个 H2"
+    },
+    {
+      "group": "解析",
+      "name": "列表行 − 目录锚点 = 条目数",
+      "ok": true,
+      "detail": "705 − 27 = 678"
+    },
+    {
+      "group": "解析",
+      "name": "带链接行 − 目录锚点 = 有 URL 条目",
+      "ok": true,
+      "detail": "703 − 27 = 676"
+    },
+    {
+      "group": "解析",
+      "name": "分类数 = H2 − 目录",
+      "ok": true,
+      "detail": "27 个分类"
+    },
+    {
+      "group": "解析",
+      "name": "各分类计数之和 = 总条目数",
+      "ok": true,
+      "detail": "678 条"
+    },
+    {
+      "group": "解析",
+      "name": "解析告警为 0",
+      "ok": true,
+      "detail": "0 条告警"
+    },
+    {
+      "group": "解析",
+      "name": "GitHub 站点保留路径未被误判为仓库",
+      "ok": true,
+      "detail": "0 条误判"
+    },
+    {
+      "group": "结构",
+      "name": "每条记录都能回溯到源 README 的列表行",
+      "ok": true,
+      "detail": "0 条异常"
+    },
+    {
+      "group": "结构",
+      "name": "子条目的父级与反向引用互相一致",
+      "ok": true,
+      "detail": "父级异常 0 / 子级异常 0"
+    },
+    {
+      "group": "结构",
+      "name": "所有 URL 可解析且为 http(s)",
+      "ok": true,
+      "detail": "0 条异常"
+    },
+    {
+      "group": "结构",
+      "name": "条目 ID 全局唯一",
+      "ok": true,
+      "detail": "678 个唯一 ID"
+    },
+    {
+      "group": "结构",
+      "name": "分类 ID 与目录锚点一一对应",
+      "ok": true,
+      "detail": "27 个目录锚点"
+    },
+    {
+      "group": "指标",
+      "name": "健康分 / star / 日期均在合法范围",
+      "ok": true,
+      "detail": "673 条指标，异常 0"
+    },
+    {
+      "group": "指标",
+      "name": "全量覆盖：每个 GitHub 仓库都有真实指标",
+      "ok": true,
+      "detail": "673/673（100%）"
+    },
+    {
+      "group": "指标",
+      "name": "覆盖率可从条目独立重算",
+      "ok": true,
+      "detail": "100%"
+    },
+    {
+      "group": "指标",
+      "name": "star 总量可由明细独立重算",
+      "ok": true,
+      "detail": "5,979,356 star"
+    },
+    {
+      "group": "指标",
+      "name": "授权抓取未产生解析错误",
+      "ok": true,
+      "detail": "GraphQL 批量核验，0 错误"
+    },
+    {
+      "group": "指标",
+      "name": "上游提交按时间倒序且 sha 有效",
+      "ok": true,
+      "detail": "12 条提交"
+    },
+    {
+      "group": "中文",
+      "name": "466 条英文描述全部有中文译文",
+      "ok": true,
+      "detail": "466/466，缺 0，多 0，空 0"
+    },
+    {
+      "group": "中文",
+      "name": "212 条无描述条目全部有中文提示",
+      "ok": true,
+      "detail": "212 条无描述，未覆盖 0"
+    },
+    {
+      "group": "中文",
+      "name": "27 个分类均有中文名与释义",
+      "ok": true,
+      "detail": "27 个分类"
+    },
+    {
+      "group": "中文",
+      "name": "界面默认语言为中文",
+      "ok": true,
+      "detail": "lang=zh-CN / 中文按钮默认选中"
+    },
+    {
+      "group": "中文",
+      "name": "三态语言切换与中英字典齐备",
+      "ok": true,
+      "detail": "中文 / 双语 / EN"
+    },
+    {
+      "group": "中文",
+      "name": "中文检索索引包含译名与提示",
+      "ok": true,
+      "detail": "名称 + 译文 + 提示 + 分类均入索引"
+    },
+    {
+      "group": "中文",
+      "name": "国内友好：万位计数与中文日期",
+      "ok": true,
+      "detail": "万 / 亿、年月日"
+    },
+    {
+      "group": "历史",
+      "name": "历史版本数量与解析跨度一致",
+      "ok": true,
+      "detail": "24 个版本 / 309 天"
+    },
+    {
+      "group": "历史",
+      "name": "收录量曲线按时间单调递增排列",
+      "ok": true,
+      "detail": "24 个数据点"
+    },
+    {
+      "group": "历史",
+      "name": "增删计数与快照明细可独立重算",
+      "ok": true,
+      "detail": "+9 / −27 / ↗2"
+    },
+    {
+      "group": "历史",
+      "name": "换链接不再被误报为「删了又加」",
+      "ok": true,
+      "detail": "2 次链接更新已单列"
+    },
+    {
+      "group": "历史",
+      "name": "净变化与首末版本总数一致",
+      "ok": true,
+      "detail": "694 → 676"
+    },
+    {
+      "group": "历史",
+      "name": "每条提交都有中文说明",
+      "ok": true,
+      "detail": "24 条"
+    },
+    {
+      "group": "产物",
+      "name": "数据包含 4 组独立数据段",
+      "ok": true,
+      "detail": "__ATLAS_DATA__ / __ATLAS_UPSTREAM__ / __ATLAS_HISTORY__ / __ATLAS_I18N__"
+    },
+    {
+      "group": "产物",
+      "name": "catalog.js 与 catalog.json 数据一致",
+      "ok": true,
+      "detail": "678 条 / 673 条已验证，与 catalog.json 一致"
+    },
+    {
+      "group": "产物",
+      "name": "index.html 引用的本地资源全部存在",
+      "ok": true,
+      "detail": "3 个引用，缺失 0"
+    },
+    {
+      "group": "产物",
+      "name": "无外部运行时依赖",
+      "ok": true,
+      "detail": "脚本与样式均本地加载"
+    },
+    {
+      "group": "产物",
+      "name": "页面无占位文本与调试残留",
+      "ok": true,
+      "detail": "无 TODO / console.log"
+    },
+    {
+      "group": "产物",
+      "name": "五个视图与命令面板齐备",
+      "ok": true,
+      "detail": "地图 / 图谱 / 榜单 / 时间轴 / 洞察"
+    },
+    {
+      "group": "产物",
+      "name": "数据包体积适合静态托管",
+      "ok": true,
+      "detail": "672 KB"
+    },
+    {
+      "group": "产物",
+      "name": "部署所需文件齐备",
+      "ok": true,
+      "detail": ".nojekyll / CI 校验 / README / REST 部署脚本"
+    },
+    {
+      "group": "产物",
+      "name": "Pages 分支发布与 CI 不冲突",
+      "ok": true,
+      "detail": "采用 main/root 分支发布，CI 只做数据校验"
+    },
+    {
+      "group": "设计",
+      "name": "浅色主题文字对比度 ≥ 4.5:1",
+      "ok": true,
+      "detail": "最低 5.05:1（三级 ink-3/paper）"
+    },
+    {
+      "group": "设计",
+      "name": "深色主题文字对比度 ≥ 4.5:1",
+      "ok": true,
+      "detail": "最低 5.28:1（反白 accent-ink/accent）"
+    },
+    {
+      "group": "设计",
+      "name": "单一强调色相（浅/深色同一色相）",
+      "ok": true,
+      "detail": "浅色 5° / 深色 7°"
+    },
+    {
+      "group": "设计",
+      "name": "无渐变文字与玻璃拟态",
+      "ok": true,
+      "detail": "无 gradient text / backdrop-filter"
+    },
+    {
+      "group": "设计",
+      "name": "圆角系统为 0（Swiss 网格）",
+      "ok": true,
+      "detail": "仅进度条与开关保留功能性圆角"
+    },
+    {
+      "group": "设计",
+      "name": "基础字号与触控目标达标",
+      "ok": true,
+      "detail": "正文 15px / 移动端标签 44px"
+    },
+    {
+      "group": "设计",
+      "name": "无 emoji 充当图标",
+      "ok": true,
+      "detail": "图标均为 SVG 或编号"
+    },
+    {
+      "group": "设计",
+      "name": "键盘焦点与减少动效均已覆盖",
+      "ok": true,
+      "detail": "focus-visible + reduced-motion"
+    },
+    {
+      "group": "设计",
+      "name": "深色主题不依赖浅色瓦片",
+      "ok": true,
+      "detail": "数据色阶随主题反转"
+    }
+  ]
+}

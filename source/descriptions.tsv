@@ -1,0 +1,466 @@
+platforms/node-js-1	Node.js	Async non-blocking event-driven JavaScript runtime built on Chrome's V8 JavaScript engine.
+platforms/cross-platform-2	Cross-Platform	Writing cross-platform code on Node.js.
+platforms/ios-4	iOS	Mobile operating system for Apple phones and tablets.
+platforms/android-5	Android	Mobile operating system developed by Google.
+platforms/electron-7	Electron	Cross-platform native desktop apps using JavaScript/HTML/CSS.
+platforms/cordova-8	Cordova	JavaScript API for hybrid apps.
+platforms/react-native-9	React Native	JavaScript framework for writing natively rendering mobile apps for iOS and Android.
+platforms/ebpf-12	eBPF	Virtual machine that allows you to write more efficient and powerful tracing and monitoring for Linux systems.
+platforms/arch-based-projects-13	Arch-based Projects	Linux distributions and projects based on Arch Linux.
+platforms/appimage-14	AppImage	Package apps in a single file that works on various mainstream Linux distributions.
+platforms/omarchy-15	Omarchy	Opinionated Arch Linux and Hyprland desktop environment from the creator of Ruby on Rails.
+platforms/macos-16	macOS	Operating system for Apple's Mac computers.
+platforms/watchos-20	watchOS	Operating system for the Apple Watch.
+platforms/windows-24	Windows	Consumer desktop operating system.
+platforms/powertoys-run-plugins-25	PowerToys Run Plugins	Community plugins for the Windows quick launcher.
+platforms/ipfs-26	IPFS	P2P hypermedia protocol.
+platforms/fuse-27	Fuse	Mobile development tools.
+platforms/heroku-28	Heroku	Cloud platform as a service.
+platforms/raspberry-pi-29	Raspberry Pi	Credit card-sized computer aimed at teaching kids programming, but capable of a lot more.
+platforms/webextensions-30	WebExtensions	Cross-browser extension system.
+platforms/smart-tv-31	Smart TV	Create apps for different TV platforms.
+platforms/gnome-32	GNOME	Simple and distraction-free desktop environment for Linux.
+platforms/kde-33	KDE	A free software community dedicated to creating an open and user-friendly computing experience.
+platforms/roslyn-36	Roslyn	Open-source compilers and code analysis APIs for C# and VB.NET languages.
+platforms/digitalocean-37	DigitalOcean	Cloud computing platform designed for developers.
+platforms/flutter-38	Flutter	Google's mobile SDK for building native iOS and Android apps from a single codebase written in Dart.
+platforms/home-assistant-39	Home Assistant	Open source home automation that puts local control and privacy first.
+platforms/ibm-cloud-40	IBM Cloud	Cloud platform for developers and companies.
+platforms/firebase-41	Firebase	App development platform built on Google Cloud.
+platforms/adafruit-io-42	Adafruit IO	Visualize and store data from any device.
+platforms/cloudflare-43	Cloudflare	CDN, DNS, DDoS protection, and security for your site.
+platforms/actions-on-google-44	Actions on Google	Developer platform for Google Assistant.
+platforms/esp-45	ESP	Low-cost microcontrollers with WiFi and broad IoT applications.
+platforms/deno-46	Deno	A secure runtime for JavaScript and TypeScript that uses V8 and is built in Rust.
+platforms/dos-47	DOS	Operating system for x86-based personal computers that was popular during the 1980s and early 1990s.
+platforms/nix-48	Nix	Package manager for Linux and other Unix systems that makes package management reliable and reproducible.
+platforms/integration-49	Integration	Linking together different IT systems (components) to functionally cooperate as a whole.
+platforms/node-red-50	Node-RED	A programming tool for wiring together hardware devices, APIs, and online services.
+platforms/low-code-51	Low Code	Allowing business professionals to address their needs on their own with little to no coding skills.
+platforms/capacitor-52	Capacitor	Cross-platform open source runtime for building Web Native apps.
+platforms/arcgis-developer-53	ArcGIS Developer	Mapping and location analysis platform for developers.
+platforms/bluetooth-low-energy-54	Bluetooth Low Energy	Low-power wireless communication protocol ideal for IoT, wearables, and other battery-powered applications.
+platforms/uno-platform-55	Uno Platform	Open-source .NET UI platform for building cross-platform apps.
+platforms/firebase-genkit-56	Firebase Genkit	An open-source framework for building AI-powered apps and features.
+platforms/backstage-57	Backstage	Open-source platform for building Internal Developer Portals that unify tools and workflows.
+programming-languages/standard-style-60	Standard Style	Style guide and linter.
+programming-languages/mad-science-npm-packages-65	Mad Science npm Packages	Impossible sounding projects that exist.
+programming-languages/maintenance-modules-66	Maintenance Modules	For npm packages.
+programming-languages/npm-67	npm	Package manager.
+programming-languages/ava-68	AVA	Test runner.
+programming-languages/eslint-69	ESLint	Linter.
+programming-languages/npm-scripts-72	npm scripts	Task runner.
+programming-languages/30-seconds-of-code-73	30 Seconds of Code	Code snippets you can understand in 30 seconds.
+programming-languages/ponyfills-74	Ponyfills	Like polyfills but without overriding native APIs.
+programming-languages/swift-75	Swift	Apple's compiled programming language that is secure, modern, programmer-friendly, and fast.
+programming-languages/python-78	Python	General-purpose programming language designed for readability.
+programming-languages/asyncio-79	Asyncio	Asynchronous I/O in Python 3.
+programming-languages/scientific-audio-80	Scientific Audio	Scientific research in audio/music.
+programming-languages/circuitpython-81	CircuitPython	A version of Python for microcontrollers.
+programming-languages/data-science-82	Data Science	Data analysis and machine learning.
+programming-languages/typing-83	Typing	Optional static typing for Python.
+programming-languages/micropython-84	MicroPython	A lean and efficient implementation of Python 3 for microcontrollers.
+programming-languages/pest-86	Pest	Parser generator.
+programming-languages/scala-native-91	Scala Native	Optimizing ahead-of-time compiler for Scala based on LLVM.
+programming-languages/julia-98	Julia	High-level dynamic programming language designed to address the needs of high-performance numerical analysis and computational science.
+programming-languages/c-c-100	C/C++	General-purpose language with a bias toward system programming and embedded, resource-constrained software.
+programming-languages/r-101	R	Functional programming language and environment for statistical computing and graphics.
+programming-languages/common-lisp-104	Common Lisp	Powerful dynamic multiparadigm language that facilitates iterative and interactive development.
+programming-languages/java-109	Java	Popular secure object-oriented language designed for flexibility to "write once, run anywhere".
+programming-languages/j2me-111	J2ME	Java specification designed for old keypad phones and PDAs..
+programming-languages/php-116	PHP	Server-side scripting language.
+programming-languages/composer-117	Composer	Package manager.
+programming-languages/cmake-122	CMake	Build, test, and package software.
+programming-languages/actionscript-3-123	ActionScript 3	Object-oriented language targeting Adobe AIR.
+programming-languages/idris-124	Idris	General purpose pure functional programming language with dependent types influenced by Haskell and ML.
+programming-languages/ada-spark-125	Ada/SPARK	Modern programming language designed for large, long-lived apps where reliability and efficiency are essential.
+programming-languages/q-126	Q#	Domain-specific programming language used for expressing quantum algorithms.
+programming-languages/imba-127	Imba	Programming language inspired by Ruby and Python and compiles to performant JavaScript.
+programming-languages/vala-128	Vala	Programming language designed to take full advantage of the GLib and GNOME ecosystems, while preserving the speed of C code.
+programming-languages/coq-129	Coq	Formal language and environment for programming and specification which facilitates interactive development of machine-checked proofs.
+programming-languages/v-130	V	Simple, fast, safe, compiled language for developing maintainable software.
+programming-languages/move-131	Move	Domain-specific programming language for writing safe smart contracts.
+programming-languages/esolangs-132	Esolangs	Programming languages designed for experimentation or as jokes rather than actual use.
+programming-languages/vba-133	VBA	An event-driven version of Visual Basic 6.0 built into most Microsoft Office apps for automation and scripting.
+programming-languages/f-134	F#	A .NET-based language with focus on functional programming.
+front-end-development/css-138	CSS	Style sheet language that specifies how HTML elements are displayed on screen.
+front-end-development/react-144	React	JavaScript library for building user interfaces.
+front-end-development/relay-145	Relay	Framework for building data-driven React apps.
+front-end-development/react-hooks-146	React Hooks	Lets you use state and other React features without writing a class.
+front-end-development/polymer-148	Polymer	JavaScript library to develop Web Components.
+front-end-development/angular-149	Angular	App framework.
+front-end-development/backbone-150	Backbone	App framework.
+front-end-development/html5-151	HTML5	Markup language used for websites & web apps.
+front-end-development/svg-152	SVG	XML-based vector image format.
+front-end-development/knockoutjs-154	KnockoutJS	JavaScript library.
+front-end-development/dojo-toolkit-155	Dojo Toolkit	JavaScript toolkit.
+front-end-development/ember-157	Ember	App framework.
+front-end-development/d3-166	D3	Library for producing dynamic, interactive data visualizations.
+front-end-development/jquery-168	jQuery	Easy to use JavaScript library for DOM manipulation.
+front-end-development/cycle-js-173	Cycle.js	Functional and reactive JavaScript framework.
+front-end-development/vue-js-176	Vue.js	App framework.
+front-end-development/marionette-js-177	Marionette.js	App framework.
+front-end-development/aurelia-178	Aurelia	App framework.
+front-end-development/postcss-182	PostCSS	CSS tool.
+front-end-development/draft-js-183	Draft.js	Rich text editor framework for React.
+front-end-development/choo-186	choo	App framework.
+front-end-development/redux-187	Redux	State container for JavaScript apps.
+front-end-development/browserify-188	Browserify	Module bundler.
+front-end-development/sass-189	Sass	CSS preprocessor.
+front-end-development/ant-design-190	Ant Design	Enterprise-class UI design language.
+front-end-development/less-191	Less	CSS preprocessor.
+front-end-development/webgl-192	WebGL	JavaScript API for rendering 3D graphics.
+front-end-development/preact-193	Preact	App framework.
+front-end-development/next-js-195	Next.js	Framework for server-rendered React apps.
+front-end-development/lit-196	lit	Library for building web components with a declarative template system.
+front-end-development/jamstack-197	JAMstack	Modern web development architecture based on client-side JavaScript, reusable APIs, and prebuilt markup.
+front-end-development/wordpress-gatsby-198	WordPress-Gatsby	Web development technology stack with WordPress as a back end and Gatsby as a front end.
+front-end-development/mobile-web-development-199	Mobile Web Development	Creating a great mobile web experience.
+front-end-development/storybook-200	Storybook	Development environment for UI components.
+front-end-development/blazor-201	Blazor	.NET web framework using C#/Razor and HTML that runs in the browser with WebAssembly.
+front-end-development/pagespeed-metrics-202	PageSpeed Metrics	Metrics to help understand page speed and user experience.
+front-end-development/tailwind-css-203	Tailwind CSS	Utility-first CSS framework for rapid UI development.
+front-end-development/seed-204	Seed	Rust framework for creating web apps running in WebAssembly.
+front-end-development/web-performance-budget-205	Web Performance Budget	Techniques to ensure certain performance metrics for a website.
+front-end-development/web-animation-206	Web Animation	Animations in the browser with JavaScript, CSS, SVG, etc.
+front-end-development/yew-207	Yew	Rust framework inspired by Elm and React for creating multi-threaded frontend web apps with WebAssembly.
+front-end-development/material-ui-208	Material-UI	Material Design React components for faster and easier web development.
+front-end-development/building-blocks-for-web-apps-209	Building Blocks for Web Apps	Standalone features to be integrated into web apps.
+front-end-development/svelte-210	Svelte	App framework.
+front-end-development/design-systems-211	Design systems	Collection of reusable components, guided by rules that ensure consistency and speed.
+front-end-development/inertia-js-212	Inertia.js	Make single-page apps without building an API.
+front-end-development/mdbootstrap-213	MDBootstrap	Templates, layouts, components, and widgets to rapidly build websites.
+front-end-development/master-css-214	Master CSS	A virtual CSS language with enhanced syntax.
+front-end-development/hydrogen-215	Hydrogen	Edge-first framework for building Shopify storefronts with React.
+front-end-development/tiny-js-216	Tiny JS	Frontend libraries that fit into 2 kB with dependencies.
+front-end-development/frontend-gis-217	Frontend GIS	Geographic Information Systems (GIS) for web browsers.
+front-end-development/webgpu-218	WebGPU	JavaScript API for rendering and compute on GPUs.
+front-end-development/webassembly-219	WebAssembly	A portable binary format for running code efficiently across platforms.
+back-end-development/flask-220	Flask	Python framework.
+back-end-development/vagrant-222	Vagrant	Automation virtual machine environment.
+back-end-development/pyramid-223	Pyramid	Python framework.
+back-end-development/cakephp-225	CakePHP	PHP framework.
+back-end-development/symfony-226	Symfony	PHP framework.
+back-end-development/laravel-228	Laravel	PHP framework.
+back-end-development/rails-230	Rails	Web app framework for Ruby.
+back-end-development/gems-231	Gems	Packages.
+back-end-development/phalcon-232	Phalcon	PHP framework.
+back-end-development/nginx-234	nginx	Web server.
+back-end-development/dropwizard-235	Dropwizard	Java framework.
+back-end-development/kubernetes-236	Kubernetes	Open-source platform that automates Linux container operations.
+back-end-development/lumen-237	Lumen	PHP micro-framework.
+back-end-development/serverless-framework-238	Serverless Framework	Serverless computing and serverless architectures.
+back-end-development/apache-wicket-239	Apache Wicket	Java web app framework.
+back-end-development/vert-x-240	Vert.x	Toolkit for building reactive apps on the JVM.
+back-end-development/terraform-241	Terraform	Tool for building, changing, and versioning infrastructure.
+back-end-development/vapor-242	Vapor	Server-side development in Swift.
+back-end-development/dash-243	Dash	Python web app framework.
+back-end-development/fastapi-244	FastAPI	Python web app framework.
+back-end-development/cdk-245	CDK	Open-source software development framework for defining cloud infrastructure in code.
+back-end-development/iam-246	IAM	User accounts, authentication and authorization.
+back-end-development/slim-247	Slim	PHP framework.
+back-end-development/fiber-248	Fiber	Web framework built on top of Fasthttp, the fastest HTTP engine for Go.
+back-end-development/kustomize-249	Kustomize	Kubernetes native declarative configuration management tool.
+back-end-development/opentofu-250	OpenTofu	Open-source infrastructure as code tool.
+back-end-development/reflex-251	Reflex	Python web framework for building both your frontend and backend with no JavaScript.
+computer-science/ml-with-ruby-257	ML with Ruby	Learning, implementing, and applying Machine Learning using Ruby.
+computer-science/core-ml-models-258	Core ML Models	Models for Apple's machine learning framework.
+computer-science/h2o-259	H2O	Open source distributed machine learning platform written in Java with APIs in R, Python, and Scala.
+computer-science/software-engineering-for-machine-learning-260	Software Engineering for Machine Learning	From experiment to production-level machine learning.
+computer-science/ai-in-finance-261	AI in Finance	Solving problems in finance with machine learning.
+computer-science/jax-262	JAX	Automatic differentiation and XLA compilation brought together for high-performance machine learning research.
+computer-science/xai-263	XAI	Providing insight, explanations, and interpretability to machine learning methods.
+computer-science/question-answering-267	Question Answering	The science of asking and answering in natural language with a machine.
+computer-science/natural-language-generation-268	Natural Language Generation	Generation of text used in data-to-text, conversational agents, and narrative generation applications.
+computer-science/papers-271	Papers	Theory basics for using cryptography by non-cryptographers.
+computer-science/deep-learning-273	Deep Learning	Neural networks.
+computer-science/tensorflow-274	TensorFlow	Library for machine intelligence.
+computer-science/tensorflow-js-275	TensorFlow.js	WebGL-accelerated machine learning JavaScript library for training and deploying models.
+computer-science/tensorflow-lite-276	TensorFlow Lite	Framework that optimizes TensorFlow models for on-device machine learning.
+computer-science/papers-277	Papers	The most cited deep learning papers.
+computer-science/empirical-software-engineering-282	Empirical Software Engineering	Evidence-based research on software systems.
+computer-science/information-retrieval-284	Information Retrieval	Learn to develop your own search engine.
+computer-science/quantum-computing-285	Quantum Computing	Computing that utilizes quantum mechanics and qubits on quantum computers.
+computer-science/theoretical-computer-science-286	Theoretical Computer Science	The interplay of computer science and pure mathematics, distinguished by its emphasis on mathematical rigour and technique.
+computer-science/conversational-ai-287	Conversational AI	Build awesome chatbots and digital assistants.
+computer-science/generative-ai-288	Generative AI	Automatically generates a wide range of unique content in text, image, and audio format.
+computer-science/position-based-quantum-cryptography-289	Position-Based Quantum Cryptography	Theory on quantum cryptography that utilizes special relativistic constraints to achieve quantum-security under certain conditions.
+big-data/hadoop-292	Hadoop	Framework for distributed storage and processing of very large data sets.
+big-data/apache-spark-295	Apache Spark	Unified engine for large-scale data processing.
+big-data/qlik-296	Qlik	Business intelligence platform for data visualization, analytics, and reporting apps.
+big-data/splunk-297	Splunk	Platform for searching, monitoring, and analyzing structured and unstructured machine-generated big data in real time.
+theory/education-302	Education	Learning and practicing.
+theory/recursion-schemes-308	Recursion Schemes	Traversing nested data structures.
+theory/audit-algorithms-309	Audit Algorithms	Algorithmic audits of algorithms.
+theory/agi-cocosci-310	AGI & CoCoSci	The reciprocation of Artificial General Intelligence (AGI) and Computational Cognitive Sciences (CoCoSci).
+theory/complex-systems-311	Complex Systems	The scientific field studying systems with multiple interacting parts and emergent properties.
+theory/vlm-architectures-312	VLM Architectures	Vision Language Model architectures.
+editors/neovim-321	Neovim	Vim-fork focused on extensibility and usability.
+editors/visual-studio-code-323	Visual Studio Code	Cross-platform open-source text editor.
+gaming/godot-326	Godot	Game engine.
+gaming/l-ve-329	LÖVE	Game engine.
+gaming/pico-8-330	PICO-8	Fantasy console.
+gaming/construct-2-332	Construct 2	Game engine.
+gaming/gideros-333	Gideros	Game engine.
+gaming/minecraft-334	Minecraft	Sandbox video game.
+gaming/computercraft-335	ComputerCraft	Minecraft mod that adds programmable computers.
+gaming/game-datasets-336	Game Datasets	Materials and datasets for Artificial Intelligence in games.
+gaming/haxe-game-development-337	Haxe Game Development	A high-level strongly typed programming language used to produce cross-platform native code.
+gaming/libgdx-338	libGDX	Java game framework.
+gaming/playcanvas-339	PlayCanvas	Game engine.
+gaming/game-remakes-340	Game Remakes	Actively maintained open-source game remakes.
+gaming/flame-341	Flame	Game engine for Flutter.
+gaming/discord-communities-342	Discord Communities	Chat with friends and communities.
+gaming/chip-8-343	CHIP-8	Virtual computer game machine from the 70s.
+gaming/games-of-coding-344	Games of Coding	Learn a programming language by making games.
+gaming/esports-345	Esports	Video games played as a sport.
+gaming/learn-gamedev-346	Learn Gamedev	The craft of video game creation.
+gaming/game-engine-development-347	Game Engine Development	Building software to speed up game creation.
+gaming/gamemaker-348	GameMaker	Game engine.
+gaming/game-production-349	Game Production	Leading the process of designing, developing, testing and distributing a video game from concept to release.
+gaming/babylon-js-350	Babylon.js	Game engine for cross-platform web and native game development.
+gaming/roblox-351	Roblox	Immersive platform for hosting millions of diverse experiences.
+development-environment/quick-look-plugins-352	Quick Look Plugins	For macOS.
+development-environment/fish-356	Fish	User-friendly shell.
+development-environment/github-359	GitHub	Hosting service for Git repositories.
+development-environment/pinned-gists-362	Pinned Gists	Dynamic pinned gists for your GitHub profile.
+development-environment/git-add-ons-365	Git Add-ons	Enhance the `git` CLI.
+development-environment/git-hooks-366	Git Hooks	Scripts for automating tasks during `git` workflows.
+development-environment/hyper-369	Hyper	Cross-platform terminal app built on web technologies.
+development-environment/github-actions-371	GitHub Actions	Create tasks to automate your workflow and share them with others on GitHub.
+development-environment/wezterm-372	WezTerm	Powerful cross-platform terminal emulator.
+entertainment/science-fiction-373	Science Fiction	Scifi.
+databases/mongodb-383	MongoDB	NoSQL database.
+databases/tinkerpop-385	TinkerPop	Graph computing framework.
+databases/postgresql-386	PostgreSQL	Object-relational database.
+databases/couchdb-387	CouchDB	Document-oriented NoSQL database.
+databases/hbase-388	HBase	Distributed, scalable, big data store.
+databases/nosql-guides-389	NoSQL Guides	Help on using non-relational, distributed, open-source, and horizontally scalable databases.
+databases/database-tools-390	Database Tools	Everything that makes working with databases easier.
+databases/typedb-391	TypeDB	Logical database to organize large and complex networks of data as one body of knowledge.
+databases/supabase-392	Supabase	An open-source alternative to Firebase.
+databases/pocketbase-393	PocketBase	An open-source, Go-based backend in one file.
+databases/neon-394	Neon	An open-source alternative to AWS Aurora.
+media/codeface-396	Codeface	Text editor fonts.
+media/gif-398	GIF	Image format known for animated images.
+media/pixel-art-403	Pixel Art	Pixel-level digital art.
+media/ffmpeg-404	FFmpeg	Cross-platform solution to record, convert and stream audio and video.
+media/icons-405	Icons	Downloadable SVG/PNG/font icon projects.
+media/audiovisual-406	Audiovisual	Lighting, audio and video in professional environments.
+media/vlc-407	VLC	Cross-platform media player software and streaming server.
+media/audio-over-ip-408	Audio Over IP	Reliably transmit uncompressed, low-latency audio over an IP (layer 3) network.
+learn/cli-workshoppers-409	CLI Workshoppers	Interactive tutorials.
+learn/steam-415	STEAM	Supplements for specific science, technology, engineering, arts, and math (STEAM) courses across all grade levels.
+learn/educational-games-416	Educational Games	Learn while playing.
+learn/css-learning-418	CSS Learning	Mainly about CSS – the language and the modules.
+learn/product-management-419	Product Management	Learn how to be a better product manager.
+learn/roadmaps-420	Roadmaps	Gives you a clear route to improve your knowledge and skills.
+learn/youtubers-421	YouTubers	Watch video tutorials from YouTubers that teach you about technology.
+learn/hackathon-422	Hackathon	Running fun and productive hackathons.
+learn/certificates-423	Certificates	Free computer science certifications to showcase your knowledge.
+security/ctf-426	CTF	Capture The Flag.
+security/cyber-security-university-427	Cyber Security University	Free educational resources that focus on learning by doing.
+security/honeypots-432	Honeypots	Deception trap, designed to entice an attacker into attempting to compromise the information systems in an organization.
+security/web-security-435	Web Security	Security of web apps & services.
+security/lockpicking-436	Lockpicking	The art of unlocking a lock by manipulating its components without the key.
+security/cybersecurity-blue-team-437	Cybersecurity Blue Team	Groups of individuals who identify security flaws in information technology systems.
+security/fuzzing-438	Fuzzing	Automated software testing technique that involves feeding pseudo-randomly generated input data.
+security/gdpr-440	GDPR	Regulation on data protection and privacy for all individuals within EU.
+security/devsecops-441	DevSecOps	Integration of security practices into [DevOps](https://en.wikipedia.org/wiki/DevOps).
+security/executable-packing-442	Executable Packing	Packing and unpacking executable formats.
+security/malware-persistence-443	Malware Persistence	Techniques that adversaries use to keep access to systems across restarts.
+security/evm-security-444	EVM Security	Understanding the Ethereum Virtual Machine security ecosystem.
+security/password-cracking-445	Password Cracking	The process of recovering passwords from data that has been stored in or transmitted by a system in scrambled form.
+security/security-card-games-446	Security Card Games	Train your skills and discuss various security topics.
+security/suricata-447	Suricata	Intrusion detection/prevention system and network security monitoring engine.
+security/prompt-injection-448	Prompt Injection	A type of vulnerability that specifically targets machine learning models.
+security/detection-engineering-449	Detection Engineering	Design, build, and operate detective cybersecurity controls.
+security/annual-security-reports-450	Annual Security Reports	Exploring cybersecurity trends, insights, and challenges.
+security/ci-cd-attacks-451	CI/CD Attacks	Offensive research of systems and processes related to developing and deploying code.
+security/openid-connect-452	OpenID Connect	Identity standard and authentication protocol built on OAuth 2.0 for user identity assertion.
+content-management-systems/refinery-cms-454	Refinery CMS	Ruby on Rails CMS.
+content-management-systems/wagtail-455	Wagtail	Django CMS focused on flexibility and user experience.
+content-management-systems/textpattern-456	Textpattern	Lightweight PHP-based CMS.
+content-management-systems/drupal-457	Drupal	Extensible PHP-based CMS.
+content-management-systems/craft-cms-458	Craft CMS	Content-first CMS.
+content-management-systems/sitecore-459	Sitecore	.NET digital marketing platform that combines CMS with tools for managing multiple websites.
+content-management-systems/silverstripe-cms-460	Silverstripe CMS	PHP MVC framework that serves as a classic or headless CMS.
+content-management-systems/directus-461	Directus	A real-time API and app dashboard for managing SQL database content.
+content-management-systems/plone-462	Plone	Open source Python CMS.
+content-management-systems/payload-463	Payload	Next.js native and open source headless CMS.
+hardware/electronics-466	Electronics	For electronic engineers and hobbyists.
+hardware/electric-guitar-specifications-468	Electric Guitar Specifications	Checklist for building your own electric guitar.
+hardware/plotters-469	Plotters	Computer-controlled drawing machines and other visual art robots.
+hardware/robotic-tooling-470	Robotic Tooling	Free and open tools for professional robotic development.
+hardware/lidar-471	LIDAR	Sensor for measuring distances by illuminating the target with laser light.
+hardware/open-hardware-472	Open Hardware	Open-source hardware projects.
+hardware/ads-b-473	ADS-B	Technology broadcasting aircraft's identity, position, and data periodically.
+hardware/flying-fpv-474	Flying FPV	Open hardware and software related to drones / UAVs.
+business/okr-methodology-477	OKR Methodology	Goal setting & communication best practices.
+business/indie-478	Indie	Independent developer businesses.
+business/tools-of-the-trade-479	Tools of the Trade	Tools used by companies on Hacker News.
+business/clean-tech-480	Clean Tech	Fighting climate change with technology.
+business/wardley-maps-481	Wardley Maps	Provides high situational awareness to help improve strategic planning and decision making.
+business/social-enterprise-482	Social Enterprise	Building an organization primarily focused on social impact that is at least partially self-funded.
+business/engineering-team-management-483	Engineering Team Management	How to transition from software development to engineering management.
+business/developer-first-products-484	Developer-First Products	Products that target developers as the user.
+business/billing-485	Billing	Payments, invoicing, pricing, accounting, marketplace, fraud, and business intelligence.
+business/engineering-strategy-486	Engineering Strategy	How to design and execute engineering strategies for tech leadership.
+work/slack-487	Slack	Team collaboration.
+work/code-review-492	Code Review	Reviewing code.
+work/creative-technology-493	Creative Technology	Businesses & groups that specialize in combining computing, design, art, and user experience.
+networking/real-time-communications-495	Real-Time Communications	Network protocols for near simultaneous exchange of media and data.
+networking/snmp-496	SNMP	A protocol for collecting, modifying, and organizing information about managed devices on IP networks.
+networking/scapy-497	Scapy	Python-based interactive packet manipulation.
+networking/cilium-498	Cilium	Provides networking and security capabilities for containerized apps, microservices, and virtual machines.
+decentralized-systems/bitcoin-499	Bitcoin	Services and tools for Bitcoin software developers.
+decentralized-systems/ripple-500	Ripple	Open source distributed settlement network.
+decentralized-systems/non-financial-blockchain-501	Non-Financial Blockchain	Applications of Blockchain beyond finance.
+decentralized-systems/mastodon-502	Mastodon	Open source decentralized microblogging network.
+decentralized-systems/ethereum-503	Ethereum	Distributed computing platform for smart contract development.
+decentralized-systems/blockchain-ai-504	Blockchain AI	AI and machine-learning projects built on Blockchain.
+decentralized-systems/eosio-505	EOSIO	A decentralized operating system supporting industrial-scale apps.
+decentralized-systems/corda-506	Corda	Open source Blockchain platform designed for business.
+decentralized-systems/waves-507	Waves	Open source Blockchain platform and development toolset for Web 3.0 apps and decentralized solutions.
+decentralized-systems/substrate-508	Substrate	Framework for writing scalable, upgradeable blockchains in Rust.
+decentralized-systems/golem-509	Golem	Open source peer-to-peer marketplace for computing resources.
+decentralized-systems/stacks-510	Stacks	A smart contract platform secured by Bitcoin.
+decentralized-systems/algorand-511	Algorand	An open-source, proof of stake Blockchain and smart contract computing platform.
+decentralized-systems/zeronet-512	ZeroNet	A decentralized web-like network of peer-to-peer users.
+decentralized-systems/cosmos-sdk-513	Cosmos SDK	Modular framework for building app-specific blockchains in Go.
+decentralized-systems/tor-514	Tor	A free overlay network for enabling anonymous communication.
+decentralized-systems/atproto-515	ATProto	Open, decentralized network for building social apps.
+health-and-social-science/biomedical-information-extraction-516	Biomedical Information Extraction	How to extract information from unstructured biomedical data and text.
+health-and-social-science/computational-neuroscience-517	Computational Neuroscience	A multidisciplinary science which uses computational approaches to study the nervous system.
+health-and-social-science/diversity-518	Diversity	Creating a more inclusive and diverse tech community.
+health-and-social-science/digital-history-519	Digital History	Computer-aided scientific investigation of history.
+health-and-social-science/empathy-in-engineering-520	Empathy in Engineering	Building and promoting more compassionate engineering cultures.
+health-and-social-science/healthcare-521	Healthcare	Open source healthcare software for facilities, providers, developers, policy experts, and researchers.
+health-and-social-science/mental-health-522	Mental Health	Awareness and self-care in the software industry.
+health-and-social-science/neuroscience-523	Neuroscience	Study of the nervous system and brain.
+health-and-social-science/digital-humanities-524	Digital Humanities	Software for humanities scholars using quantitative or computational methods.
+health-and-social-science/lucid-dreams-525	Lucid Dreams	A dream where one becomes aware they are dreaming.
+health-and-social-science/neuroimaging-526	Neuroimaging	Software for analyzing brain data from living subjects.
+health-and-social-science/transgender-527	Transgender	Someone whose gender identity differs from their assigned birth sex.
+events/creative-tech-events-528	Creative Tech Events	Events around the globe for creative coding, tech, design, music, arts and cool stuff.
+events/events-in-italy-529	Events in Italy	Tech-related events in Italy.
+events/events-in-the-netherlands-530	Events in the Netherlands	Tech-related events in the Netherlands.
+testing/testing-531	Testing	Software testing.
+testing/visual-regression-testing-532	Visual Regression Testing	Ensures changes did not break the functionality or style.
+testing/selenium-533	Selenium	Open-source browser automation framework and ecosystem.
+testing/appium-534	Appium	Test automation tool for apps.
+testing/tap-535	TAP	Test Anything Protocol.
+testing/jmeter-536	JMeter	Load testing and performance measurement tool.
+testing/k6-537	k6	Open-source, developer-centric performance monitoring and load testing solution.
+testing/playwright-538	Playwright	Node.js library to automate Chromium, Firefox and WebKit with a single API.
+testing/quality-assurance-roadmap-539	Quality Assurance Roadmap	How to start & build a career in software testing.
+testing/gatling-540	Gatling	Open-source load and performance testing framework based on Scala, Akka, and Netty.
+testing/coderabbit-541	CodeRabbit	AI-powered code review platform.
+miscellaneous/scientific-writing-542	Scientific Writing	Distraction-free scientific writing with Markdown, reStructuredText and Jupyter notebooks.
+miscellaneous/json-543	JSON	Text based data interchange format.
+miscellaneous/csv-545	CSV	A text file format that stores tabular data and uses a comma to separate values.
+miscellaneous/awesome-548	Awesome	Recursion illustrated.
+miscellaneous/github-wiki-556	GitHub Wiki	Comprehensive documentation on GitHub beyond README.
+miscellaneous/gulp-561	Gulp	Task runner.
+miscellaneous/ama-562	AMA	Ask Me Anything.
+miscellaneous/opengl-565	OpenGL	Cross-platform API for rendering 2D and 3D graphics.
+miscellaneous/urban-regional-planning-567	Urban & Regional Planning	Concerning the built environment and communities.
+miscellaneous/transit-568	Transit	– Data standards, APIs, apps, tools, datasets, and research around open source technology of public transit.
+miscellaneous/unicode-572	Unicode	Standards, quirks, packages and resources for Unicode.
+miscellaneous/citizen-science-577	Citizen Science	For community-based and non-institutional scientists.
+miscellaneous/mqtt-578	MQTT	"Internet of Things" connectivity protocol.
+miscellaneous/vorpal-580	Vorpal	Node.js CLI framework.
+miscellaneous/vulkan-581	Vulkan	Low-overhead, cross-platform 3D graphics and compute API.
+miscellaneous/latex-582	LaTeX	Typesetting language.
+miscellaneous/economics-583	Economics	An economist's starter kit.
+miscellaneous/cheminformatics-586	Cheminformatics	Informatics techniques applied to problems in chemistry.
+miscellaneous/colorful-587	Colorful	Choose your next color scheme.
+miscellaneous/steam-588	Steam	Digital distribution platform.
+miscellaneous/bots-589	Bots	Building bots.
+miscellaneous/dtrace-591	DTrace	Dynamic tracing framework.
+miscellaneous/userscripts-592	Userscripts	Enhance your browsing experience.
+miscellaneous/pok-mon-593	Pokémon	Resources for Pokémon and Pokémon GO.
+miscellaneous/chatops-594	ChatOps	Managing technical and business operations through a chat.
+miscellaneous/falsehood-595	Falsehood	Falsehoods programmers believe in.
+miscellaneous/domain-driven-design-596	Domain-Driven Design	Software development approach for complex needs by connecting the implementation to an evolving model.
+miscellaneous/quantified-self-597	Quantified Self	Self-tracking through technology.
+miscellaneous/web-design-598	Web Design	For digital designers.
+miscellaneous/creative-coding-599	Creative Coding	Programming something expressive instead of something functional.
+miscellaneous/no-login-web-apps-600	No-Login Web Apps	Web apps that work without login.
+miscellaneous/free-software-601	Free Software	Free as in freedom.
+miscellaneous/framer-602	Framer	Prototyping interactive UI designs.
+miscellaneous/markdown-603	Markdown	Markup language.
+miscellaneous/dev-fun-604	Dev Fun	Funny developer projects.
+miscellaneous/magento-2-605	Magento 2	Open Source eCommerce built with PHP.
+miscellaneous/tikz-606	TikZ	Graph drawing packages for TeX/LaTeX/ConTeXt.
+miscellaneous/ad-free-607	Ad-Free	Alternatives without ads.
+miscellaneous/prometheus-608	Prometheus	Open-source monitoring system.
+miscellaneous/homematic-609	Homematic	Smart home devices.
+miscellaneous/ledger-610	Ledger	Double-entry accounting on the command-line.
+miscellaneous/web-monetization-611	Web Monetization	A free open web standard service that allows you to send money directly in your browser.
+miscellaneous/uncopyright-612	Uncopyright	Public domain works.
+miscellaneous/crypto-currency-tools-algorithms-613	Crypto Currency Tools & Algorithms	Digital currency where encryption is used to regulate the generation of units and verify transfers.
+miscellaneous/open-source-supporters-614	Open Source Supporters	Companies that offer their tools and services for free to open source projects.
+miscellaneous/design-principles-615	Design Principles	Create better and more consistent designs and experiences.
+miscellaneous/theravada-616	Theravada	Teachings from the Theravada Buddhist tradition.
+miscellaneous/inspectit-617	inspectIT	Open source Java app performance management tool.
+miscellaneous/open-source-maintainers-618	Open Source Maintainers	The experience of being an open source maintainer.
+miscellaneous/calculators-619	Calculators	Tools for every platform.
+miscellaneous/captcha-620	Captcha	A type of challenge–response test used in computing to determine whether or not the user is human.
+miscellaneous/jupyter-621	Jupyter	Create and share documents that contain code, equations, visualizations and narrative text.
+miscellaneous/first-robotics-competition-622	FIRST Robotics Competition	International high school robotics championship.
+miscellaneous/speakers-623	Speakers	Conference and meetup speakers in the programming and design community.
+miscellaneous/board-games-624	Board Games	Table-top gaming fun for all.
+miscellaneous/software-patreons-625	Software Patreons	Fund individual programmers or the development of open source projects.
+miscellaneous/parasite-626	Parasite	Parasites and host-pathogen interactions.
+miscellaneous/food-627	Food	Projects on GitHub related to food.
+miscellaneous/bitcoin-payment-processors-628	Bitcoin Payment Processors	Start accepting Bitcoin.
+miscellaneous/scientific-computing-629	Scientific Computing	Solving complex scientific problems using computers.
+miscellaneous/agriculture-631	Agriculture	Open source technology for farming and gardening.
+miscellaneous/product-design-632	Product Design	Design a product from the initial concept to production.
+miscellaneous/prisma-633	Prisma	Turn your database into a GraphQL API.
+miscellaneous/software-architecture-634	Software Architecture	The discipline of designing and building software.
+miscellaneous/connectivity-data-and-reports-635	Connectivity Data and Reports	Better understand who has access to telecommunication and internet infrastructure and on what terms.
+miscellaneous/stacks-636	Stacks	Tech stacks for building different apps and features.
+miscellaneous/cytodata-637	Cytodata	Image-based profiling of biological phenotypes for computational biologists.
+miscellaneous/irc-638	IRC	Open source messaging protocol.
+miscellaneous/advertising-639	Advertising	Programmatic media and ad tech for websites.
+miscellaneous/earth-640	Earth	Find ways to resolve the climate crisis.
+miscellaneous/naming-641	Naming	Guides for naming things in computer science.
+miscellaneous/web-archiving-642	Web Archiving	An effort to preserve the Web for future generations.
+miscellaneous/wp-cli-643	WP-CLI	Command-line interface for WordPress.
+miscellaneous/credit-modeling-644	Credit Modeling	Methods for classifying credit applicants into risk classes.
+miscellaneous/ansible-645	Ansible	A Python-based, open-source IT configuration management and automation platform.
+miscellaneous/biological-visualizations-646	Biological Visualizations	Interactive visualization of biological data on the web.
+miscellaneous/qr-code-647	QR Code	A type of matrix barcode that can be used to store and share a small amount of information.
+miscellaneous/veganism-648	Veganism	Making the plant-based lifestyle easy and accessible.
+miscellaneous/translations-649	Translations	The transfer of the meaning of a text from one language to another.
+miscellaneous/scriptable-650	Scriptable	An iOS app for automation in JavaScript.
+miscellaneous/webxr-651	WebXR	Enables immersive virtual reality and augmented reality content on the web.
+miscellaneous/computational-geometry-652	Computational Geometry	Computational approaches for problems in geometry.
+miscellaneous/openstreetmap-653	OpenStreetMap	An open data mapping project utilized by many apps and devices.
+miscellaneous/computational-biology-654	Computational Biology	Computational approaches applied to problems in biology.
+miscellaneous/read-the-docs-655	Read the Docs	Example documentation projects to inspire and help bootstrap new documentation projects.
+miscellaneous/quarto-656	Quarto	Scientific and technical open-source publishing system built on Pandoc.
+miscellaneous/biological-image-analysis-657	Biological Image Analysis	Interpreting biological phenomena using images.
+miscellaneous/chatgpt-658	ChatGPT	Artificial intelligence chatbot developed by OpenAI.
+miscellaneous/whisper-659	Whisper	Open-source AI-powered speech recognition system developed by OpenAI.
+miscellaneous/stock-trading-660	Stock Trading	Purchase and sale of equities of publicly traded companies to generate profits.
+miscellaneous/steam-deck-661	Steam Deck	A handheld gaming computer developed by Valve.
+miscellaneous/astrophotography-662	Astrophotography	Photography of astronomical objects, celestial events, or areas of the night sky.
+miscellaneous/hpc-663	HPC	High Performance Computing.
+miscellaneous/geocaching-664	Geocaching	Outdoor treasure-hunting activity that uses GPS-enabled devices.
+miscellaneous/regex-665	Regex	Specialized language for matching patterns in text.
+miscellaneous/event-driven-architecture-666	Event-Driven Architecture	A software architecture approach where services collaborate by publishing and subscribing to events.
+miscellaneous/permacomputing-667	Permacomputing	Resilient and regenerative computing practices inspired by permaculture.
+miscellaneous/standards-668	Standards	Proposals and standards that define and enhance software, languages, and related technologies.
+miscellaneous/claude-code-669	Claude Code	Terminal-based AI coding assistant by Anthropic.
+miscellaneous/gemini-cli-670	Gemini CLI	Terminal-based AI coding assistant by Google.
+miscellaneous/sap-commerce-671	SAP Commerce	An e-commerce platform built with Java, Spring MVC, and Angular.
+miscellaneous/tech-ethics-672	Tech Ethics	Mitigating and avoiding the potential negative effects of technology on society.
+miscellaneous/copilot-agents-673	Copilot Agents	AI pair programming assistant by GitHub that provides code suggestions and completions.
+related/all-awesome-lists-674	All Awesome Lists	All the Awesome lists on GitHub.
+related/awesome-search-675	Awesome Search	Quick search for Awesome lists.
+related/stumbleuponawesome-676	StumbleUponAwesome	Discover random pages from the Awesome dataset using a browser extension.
+related/awesome-cli-677	Awesome CLI	A simple command-line tool to dive into Awesome lists.
+related/track-awesome-list-678	Track Awesome List	View the latest updates of Awesome lists.
