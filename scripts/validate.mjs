@@ -141,7 +141,10 @@ add('产物', 'catalog.js 与 catalog.json 数据一致', bundleOk, bundleDetail
 const refs = [...html.matchAll(/(?:src|href)="(\.\/[^"]+)"/g)].map((m) => m[1].replace(/^\.\//, ''));
 const missing = refs.filter((r) => !exists(r));
 add('产物', 'index.html 引用的本地资源全部存在', missing.length === 0, `${refs.length} 个引用，缺失 ${missing.length}`);
-add('产物', '无外部运行时依赖', !/<script[^>]+src="https?:/.test(html) && !/<link[^>]+href="https?:/.test(html), '脚本与样式均本地加载');
+/* Metadata links (canonical, og:image) are allowed to be absolute; runtime
+   dependencies are not. The check has to name what it forbids, or a rel=canonical
+   tag would read as an external stylesheet. */
+add('产物', '无外部运行时依赖', !/<script[^>]+src="https?:/.test(html) && !/<link[^>]+rel="stylesheet"[^>]+href="https?:/.test(html), '脚本与样式均本地加载');
 add('产物', '页面无占位文本与调试残留', !/TODO|FIXME|lorem ipsum|console\.log\(/i.test(html + js + css), '无 TODO / console.log');
 add('产物', '五个视图与命令面板齐备', (html.match(/data-view="(map|graph|table|timeline|insight)"/g) || []).length === 5 && html.includes('id="cmdk"') && html.includes('id="mobileTabs"'), '地图 / 图谱 / 榜单 / 时间轴 / 洞察');
 add('产物', '数据包体积适合静态托管', fs.statSync(path.join(ROOT, 'data/catalog.js')).size < 1024 * 1024, `${(fs.statSync(path.join(ROOT, 'data/catalog.js')).size / 1024).toFixed(0)} KB`);
@@ -156,6 +159,19 @@ add('界面', '上游仓库入口已移出顶栏、落在页脚', !/sindresorhus
 add('界面', '刷新页面不恢复旧滚动位置', /'scrollRestoration' in history/.test(html) && /scrollRestoration = 'manual'/.test(html) && /if \(!location\.hash\) window\.scrollTo\(0, 0\)/.test(js), 'head 内 manual + 初始化回顶');
 add('界面', '回到顶部按钮有真实事件绑定', /id="backToTop"/.test(footerHtml) && /\$\('#backToTop'\)\.addEventListener\('click'/.test(js), '页脚按钮 → scrollTo(0)');
 add('界面', '语言切换仅保留中文与 EN 两态', (html.match(/data-lang="/g) || []).length === 2, `${(html.match(/data-lang="/g) || []).length} 个语言按钮`);
+
+/* --- 7c. first screen, share card and README as the project home --- */
+const readme = read('README.md');
+const readmeHead = readme.split('\n').slice(0, 16).join('\n');
+const shotRefs = [...readme.matchAll(/docs\/screenshots\/([\w-]+\.png)/g)].map((m) => `docs/screenshots/${m[1]}`);
+const missingShots = [...new Set(shotRefs)].filter((p) => !exists(p));
+add('界面', '首屏地图预览板由真实数据渲染', /id="heroPlateMap"/.test(html) && /function renderHeroPlate/.test(js) && /const cells = treemap\(entries/.test(js), '预览板复用同一套 treemap 与色阶');
+add('界面', '首屏与下方版块共用同一条栅格', /\.hero-inner \{ display: grid; grid-template-columns: minmax\(0, 1fr\) 356px/.test(css) && !/\.hero-inner \{ max-width: 1080px/.test(css), 'hero 双栏，左边缘与指标带对齐');
+add('界面', '社交卡片图已生成并被 og:image 引用', exists('docs/banner.png') && /og:image" content="https:\/\/odin1024\.github\.io\/awesome-atlas\/docs\/banner\.png"/.test(html) && /docs\/banner\.png/.test(readmeHead), `${exists('docs/banner.png') ? Math.round(fs.statSync(path.join(ROOT, 'docs/banner.png')).size / 1024) + ' KB' : '缺文件'}`);
+add('界面', 'README 顶部给出线上地址与横幅', /odin1024\.github\.io\/awesome-atlas/.test(readmeHead) && /docs\/banner\.png/.test(readmeHead), '项目主页 = 在线入口 + 横幅 + 截图');
+add('界面', 'README 引用的截图全部存在', shotRefs.length >= 6 && missingShots.length === 0, `${new Set(shotRefs).size} 张，缺 ${missingShots.length}`);
+add('界面', '画布脚注有独立布局位，不再被裁剪', /\.canvas-fill \{ position: absolute; inset: 16px/.test(css) && /id="canvasFoot"/.test(js) && /\.canvas-foot \{/.test(css), '.canvas-fill / .canvas-main / .canvas-foot 三段式');
+add('界面', '图例色阶由 RAMP 生成而非硬编码', /function rampGradient/.test(js) && /scaleEl\.style\.background = rampGradient\(\)/.test(js) && !/#cdb3ac/.test(css), '一处色阶，图例与瓦片同源');
 
 /* --- 8. design system (UI/UX Pro Max checklist, mechanically verified) --- */
 function themeTokens(name) {
@@ -217,6 +233,15 @@ const report = {
 fs.mkdirSync(path.join(ROOT, 'docs'), { recursive: true });
 fs.writeFileSync(path.join(ROOT, 'data/validation.json'), JSON.stringify(report, null, 2));
 
+/* The browser suite appends its own section to this file. Re-running the data
+   check used to overwrite the whole report and silently delete that section, so
+   the two scripts had an undocumented order dependency. Keep the tail. */
+const reportPath = path.join(ROOT, 'docs/VALIDATION.md');
+const previousReport = exists('docs/VALIDATION.md') ? read('docs/VALIDATION.md') : '';
+const browserMarker = '## 浏览器实机验证';
+const browserAt = previousReport.indexOf(browserMarker);
+const browserTail = browserAt >= 0 ? previousReport.slice(browserAt) : '';
+
 const groups = [...new Set(checks.map((c) => c.group))];
 let md = `# 交叉验证报告\n\n`;
 md += `- 验证时间：${report.validatedAt}\n- 结果：**${passed} / ${checks.length} 项通过**${report.allPassed ? '（全部通过）' : '（存在失败项）'}\n`;
@@ -236,7 +261,8 @@ md += `2. 源清单里有 ${noDesc.length} 条完全没有描述，本站补写�
 md += `3. 仓库指标来自带授权的 GitHub GraphQL 全量核验；仓库可能改名、归档或删除，页面对此显式标注，不按 0 分处理。\n`;
 md += `4. 历史增删对 ${snaps.length} 个真实 README 版本逐版解析比对，仅覆盖最近约 ${history.summary.spanDays} 天；更早的演化不在数据范围内。\n`;
 md += `5. 活跃度时间轴展示仓库最近 push 的分布，不是本站的版本历史。\n`;
-fs.writeFileSync(path.join(ROOT, 'docs/VALIDATION.md'), md);
+if (browserTail) md += '\n' + browserTail;
+fs.writeFileSync(reportPath, md);
 console.log(`${passed}/${checks.length} passed`);
 for (const c of checks.filter((x) => !x.ok)) console.log('FAIL:', c.group, c.name, c.detail);
 process.exitCode = report.allPassed ? 0 : 1;

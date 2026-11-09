@@ -12,6 +12,8 @@ BASE = os.environ.get('ATLAS_BASE', 'http://127.0.0.1:8765')
 CHROME = r'C:\Program Files\Google\Chrome\Application\chrome.exe'
 SHOTS = os.environ.get('ATLAS_SHOTS') or os.path.join(ROOT, 'docs', 'screenshots')
 os.makedirs(SHOTS, exist_ok=True)
+# Frames for the README are produced by scripts/shots.py; this suite only
+# asserts behaviour, so a failing check can never leave a half-taken gallery.
 
 checks = []
 def check(name, ok, detail=''):
@@ -48,7 +50,29 @@ with sync_playwright() as p:
     check('数据说明已填充', len(page.locator('#aboutCoverage').inner_text()) > 60, page.locator('#aboutCoverage').inner_text()[:60])
     check('覆盖率标注为全量', '100%' in page.locator('#aboutMetricText').inner_text(), page.locator('#aboutMetricText').inner_text()[:90])
 
-    page.screenshot(path=os.path.join(SHOTS, 'desktop-map.png'), full_page=False)
+
+    # --- first screen: the preview plate and the shared grid ---
+    check('首屏地图预览板渲染 27 个分类瓦片', page.locator('.plate-tile').count() == 27,
+          page.locator('.plate-tile').count())
+    check('预览板不冒充工作区瓦片（选择器不串）', page.locator('#heroPlate .tile').count() == 0,
+          page.locator('#heroPlate .tile').count())
+    edges = page.evaluate("""() => [Math.round(document.querySelector('#heroTitle').getBoundingClientRect().left),
+                                        Math.round(document.querySelector('.metrics').getBoundingClientRect().left)]""")
+    check('首屏与下方版块左边缘对齐', abs(edges[0] - edges[1]) <= 1, edges)
+    check('预览板是进入地图的入口', page.locator('#heroPlate').get_attribute('href') == '#workspace',
+          page.locator('#heroPlate').get_attribute('href'))
+    page.locator('#heroPlate').click()
+    page.wait_for_timeout(950)
+    merged = page.evaluate("""() => {
+      const ws = document.querySelector('#workspace').getBoundingClientRect();
+      return {y: Math.round(window.scrollY), top: Math.round(ws.top),
+              map: document.querySelector('.view-tab[data-view="map"]').classList.contains('is-active')};
+    }""")
+    check('点预览板真的落到分类地图', merged['y'] > 200 and merged['map'] and -8 <= merged['top'] <= 620, merged)
+    check('分享卡片图已声明', 'docs/banner.png' in (page.locator('meta[property="og:image"]').get_attribute('content') or ''),
+          page.locator('meta[property="og:image"]').get_attribute('content'))
+    page.goto(BASE, wait_until='networkidle')
+    page.wait_for_timeout(400)
 
     # --- page chrome: brand, nav anchors, footer source link ---
     check('品牌副标题不再出现「中文版」',
@@ -109,6 +133,24 @@ with sync_playwright() as p:
         page.wait_for_timeout(200)
         check('可返回全部分类', page.locator('.tile').count() == 27, page.locator('.tile').count())
 
+    # The note and the colour key used to be laid out below a 100%-height SVG in
+    # an `overflow: hidden` body, so both existed in the DOM and were never once
+    # visible. Measure the boxes instead of trusting innerText.
+    def foot_box():
+        return page.evaluate("""() => {
+          const b = document.querySelector('#canvasBody');
+          const n = document.querySelector('.canvas-note');
+          const s = document.querySelector('.map-scale-track');
+          if (!b || !n) return {'ok': false, 'why': 'missing'};
+          const rb = b.getBoundingClientRect(), rn = n.getBoundingClientRect();
+          const inside = rn.top >= rb.top - 1 && rn.bottom <= rb.bottom + 1 && rn.height > 4;
+          return {'ok': inside && !!s, 'inside': inside, 'scale': !!s,
+                  'bottomGap': Math.round(rb.bottom - rn.bottom)};
+        }""")
+
+    foot = foot_box()
+    check('地图脚注与色阶真的在画布内可见', foot['ok'], foot)
+
     # --- graph ---
     page.locator('.view-tab[data-view="graph"]').click()
     page.wait_for_timeout(250)
@@ -117,6 +159,8 @@ with sync_playwright() as p:
     # Two rings now: a reading guide at 0.66R and the node ring at R. The old
     # third ring sat exactly on the label radius and drew a line through the text.
     check('图谱有两层轨道环', page.locator('.graph-orbit').count() == 2, page.locator('.graph-orbit').count())
+    gfoot = foot_box()
+    check('图谱脚注同样落在画布内', gfoot['ok'], gfoot)
 
     # Labels must not collide with each other. A handful of label-vs-dot hits is
     # allowed because labels paint above the dots and carry a paper halo.
@@ -219,7 +263,6 @@ with sync_playwright() as p:
     check('收录量增长曲线来自历史版本', page.locator('.growth-svg').count() == 1, page.locator('.growth-svg').count())
     check('增删事件带真实清单名', page.locator('.commit-diff span.add, .commit-diff span.del').count() >= 2, page.locator('.commit-diff span').count())
     check('切换视图后详情画像保持', page.locator('#detailContent').is_visible(), 'detail persists')
-    page.screenshot(path=os.path.join(SHOTS, 'desktop-timeline.png'), full_page=False)
 
     # --- insight dashboard ---
     page.locator('.view-tab[data-view="insight"]').click()
@@ -227,7 +270,6 @@ with sync_playwright() as p:
     check('数据洞察四张图卡', page.locator('.iv-card').count() == 4, page.locator('.iv-card').count())
     check('健康分分布 10 个分桶', page.locator('.iv-bucket').count() == 10, page.locator('.iv-bucket').count())
     check('语言标签云非空', page.locator('.iv-tag').count() >= 5, page.locator('.iv-tag').count())
-    page.screenshot(path=os.path.join(SHOTS, 'desktop-insight.png'), full_page=False)
 
     # --- language: two states only ---
     check('语言切换只有中文与 EN 两个选项',
@@ -282,7 +324,6 @@ with sync_playwright() as p:
         page.locator('#themeToggle').click()
         page.wait_for_timeout(260)
     check('浅色主题可显式选中', page.locator('html').get_attribute('data-theme') == 'light', page.locator('html').get_attribute('data-theme'))
-    page.screenshot(path=os.path.join(SHOTS, 'desktop-light.png'), full_page=False)
 
     # --- every interactive control must produce a response ---
     page.goto(BASE, wait_until='networkidle')
@@ -491,7 +532,6 @@ with sync_playwright() as p:
           mp.locator('#categoryList').inner_text()[:40].replace('\n', ' / '))
     mp.locator('#langSwitch [data-lang="zh"]').click()
     mp.wait_for_timeout(320)
-    mp.screenshot(path=os.path.join(SHOTS, 'mobile-map.png'), full_page=False)
     mobile.close()
 
     check('浏览器控制台无 JS 异常', len(errors) == 0, '; '.join(errors[:3]) if errors else '0 errors')
@@ -516,7 +556,7 @@ with open(report_path, 'w', encoding='utf-8') as f:
     f.write('| 检查项 | 结果 | 观察值 |\n| --- | --- | --- |\n')
     for c in checks:
         f.write(f"| {c['name']} | {'通过' if c['ok'] else '**失败**'} | {str(c['detail']).replace('|', '\\|')[:110]} |\n")
-    f.write('\n截图：`docs/screenshots/desktop-map.png`（分类地图）、`desktop-timeline.png`、`desktop-insight.png`、`desktop-light.png`、`mobile-map.png`；`desktop-workspace.png` 为三栏工作区，单独生成。\n')
+    f.write('\n截图：`docs/screenshots/hero.png`（首屏）、`desktop-map.png`、`desktop-graph.png`、`desktop-table.png`、`desktop-timeline.png`、`desktop-insight.png`、`desktop-detail.png`、`desktop-dark.png`、`mobile-hero.png`、`mobile-map.png`，全部由 `scripts/shots.py` 生成。\n')
 
 print(json.dumps({'passed': passed, 'total': len(checks), 'errors': errors[:5]}, ensure_ascii=False, indent=2))
 for c in checks:

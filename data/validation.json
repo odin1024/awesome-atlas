@@ -1,7 +1,7 @@
 {
-  "validatedAt": "2026-11-09T04:07:33.647Z",
-  "passed": 57,
-  "total": 57,
+  "validatedAt": "2026-11-09T04:54:28.952Z",
+  "passed": 64,
+  "total": 64,
   "allPassed": true,
   "source": {
     "sha256": "465cd781335e44587d238f666800104b63d4fc8ba2395d6422974dcba421c616",
@@ -324,6 +324,48 @@
       "name": "语言切换仅保留中文与 EN 两态",
       "ok": true,
       "detail": "2 个语言按钮"
+    },
+    {
+      "group": "界面",
+      "name": "首屏地图预览板由真实数据渲染",
+      "ok": true,
+      "detail": "预览板复用同一套 treemap 与色阶"
+    },
+    {
+      "group": "界面",
+      "name": "首屏与下方版块共用同一条栅格",
+      "ok": true,
+      "detail": "hero 双栏，左边缘与指标带对齐"
+    },
+    {
+      "group": "界面",
+      "name": "社交卡片图已生成并被 og:image 引用",
+      "ok": true,
+      "detail": "200 KB"
+    },
+    {
+      "group": "界面",
+      "name": "README 顶部给出线上地址与横幅",
+      "ok": true,
+      "detail": "项目主页 = 在线入口 + 横幅 + 截图"
+    },
+    {
+      "group": "界面",
+      "name": "README 引用的截图全部存在",
+      "ok": true,
+      "detail": "9 张，缺 0"
+    },
+    {
+      "group": "界面",
+      "name": "画布脚注有独立布局位，不再被裁剪",
+      "ok": true,
+      "detail": ".canvas-fill / .canvas-main / .canvas-foot 三段式"
+    },
+    {
+      "group": "界面",
+      "name": "图例色阶由 RAMP 生成而非硬编码",
+      "ok": true,
+      "detail": "一处色阶，图例与瓦片同源"
     },
     {
       "group": "设计",

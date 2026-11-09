@@ -1,7 +1,7 @@
 # 交叉验证报告
 
-- 验证时间：2026-11-09T04:07:33.647Z
-- 结果：**57 / 57 项通过**（全部通过）
+- 验证时间：2026-11-09T04:54:28.952Z
+- 结果：**64 / 64 项通过**（全部通过）
 - 数据源：`sindresorhus/awesome/readme.md`，866 行 / 78330 字节，sha256 `465cd781335e4458…`
 - 解析结果：27 个分类、678 条清单、673 个 GitHub 仓库
 - 指标覆盖：**673 / 673（100%）**，合计 5,979,356 star
@@ -95,6 +95,13 @@
 | 刷新页面不恢复旧滚动位置 | 通过 | head 内 manual + 初始化回顶 |
 | 回到顶部按钮有真实事件绑定 | 通过 | 页脚按钮 → scrollTo(0) |
 | 语言切换仅保留中文与 EN 两态 | 通过 | 2 个语言按钮 |
+| 首屏地图预览板由真实数据渲染 | 通过 | 预览板复用同一套 treemap 与色阶 |
+| 首屏与下方版块共用同一条栅格 | 通过 | hero 双栏，左边缘与指标带对齐 |
+| 社交卡片图已生成并被 og:image 引用 | 通过 | 200 KB |
+| README 顶部给出线上地址与横幅 | 通过 | 项目主页 = 在线入口 + 横幅 + 截图 |
+| README 引用的截图全部存在 | 通过 | 9 张，缺 0 |
+| 画布脚注有独立布局位，不再被裁剪 | 通过 | .canvas-fill / .canvas-main / .canvas-foot 三段式 |
+| 图例色阶由 RAMP 生成而非硬编码 | 通过 | 一处色阶，图例与瓦片同源 |
 
 ## 设计
 
@@ -120,8 +127,8 @@
 
 ## 浏览器实机验证（Playwright + Chrome headless）
 
-结果：**104 / 104 项通过**；控制台异常 0 条。
-环境：`https://odin1024.github.io/awesome-atlas`（线上）
+结果：**112 / 112 项通过**；控制台异常 0 条。
+环境：`http://127.0.0.1:8765`（本地）
 
 | 检查项 | 结果 | 观察值 |
 | --- | --- | --- |
@@ -139,6 +146,12 @@
 | 五个视图标签 | 通过 | 5 |
 | 数据说明已填充 | 通过 | 中文为本站译述，非官方译本；专有名词保留英文原名，方便直接去 GitHub 搜索。466 条原始描述已译为中文，另有 2 |
 | 覆盖率标注为全量 | 通过 | Star / Fork / 最近 push / 语言 / 归档状态来自带授权的 GitHub API 全量核验，覆盖 673 / 673 个仓库（100%）。健康分 = 0.45  |
+| 首屏地图预览板渲染 27 个分类瓦片 | 通过 | 27 |
+| 预览板不冒充工作区瓦片（选择器不串） | 通过 | 0 |
+| 首屏与下方版块左边缘对齐 | 通过 | [32, 32] |
+| 预览板是进入地图的入口 | 通过 | #workspace |
+| 点预览板真的落到分类地图 | 通过 | {'y': 821, 'top': 152, 'map': True} |
+| 分享卡片图已声明 | 通过 | https://odin1024.github.io/awesome-atlas/docs/banner.png |
 | 品牌副标题不再出现「中文版」 | 通过 | 精选清单地图 / AWESOME ATLAS |
 | 顶栏不再放外链按钮 | 通过 | 0 |
 | 页脚上游入口指向源仓库且新窗口打开 | 通过 | https://github.com/sindresorhus/awesome |
@@ -148,8 +161,10 @@
 | 点击瓦片可下钻到分类内部 | 通过 | 132 个条目瓦片 |
 | 下钻后出现返回面包屑 | 通过 | 1 |
 | 可返回全部分类 | 通过 | 27 |
+| 地图脚注与色阶真的在画布内可见 | 通过 | {'ok': True, 'inside': True, 'scale': True, 'bottomGap': 16} |
 | 关系图谱渲染出节点与 27 条主轴 | 通过 | 259 个节点 / 27 条主轴 |
 | 图谱有两层轨道环 | 通过 | 2 |
+| 图谱脚注同样落在画布内 | 通过 | {'ok': True, 'inside': True, 'scale': True, 'bottomGap': 16} |
 | 27 个分类标签全部渲染 | 通过 | 27 |
 | 分类标签之间零重叠 | 通过 | 0 |
 | 标签不被圆点遮挡（≤2 且已由底色描边覆盖） | 通过 | 2 |
@@ -205,7 +220,7 @@ Matches names, descriptions, repos and categories |
 | 「仅显示已验证仓库」改变结果集 | 通过 | 匹配 673 条 / 期望 673 |
 | 「隐藏已归档仓库」改变结果集 | 通过 | 匹配 675 条 / 期望 675 |
 | 「仅显示我的收藏」按收藏集过滤 | 通过 | 匹配 1 条 / 收藏 1 条 |
-| 地图「面积依据」切换会重排瓦片 | 通过 | first tile 270.8 → 128.5 |
+| 地图「面积依据」切换会重排瓦片 | 通过 | first tile 226.4 → 191.7 |
 | 图谱「显示范围」下拉改变节点数 | 通过 | 259 → 386 个节点 |
 | 榜单排序下拉真的重新排序 | 通过 | ☆	 / .NET / .NET 平台 / 	平台与运行环境	2.2 万	2026-03-2 |
 | 分页「下一页」可用 | 通过 | 上一页 2 / 17 · 共 678 条 下一页 |
@@ -233,4 +248,4 @@ Matches names, descriptions, repos and categories |
 | 移动端可切到英文 | 通过 | All categories / 678 / Platforms / 57 / Programm |
 | 浏览器控制台无 JS 异常 | 通过 | 0 errors |
 
-截图：`docs/screenshots/desktop-map.png`（分类地图）、`desktop-timeline.png`、`desktop-insight.png`、`desktop-light.png`、`mobile-map.png`；`desktop-workspace.png` 为三栏工作区，单独生成。
+截图：`docs/screenshots/hero.png`（首屏）、`desktop-map.png`、`desktop-graph.png`、`desktop-table.png`、`desktop-timeline.png`、`desktop-insight.png`、`desktop-detail.png`、`desktop-dark.png`、`mobile-hero.png`、`mobile-map.png`，全部由 `scripts/shots.py` 生成。

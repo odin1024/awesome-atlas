@@ -1,0 +1,48 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><style>
+  * { box-sizing: border-box; margin: 0; }
+  body { width: 1200px; height: 630px; background: #faf9f5; color: #141413;
+         font-family: "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif;
+         display: grid; grid-template-columns: 1fr 470px; gap: 56px; padding: 54px 56px 0;
+         border-top: 10px solid #141413; overflow: hidden; }
+  .eyebrow { font-family: Consolas, monospace; font-size: 13px; letter-spacing: .18em;
+              text-transform: uppercase; color: #a82d22; display: flex; align-items: center; gap: 12px; }
+  .eyebrow i { width: 26px; height: 1px; background: currentColor; display: block; }
+  h1 { font-family: "Songti SC", "SimSun", "Noto Serif SC", serif; font-size: 66px; line-height: 1.16;
+        font-weight: 700; margin: 18px 0 14px; letter-spacing: .01em; }
+  .sub { font-size: 23px; line-height: 1.55; color: #4a4842; max-width: 24ch; }
+  .lede { font-size: 15.5px; line-height: 1.85; color: #6e6b63; max-width: 38ch; margin-top: 22px;
+           padding-left: 13px; border-left: 2px solid #a82d22; }
+  .sub em { font-style: normal; color: #a82d22; }
+  .stats { display: flex; gap: 34px; position: absolute; left: 56px; bottom: 92px; padding-top: 18px;
+            border-top: 1px solid #141413; width: 640px; }
+  .stat-v { font-family: Consolas, monospace; font-size: 30px; font-weight: 700; letter-spacing: -.02em; }
+  .stat-k { font-size: 12px; color: #6e6b63; margin-top: 2px; letter-spacing: .04em; }
+  .url { position: absolute; left: 56px; bottom: 34px; font-family: Consolas, monospace;
+          font-size: 14px; color: #6e6b63; letter-spacing: .02em; }
+  .url b { color: #141413; font-weight: 600; }
+  .plate { border: 1px solid #141413; padding: 12px; align-self: start; margin-top: 4px; }
+  .plate-head { display: flex; justify-content: space-between; font-family: Consolas, monospace;
+                 font-size: 11px; letter-spacing: .1em; text-transform: uppercase; color: #6e6b63;
+                 padding-bottom: 9px; }
+  .plate-head b { color: #a82d22; font-weight: 500; }
+  .plate svg { display: block; }
+  .plate-foot { display: flex; justify-content: space-between; font-size: 12px; color: #4a4842;
+                 border-top: 1px solid #dedad0; margin-top: 9px; padding-top: 9px; }
+  .plate-foot span:last-child { color: #a82d22; font-family: Consolas, monospace; }
+  body::after { content: ""; position: absolute; right: 0; bottom: 0; width: 300px; height: 300px; }
+</style></head><body>
+  <div>
+    <div class="eyebrow"><i></i>Awesome Atlas · 数据索引</div>
+    <h1>精选清单地图</h1>
+    <p class="sub">把 678 份清单<br>变成一张<em>看得懂的地图</em></p>
+    <p class="lede">源 README 是一份线性列表，看不出结构。这里补上原文没有的四个维度——层级、热度、
+      活跃度与时间演化，并把 466 条描述译成中文。不重复列表，只让结构显形。</p>
+    <div class="stats"><div class="stat"><div class="stat-v">27</div><div class="stat-k">技术分类</div></div><div class="stat"><div class="stat-v">678</div><div class="stat-k">精选清单</div></div><div class="stat"><div class="stat-v">673</div><div class="stat-k">已验证仓库</div></div><div class="stat"><div class="stat-v">598 万</div><div class="stat-k">采样 Star</div></div></div>
+  </div>
+  <div class="plate">
+    <div class="plate-head"><b>图 01 · 分类地图</b><span>27 类 · 678 条</span></div>
+    <svg viewBox="0 0 470 470" width="100%" role="img" aria-label="分类树状地图"><rect x="2.4" y="2.4" width="238.5" height="172.0" fill="rgb(223,170,139)" stroke="#faf9f5" stroke-width="1.2"/><text x="8.4" y="21.4" font-size="13" font-family="PingFang SC, Microsoft YaHei, sans-serif" font-weight="600" fill="#141413">综合与其他</text><rect x="2.4" y="179.2" width="238.5" height="109.0" fill="rgb(224,176,144)" stroke="#faf9f5" stroke-width="1.2"/><text x="8.4" y="198.2" font-size="13" font-family="PingFang SC, Microsoft YaHei, sans-serif" font-weight="600" fill="#141413">前端开发</text><rect x="2.4" y="293.0" width="135.0" height="174.6" fill="rgb(222,169,138)" stroke="#faf9f5" stroke-width="1.2"/><text x="8.4" y="310.5" font-size="11.5" font-family="PingFang SC, Microsoft YaHei, sans-serif" font-weight="600" fill="#141413">编程语言</text><rect x="142.2" y="293.0" width="98.7" height="174.6" fill="rgb(223,170,139)" stroke="#faf9f5" stroke-width="1.2"/><text x="148.2" y="310.5" font-size="11.5" font-family="PingFang SC, Microsoft YaHei, sans-serif" font-weight="600" fill="#141413">平台与运行环境</text><rect x="245.7" y="2.4" width="118.3" height="95.8" fill="rgb(224,178,145)" stroke="#faf9f5" stroke-width="1.2"/><text x="251.7" y="19.9" font-size="11.5" font-family="PingFang SC, Microsoft YaHei, sans-serif" font-weight="600" fill="#141413">计算机科学</text><rect x="368.8" y="2.4" width="98.8" height="95.8" fill="rgb(224,175,143)" stroke="#faf9f5" stroke-width="1.2"/><text x="374.8" y="19.9" font-size="11.5" font-family="PingFang SC, Microsoft YaHei, sans-serif" font-weight="600" fill="#141413">后端开发</text><rect x="245.7" y="103.0" width="131.2" height="64.7" fill="rgb(221,166,136)" stroke="#faf9f5" stroke-width="1.2"/><text x="251.7" y="120.5" font-size="11.5" font-family="PingFang SC, Microsoft YaHei, sans-serif" font-weight="600" fill="#141413">网络安全</text><rect x="245.7" y="172.5" width="131.2" height="62.3" fill="rgb(221,166,136)" stroke="#faf9f5" stroke-width="1.2"/><text x="251.7" y="190.0" font-size="11.5" font-family="PingFang SC, Microsoft YaHei, sans-serif" font-weight="600" fill="#141413">游戏开发</text><rect x="381.7" y="103.0" width="85.9" height="70.7" fill="rgb(223,171,139)" stroke="#faf9f5" stroke-width="1.2"/><text x="387.7" y="119.0" font-size="10" font-family="PingFang SC, Microsoft YaHei, sans-serif" font-weight="600" fill="#141413">开发环境</text><rect x="381.7" y="178.5" width="85.9" height="56.3" fill="rgb(225,179,147)" stroke="#faf9f5" stroke-width="1.2"/><text x="387.7" y="194.5" font-size="10" font-family="PingFang SC, Microsoft YaHei, sans-serif" font-weight="600" fill="#141413">数据库</text><rect x="245.7" y="239.6" width="41.1" height="115.9" fill="rgb(225,187,153)" stroke="#faf9f5" stroke-width="1.2"/><rect x="291.6" y="239.6" width="73.5" height="57.6" fill="rgb(222,168,138)" stroke="#faf9f5" stroke-width="1.2"/><text x="297.6" y="255.6" font-size="10" font-family="PingFang SC, Microsoft YaHei, sans-serif" font-weight="600" fill="#141413">学习资源</text><rect x="291.6" y="302.0" width="73.5" height="53.5" fill="rgb(218,162,133)" stroke="#faf9f5" stroke-width="1.2"/><text x="297.6" y="318.0" font-size="10" font-family="PingFang SC, Microsoft YaHei, sans-serif" font-weight="600" fill="#141413">理论与前沿</text><rect x="369.9" y="239.6" width="97.7" height="39.7" fill="rgb(218,161,133)" stroke="#faf9f5" stroke-width="1.2"/><text x="375.9" y="257.1" font-size="11.5" font-family="PingFang SC, Microsoft YaHei, sans-serif" font-weight="600" fill="#141413">多媒体</text><rect x="369.9" y="284.0" width="46.5" height="71.5" fill="rgb(222,168,138)" stroke="#faf9f5" stroke-width="1.2"/><rect x="421.1" y="284.0" width="46.5" height="71.5" fill="rgb(223,170,139)" stroke="#faf9f5" stroke-width="1.2"/><rect x="245.7" y="360.3" width="59.1" height="51.3" fill="rgb(226,200,165)" stroke="#faf9f5" stroke-width="1.2"/><rect x="245.7" y="416.3" width="59.1" height="51.3" fill="rgb(222,168,138)" stroke="#faf9f5" stroke-width="1.2"/><rect x="309.7" y="360.3" width="53.3" height="56.9" fill="rgb(216,157,130)" stroke="#faf9f5" stroke-width="1.2"/><rect x="309.7" y="422.0" width="53.3" height="45.6" fill="rgb(220,166,136)" stroke="#faf9f5" stroke-width="1.2"/><rect x="367.8" y="360.3" width="35.9" height="51.3" fill="rgb(224,172,140)" stroke="#faf9f5" stroke-width="1.2"/><rect x="408.5" y="360.3" width="30.1" height="51.3" fill="rgb(224,173,141)" stroke="#faf9f5" stroke-width="1.2"/><rect x="443.3" y="360.3" width="24.3" height="51.3" fill="rgb(219,164,134)" stroke="#faf9f5" stroke-width="1.2"/><rect x="367.8" y="416.3" width="24.3" height="51.3" fill="rgb(222,168,138)" stroke="#faf9f5" stroke-width="1.2"/><rect x="396.8" y="416.3" width="24.3" height="51.3" fill="rgb(225,188,155)" stroke="#faf9f5" stroke-width="1.2"/><rect x="425.9" y="416.3" width="41.7" height="30.2" fill="rgb(226,201,167)" stroke="#faf9f5" stroke-width="1.2"/><rect x="425.9" y="451.4" width="41.7" height="16.2" fill="rgb(220,206,185)" stroke="#faf9f5" stroke-width="1.2"/></svg>
+    <div class="plate-foot"><span>面积 = 清单数 · 颜色 = 平均健康分</span><span>→</span></div>
+  </div>
+  <div class="url"><b>odin1024.github.io/awesome-atlas</b> &nbsp;·&nbsp; 数据快照 2026-11-08 · 健康分 22–100</div>
+</body></html>

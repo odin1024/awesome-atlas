@@ -144,8 +144,13 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
 [data-theme="light"] .icon-moon { display: none; }
 
 /* ---------- hero ---------- */
+/* The hero copy used to sit in its own 1080px column while every section below
+   spanned 1480px, so the headline started 150px to the right of the metrics
+   band and the right third of the fold was empty. Both are fixed by one grid:
+   copy on the left, the live treemap plate on the right, same edges as below. */
 .hero { padding: var(--s8) 0 var(--s6); }
-.hero-inner { max-width: 1080px; }
+.hero-inner { display: grid; grid-template-columns: minmax(0, 1fr) 356px; gap: var(--s8); align-items: start; }
+.hero-copy { max-width: 820px; min-width: 0; }
 .eyebrow { display: flex; align-items: center; gap: 12px; color: var(--accent); font-family: var(--font-mono); font-size: 10.5px; letter-spacing: .16em; text-transform: uppercase; }
 .eyebrow-line { width: 28px; height: 1px; background: currentColor; display: inline-block; flex-shrink: 0; }
 h1 {
@@ -162,7 +167,29 @@ h1 {
    plain wrapping, which is exactly what browsers without support already did. */
 /* `balance` keeps a 2-character 「显形。」 from landing alone on the last line,
    which is what `pretty` alone still allowed at phone widths. */
-.hero-sub { max-width: 64ch; margin: 0; color: var(--ink-2); font-size: 16px; line-height: 1.85; text-wrap: balance; }
+.hero-sub { max-width: 60ch; margin: 0; color: var(--ink-2); font-size: 16px; line-height: 1.85; text-wrap: balance; }
+
+/* ---------- hero plate: the map, at plate size ---------- */
+.hero-plate {
+  display: flex; flex-direction: column; gap: 10px;
+  padding: 12px 12px 10px;
+  border: 1px solid var(--rule-3); background: var(--surface);
+  transition: border-color var(--t), background var(--t);
+}
+.hero-plate:hover, .hero-plate:focus-visible { border-color: var(--accent); background: var(--surface-2); }
+.plate-head { display: flex; align-items: baseline; justify-content: space-between; gap: 6px 10px; flex-wrap: wrap; font-family: var(--font-mono); font-size: 9.5px; letter-spacing: .08em; text-transform: uppercase; }
+.plate-kicker { color: var(--accent); }
+.plate-meta { color: var(--ink-3); font-variant-numeric: tabular-nums; }
+/* The viewBox is 340×300; locking the ratio means the SVG is never letterboxed
+   inside its frame at any column width. */
+.plate-canvas { aspect-ratio: 34 / 30; }
+.plate-canvas svg { display: block; width: 100%; height: 100%; }
+.plate-foot { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding-top: 9px; border-top: 1px solid var(--rule); color: var(--ink-2); font-size: 11.5px; }
+.plate-arrow { color: var(--accent); font-family: var(--font-mono); transition: transform var(--t) var(--ease); }
+.hero-plate:hover .plate-arrow { transform: translateX(4px); }
+.plate-tile rect { transition: stroke var(--t), stroke-width var(--t); }
+.plate-tile.is-focus rect { stroke: var(--accent); stroke-width: 1.6; }
+.plate-tile text { fill: var(--ink); font-family: var(--font-sans); font-weight: 600; pointer-events: none; }
 .search-wrap { margin-top: var(--s6); max-width: 760px; }
 .search-box {
   display: flex; align-items: center; gap: 12px; height: 56px; padding: 0 16px;
@@ -265,8 +292,10 @@ h1 {
 .switch-row input:checked + .switch::after { transform: translateX(13px); background: var(--accent-ink); }
 .switch-row input:focus-visible + .switch { outline: 2px solid var(--accent); outline-offset: 2px; }
 .fav-summary { display: flex; justify-content: space-between; align-items: center; color: var(--ink-2); font-size: 12px; font-family: var(--font-mono); }
-/* Stepped legend: discrete buckets, never a smooth gradient. */
-.legend-scale { height: 8px; background: linear-gradient(90deg, var(--surface-3) 0 20%, #cdb3ac 20% 40%, #b98b81 40% 60%, #a2604f 60% 80%, var(--accent) 80% 100%); border: 1px solid var(--rule); }
+/* Stepped legend: discrete buckets, never a smooth gradient. The bucket colours
+   are painted from RAMP_LIGHT / RAMP_DARK in app.js so the key can never drift
+   away from the colours the map actually uses. */
+.legend-scale { height: 8px; border: 1px solid var(--rule); }
 .legend-labels { display: flex; justify-content: space-between; margin-top: 6px; color: var(--ink-3); font-size: 10.5px; font-family: var(--font-mono); }
 .legend-note { margin: 10px 0 0; color: var(--ink-3); font-size: 11px; line-height: 1.7; }
 
@@ -287,17 +316,36 @@ h1 {
 .canvas-body { position: relative; flex: 1; min-height: 600px; padding: 16px; overflow: hidden; }
 .canvas-body.is-entering > * { animation: viewIn var(--t-slow) var(--ease) both; }
 @keyframes viewIn { from { opacity: 0; } to { opacity: 1; } }
+/* SVG views measure their own box, so they get a positioned shell with a real
+   footer. The note used to be appended after a 100%-height SVG inside an
+   `overflow: hidden` body: it was laid out below the clip edge, so the reading
+   key existed in the DOM and never once appeared on screen. */
+.canvas-fill { position: absolute; inset: 16px; display: flex; flex-direction: column; gap: 10px; }
+.canvas-main { flex: 1; min-height: 0; }
+.canvas-main > svg { display: block; width: 100%; height: 100%; }
+.canvas-foot { flex: none; display: flex; align-items: flex-end; justify-content: space-between; gap: var(--s4); flex-wrap: wrap; }
+.canvas-foot .canvas-note { margin: 0; flex: 1; min-width: 200px; }
 .canvas-note { color: var(--ink-3); font-size: 11.5px; margin: 12px 0 0; line-height: 1.7; }
+/* In-canvas key for the colour ramp: the sidebar legend is 900px away and gets
+   hidden below 1080px, which left the map without any explanation of its colour. */
+.map-scale { display: inline-flex; align-items: center; gap: 6px; flex: none; color: var(--ink-3); font-family: var(--font-mono); font-size: 10px; }
+.map-scale-track { width: 86px; height: 8px; border: 1px solid var(--rule); }
+.map-scale-cap { font-variant-numeric: tabular-nums; }
 
 /* ---------- treemap ---------- */
 .treemap-svg { width: 100%; height: 100%; display: block; }
 .tile { cursor: pointer; }
-.tile rect { transition: stroke var(--t), stroke-width var(--t); }
-.tile:hover rect { stroke: var(--ink); stroke-width: 2; }
-.tile.is-selected rect { stroke: var(--accent); stroke-width: 2.5; }
-.tile.is-dim { opacity: .22; }
-.tile-label { pointer-events: none; font-weight: 600; }
-.tile-sub, .tile-name, .tile-desc { pointer-events: none; }
+/* Tiles carry a paper-toned wash with the value in a solid band along the top
+   edge. A full-bleed fill at category-average values collapsed all 27 tiles into
+   one salmon mass; the band gives a crisp data cue while the wash keeps the
+   labels at full ink contrast. */
+.tile-bg { transition: stroke var(--t), stroke-width var(--t); }
+.tile:hover .tile-bg { stroke: var(--ink); stroke-width: 2; }
+.tile.is-selected .tile-bg { stroke: var(--accent); stroke-width: 2.5; }
+.tile.is-dim { opacity: .26; }
+.tile-label { pointer-events: none; font-weight: 600; fill: var(--ink); }
+.tile-label.is-serif { font-family: var(--font-serif); font-weight: 700; letter-spacing: .01em; }
+.tile-sub, .tile-note { pointer-events: none; fill: var(--ink-2); }
 
 /* ---------- graph ---------- */
 .graph-svg { width: 100%; height: 100%; display: block; }
@@ -545,6 +593,12 @@ td { padding: 10px 10px; vertical-align: middle; }
   .insight-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .about-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
+/* Below 1180 the copy column can no longer hold a 54px headline beside a 356px
+   plate, and the real map is one screen below anyway. */
+@media (max-width: 1180px) {
+  .hero-inner { grid-template-columns: minmax(0, 1fr); }
+  .hero-plate { display: none; }
+}
 @media (max-width: 1080px) {
   :root { --gut: 24px; }
   .workspace { grid-template-columns: minmax(0, 1fr) 292px; }
@@ -606,6 +660,7 @@ td { padding: 10px 10px; vertical-align: middle; }
   .side-block { display: block; width: auto; border-left: 0; border-top: 1px solid var(--rule); margin-top: 12px; padding: 12px 0 2px; }
   .side-block.legend-block { display: block; }
   .canvas-body { min-height: 460px; padding: 10px; }
+  .canvas-fill { inset: 10px; }
   .iv-grid { inset: 10px; }
   .detail { position: static; max-height: none; }
   /* The fixed tab bar overlays the footer otherwise. */

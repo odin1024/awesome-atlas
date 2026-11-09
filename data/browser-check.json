@@ -1,6 +1,6 @@
 {
-  "passed": 104,
-  "total": 104,
+  "passed": 112,
+  "total": 112,
   "allPassed": true,
   "checks": [
     {
@@ -74,6 +74,36 @@
       "detail": "Star / Fork / 最近 push / 语言 / 归档状态来自带授权的 GitHub API 全量核验，覆盖 673 / 673 个仓库（100%）。健康分 = 0.45 "
     },
     {
+      "name": "首屏地图预览板渲染 27 个分类瓦片",
+      "ok": true,
+      "detail": "27"
+    },
+    {
+      "name": "预览板不冒充工作区瓦片（选择器不串）",
+      "ok": true,
+      "detail": "0"
+    },
+    {
+      "name": "首屏与下方版块左边缘对齐",
+      "ok": true,
+      "detail": "[32, 32]"
+    },
+    {
+      "name": "预览板是进入地图的入口",
+      "ok": true,
+      "detail": "#workspace"
+    },
+    {
+      "name": "点预览板真的落到分类地图",
+      "ok": true,
+      "detail": "{'y': 821, 'top': 152, 'map': True}"
+    },
+    {
+      "name": "分享卡片图已声明",
+      "ok": true,
+      "detail": "https://odin1024.github.io/awesome-atlas/docs/banner.png"
+    },
+    {
       "name": "品牌副标题不再出现「中文版」",
       "ok": true,
       "detail": "精选清单地图 / AWESOME ATLAS"
@@ -119,6 +149,11 @@
       "detail": "27"
     },
     {
+      "name": "地图脚注与色阶真的在画布内可见",
+      "ok": true,
+      "detail": "{'ok': True, 'inside': True, 'scale': True, 'bottomGap': 16}"
+    },
+    {
       "name": "关系图谱渲染出节点与 27 条主轴",
       "ok": true,
       "detail": "259 个节点 / 27 条主轴"
@@ -127,6 +162,11 @@
       "name": "图谱有两层轨道环",
       "ok": true,
       "detail": "2"
+    },
+    {
+      "name": "图谱脚注同样落在画布内",
+      "ok": true,
+      "detail": "{'ok': True, 'inside': True, 'scale': True, 'bottomGap': 16}"
     },
     {
       "name": "27 个分类标签全部渲染",
@@ -391,7 +431,7 @@
     {
       "name": "地图「面积依据」切换会重排瓦片",
       "ok": true,
-      "detail": "first tile 270.8 → 128.5"
+      "detail": "first tile 226.4 → 191.7"
     },
     {
       "name": "图谱「显示范围」下拉改变节点数",

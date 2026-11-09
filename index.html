@@ -8,6 +8,15 @@
 <meta name="description" content="把 sindresorhus/awesome 的 678 份精选清单翻译成中文，用分类地图、关系图谱、检索榜单、生态时间轴与数据洞察重新组织。全量 673 个仓库指标，可查、可看、可追溯。">
 <meta property="og:title" content="精选清单地图 · Awesome 中文可视化索引">
 <meta property="og:description" content="678 份清单、27 个分类、673 个仓库全量指标，中文可读、结构可见、来源可追溯。">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:url" content="https://odin1024.github.io/awesome-atlas/">
+<meta property="og:image" content="https://odin1024.github.io/awesome-atlas/docs/banner.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="精选清单地图：678 条清单、27 个分类的深蓝与纸白版式横幅">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="canonical" href="https://odin1024.github.io/awesome-atlas/">
 <meta name="theme-color" content="#faf9f5">
 <script>/* Browsers restore the previous scroll offset on reload, which drops the reader
    into the middle of a view with no context. Own the position explicitly. */
@@ -48,21 +57,31 @@ if ('scrollRestoration' in history) history.scrollRestoration = 'manual';</scrip
 
 <section class="hero">
   <div class="hero-inner">
-    <div class="eyebrow"><span class="eyebrow-line"></span><span data-ui="eyebrow1">一个 README 的另一种读法</span><span class="eyebrow-sep">·</span><span class="eyebrow-extra" data-ui="eyebrow2">全量中文译述</span><span class="eyebrow-sep">·</span><span class="eyebrow-extra" data-ui="eyebrow3">CC0 数据</span></div>
-    <h1 id="heroTitle">把 <span class="hero-num" id="heroCount">678</span> 份清单<br>变成一张<span class="hero-accent">看得懂的地图</span></h1>
-    <p class="hero-sub" id="heroSub">一份英文 README 里藏着 27 个技术分类、近七百份人工策展的资源索引。这里把它译成中文，再补上层级、热度、活跃度与演化四个维度——不重复列表，只让结构显形。</p>
+    <div class="hero-copy">
+      <div class="eyebrow"><span class="eyebrow-line"></span><span data-ui="eyebrow1">一个 README 的另一种读法</span><span class="eyebrow-sep">·</span><span class="eyebrow-extra" data-ui="eyebrow2">全量中文译述</span><span class="eyebrow-sep">·</span><span class="eyebrow-extra" data-ui="eyebrow3">CC0 数据</span></div>
+      <h1 id="heroTitle">把 <span class="hero-num" id="heroCount">678</span> 份清单<br>变成一张<span class="hero-accent">看得懂的地图</span></h1>
+      <p class="hero-sub" id="heroSub">一份英文 README 里藏着 27 个技术分类、近七百份人工策展的资源索引。这里把它译成中文，再补上层级、热度、活跃度与演化四个维度——不重复列表，只让结构显形。</p>
 
-    <div class="search-wrap">
-      <div class="search-box">
-        <svg class="search-icon" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="10.8" cy="10.8" r="6.6"/><path d="m16 16 4.4 4.4" stroke-linecap="round"/></svg>
-        <input id="searchInput" type="search" autocomplete="off" spellcheck="false" placeholder="搜中文或英文：前端、安全、响应式、React…" aria-label="搜索清单">
-        <button id="searchClear" class="search-clear" type="button" aria-label="清除搜索" hidden>×</button>
-        <kbd class="kbd">/</kbd>
+      <div class="search-wrap">
+        <div class="search-box">
+          <svg class="search-icon" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="10.8" cy="10.8" r="6.6"/><path d="m16 16 4.4 4.4" stroke-linecap="round"/></svg>
+          <input id="searchInput" type="search" autocomplete="off" spellcheck="false" placeholder="搜中文或英文：前端、安全、响应式、React…" aria-label="搜索清单">
+          <button id="searchClear" class="search-clear" type="button" aria-label="清除搜索" hidden>×</button>
+          <kbd class="kbd">/</kbd>
+        </div>
+        <div class="search-meta"><span id="searchCount">—</span><span class="search-hint" id="searchHint">支持中文分类、中文描述、名称与仓库名</span></div>
       </div>
-      <div class="search-meta"><span id="searchCount">—</span><span class="search-hint" id="searchHint">支持中文分类、中文描述、名称与仓库名</span></div>
+
+      <div class="quick-chips" id="quickChips" aria-label="快捷分类"></div>
     </div>
 
-    <div class="quick-chips" id="quickChips" aria-label="快捷分类"></div>
+    <!-- The plate is the same treemap the workspace draws, at thumbnail size:
+         real proportions, real health colours, and a real door into the map. -->
+    <a class="hero-plate" id="heroPlate" href="#workspace" aria-label="查看完整的分类地图">
+      <div class="plate-head"><span class="plate-kicker" data-ui="plateKicker">图 01 · 分类地图</span><span class="plate-meta" id="plateMeta">27 类 · 678 条</span></div>
+      <div class="plate-canvas" id="heroPlateMap" aria-hidden="true"></div>
+      <div class="plate-foot"><span data-ui="plateFoot">点按进入地图</span><span class="plate-arrow" aria-hidden="true">→</span></div>
+    </a>
   </div>
 </section>
 

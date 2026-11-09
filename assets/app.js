@@ -41,12 +41,14 @@
   const safeUrl = (u) => (/^https?:\/\//.test(u || '') ? esc(u) : '#');
   /* Sequential health scale.
      The domain is the OBSERVED range across verified repos, not 0–100: real
-     category averages sit between ~30 and ~80, so a fixed 0–100 domain collapsed
-     every tile into one muddy shade. Dark mode inverts the luminance direction
-     (near-surface → accent) so tiles do not glare on a near-black page.
+     category averages sit between ~29 and ~77, so a fixed 0–100 domain collapsed
+     every tile into one muddy shade. The ramp holds lightness inside the band
+     where ink text still clears 4.5:1, and spends its range on hue and saturation
+     instead — stone → sand → apricot → clay → terracotta. Dark mode inverts the
+     luminance direction so a filled tile never glares on a near-black page.
      Every tile also prints its numeric score, so colour is never the only cue. */
-  const RAMP_LIGHT = [[248, 245, 238], [230, 208, 197], [205, 163, 147], [170, 106, 89], [150, 38, 28]];
-  const RAMP_DARK = [[30, 28, 26], [58, 42, 38], [93, 51, 43], [137, 52, 42], [222, 104, 88]];
+  const RAMP_LIGHT = [[217, 209, 196], [226, 201, 166], [224, 172, 140], [214, 154, 128], [196, 122, 99]];
+  const RAMP_DARK = [[36, 31, 27], [58, 47, 36], [86, 57, 42], [122, 70, 50], [160, 90, 65]];
   let _domain = null;
   function healthDomain() {
     if (!_domain) {
@@ -56,10 +58,6 @@
     return _domain;
   }
   const isDark = () => document.documentElement.dataset.theme === 'dark';
-  const relLum = (c) => {
-    const f = (v) => { const s = v / 255; return s <= 0.03928 ? s / 12.92 : ((s + 0.055) / 1.055) ** 2.4; };
-    return 0.2126 * f(c[0]) + 0.7152 * f(c[1]) + 0.0722 * f(c[2]);
-  };
   function healthRgb(h) {
     if (h == null) return [138, 134, 126];
     const [lo, hi] = healthDomain();
@@ -71,7 +69,13 @@
     return ramp[i].map((v, j) => Math.round(v + (ramp[i + 1][j] - v) * k));
   }
   const healthColor = (h) => `rgb(${healthRgb(h).join(',')})`;
-  const inkOn = (h) => (relLum(healthRgb(h)) > 0.42 ? '#141413' : '#FAF9F5');
+  /* One source of truth for the legend swatches, so the key cannot drift away
+     from the ramp the map and the graph dots actually use. */
+  function rampGradient() {
+    const ramp = isDark() ? RAMP_DARK : RAMP_LIGHT;
+    const step = 100 / ramp.length;
+    return 'linear-gradient(90deg,' + ramp.map((c, i) => `rgb(${c.join(',')}) ${(i * step).toFixed(1)}% ${((i + 1) * step).toFixed(1)}%`).join(',') + ')';
+  }
   const scoreColor = (h) => h == null ? 'var(--ink-3)' : h >= 70 ? 'var(--accent)' : h >= 45 ? 'var(--ink-2)' : 'var(--ink-3)';
   const tipAttr = (name, lines) => esc(name) + '||' + esc(lines.filter(Boolean).join(' · '));
 
@@ -115,6 +119,7 @@
       favAdded: '已加入收藏', favRemoved: '已取消收藏', langZh: '已切换为中文', langEn: '已切换为英文原文',
       dataLoaded: '数据快照', legendNote: '健康分只对已验证仓库计算；未命中或已失效的条目始终标注「未采集」，不按 0 分处理。',
       countSuffix: '条', matchedPrefix: '匹配', totalPrefix: '共', inScope: '条在当前范围内',
+      plateKicker: '图 01 · 分类地图', plateFoot: '点按进入地图', mapScale: '健康分',
     },
     en: {
       brandName: 'Awesome Atlas', brandSub: 'CURATED INDEX',
@@ -154,6 +159,7 @@
       favAdded: 'Added to favorites', favRemoved: 'Removed from favorites', langZh: 'Switched to Chinese', langEn: 'Switched to English',
       dataLoaded: 'Snapshot', legendNote: 'Health is computed only for verified repositories. Missing entries are labelled, never treated as zero.',
       countSuffix: '', matchedPrefix: 'matched', totalPrefix: 'total', inScope: 'in current scope',
+      plateKicker: 'Plate 01 · Map', plateFoot: 'Open the map', mapScale: 'health',
     },
   };
   const LANG_KEY = 'atlas-lang';
@@ -361,6 +367,7 @@
       $('#heroSub').textContent = ui('heroSub');
       $('#upstreamLink').title = isEn() ? 'Open the upstream repository on GitHub' : '打开上游仓库（境外站点，可能较慢）';
       $('#backToTop').title = isEn() ? 'Back to the top of the page' : '回到页面顶部';
+      $('#heroPlate').setAttribute('aria-label', isEn() ? 'Open the full category map' : '查看完整的分类地图');
     }
     $('#searchInput').placeholder = ui('searchPlaceholder');
     $('#searchHint').textContent = ui('searchHint');
@@ -371,6 +378,13 @@
     $('#statusPill').title = isEn() ? 'Snapshot date' : '数据快照日期';
     $$('#langSwitch button').forEach((b) => b.classList.toggle('is-on', b.dataset.lang === lang));
     $('#legendNote').textContent = ui('legendNote');
+    const scaleEl = $('.legend-scale');
+    if (scaleEl) scaleEl.style.background = rampGradient();
+    if ($('#plateMeta')) {
+      $('#plateMeta').textContent = isEn()
+        ? `${DATA.categories.length} categories · ${DATA.stats.items} lists`
+        : `${DATA.categories.length} 类 · ${DATA.stats.items} 条`;
+    }
     /* Print the real observed domain: a 0–100 legend would misrepresent a scale
        that is stretched over the actual data range. */
     const [hLo, hHi] = healthDomain();
@@ -526,12 +540,27 @@
     const chars = Math.max(3, Math.floor((w - 18) / perChar));
     return text.length > chars ? text.slice(0, chars - 1) + '…' : text;
   }
+  /* SVG text does not wrap. On the largest tiles a two-line editorial note fills
+     what used to be dead space; clipping is done by width, never by guesswork. */
+  function wrapCJK(text, perLine, maxLines) {
+    const s = String(text || '');
+    const out = [];
+    for (let i = 0; i < s.length && out.length < maxLines; i += perLine) out.push(s.slice(i, i + perLine));
+    if (out.length === maxLines && s.length > perLine * maxLines) {
+      out[maxLines - 1] = out[maxLines - 1].slice(0, Math.max(1, perLine - 1)) + '…';
+    }
+    return out;
+  }
   function renderMap() {
     const body = $('#canvasBody');
-    const W = Math.max(340, body.clientWidth - 34);
-    const H = Math.max(430, body.clientHeight - 34);
     const visible = filteredItems();
     if (!visible.length) { body.innerHTML = emptyStateHtml(); return; }
+    /* Shell first, then measure: the footer is part of the canvas now, so the
+       treemap must be drawn into the box that is actually left for it. */
+    body.innerHTML = '<div class="canvas-fill"><div class="canvas-main" id="canvasMain"></div><div class="canvas-foot" id="canvasFoot"></div></div>';
+    const main = $('#canvasMain');
+    const W = Math.max(320, main.clientWidth);
+    const H = Math.max(360, main.clientHeight);
     const matched = new Set(visible.map((it) => it.id));
     const catMatched = new Set(visible.map((it) => it.categoryId));
     /* Same rule as the graph: a selected category means "show me this one".
@@ -544,6 +573,11 @@
         key: 'cat:' + c.id, label: catName(c), en: c.name,
         sub: c.itemCount + ' ' + ui('countSuffix') + ' · ' + (avgHealth(c.id) == null ? ui('noSample') : (isEn() ? 'health ' : '健康 ') + avgHealth(c.id)),
         subShort: c.itemCount + ' ' + ui('countSuffix'),
+        note: isEn() ? '' : catNote(c),
+        /* A 400px-tall tile with two lines of text at the top is mostly void.
+           The inset lists the category's real headline repos, so the largest
+           block carries data instead of emptiness. */
+        top: enrichedOf(c.id).slice().sort((a, b) => b.metrics.stars - a.metrics.stars).slice(0, 4).map((it) => ({ name: it.name, stars: it.metrics.stars })),
         value: state.metric === 'stars' ? Math.log10(totalStarsOf(c.id) + 10) : c.itemCount,
         color: healthColor(avgHealth(c.id)),
         health: avgHealth(c.id),
@@ -560,6 +594,7 @@
         key: 'item:' + it.id, label: it.name, en: '',
         sub: it.metrics ? fmtAbbr(it.metrics.stars, isEn()) + ' ★ · ' + (isEn() ? 'health ' : '健康 ') + it.metrics.health : ui('noSample'),
         subShort: it.metrics ? fmtAbbr(it.metrics.stars, isEn()) + ' ★' : ui('noSample'),
+        note: '',
         value: state.metric === 'stars' ? Math.log10((it.metrics ? it.metrics.stars : 0) + 10) : 1,
         color: healthColor(it.metrics ? it.metrics.health : null),
         health: it.metrics ? it.metrics.health : null,
@@ -571,53 +606,105 @@
     entries.sort((a, b) => b.value - a.value);
     const tiles = treemap(entries, 0, 0, W, H);
     const dimmed = tiles.filter((t) => t.dim).length;
-    const rects = tiles.map((t, i) => {
-      const pad = Math.min(3, Math.max(1, Math.min(t.w, t.h) * 0.02));
-      const x = t.x + pad, y = t.y + pad, w = Math.max(0, t.w - pad * 2), h = Math.max(0, t.h - pad * 2);
+    const rects = tiles.map((t) => {
+      const gap = Math.min(3, Math.max(1, Math.min(t.w, t.h) * 0.02));
+      const x = t.x + gap, y = t.y + gap, w = Math.max(0, t.w - gap * 2), h = Math.max(0, t.h - gap * 2);
       if (w < 2 || h < 2) return '';
       /* Below ~58px a Chinese category name can only survive as an ellipsis
          fragment, which reads as a bug. Hide it and keep the tile as a block. */
-      const fs = w > 210 ? 15 : w > 130 ? 13 : w > 76 ? 11 : 9.5;
+      const fs = w > 230 ? 17 : w > 150 ? 14.5 : w > 96 ? 12 : w > 62 ? 10.5 : 9;
       const need = t.label.length * fs + 18;
       /* A narrow but tall sliver is the one case where a truncated name hurts
          most, and the one case where a rotated label fits perfectly. */
       const vertical = need > w && h > need + 16;
-      const showName = vertical || (w > 58 && h > 22);
-      const showSub = !vertical && w > 112 && h > 48;
+      /* A name only appears if it fits whole: an ellipsis fragment of a Chinese
+         category name reads as a rendering bug, not as an abbreviation. */
+      const showName = vertical || (need <= w && w > 44 && h > 18);
+      const showSub = !vertical && w > 96 && h > 52;
       const selected = state.selected === t.id;
       /* Narrow tiles get the bare count; only wide tiles can afford the health
          suffix without an ellipsis landing mid-word. */
       const baseSub = w > 158 ? t.sub : t.subShort;
-      const subLine = baseSub;
       const x1 = x.toFixed(1), y1 = y.toFixed(1), w1 = w.toFixed(1), h1 = h.toFixed(1);
-      const labelInk = inkOn(t.health);
+      const nameY = y + fs + 7;
       /* Very tall tiles anchor the metadata to the bottom edge so the name and
          the numbers frame the block instead of both crowding the top corner. */
-      const subY = h > 190 ? y + h - 10 : y + fs + 25;
+      const subY = h > 210 ? y + h - 9 : nameY + 15;
       /* Rotated labels run along the tile height, so the clip budget is `h`,
          not `w` -- otherwise a long repo name spills into the tile below. */
       const nameEl = vertical
-        ? `<text class="tile-label" x="${(x + 12).toFixed(1)}" y="${(y + h - 10).toFixed(1)}" font-size="${fs}" fill="${labelInk}" transform="rotate(-90 ${(x + 12).toFixed(1)} ${(y + h - 10).toFixed(1)})">${esc(clipLabel(t.label, h, fs))}</text>`
-        : `<text class="tile-label" x="${(x + 8).toFixed(1)}" y="${(y + fs + (w > 76 ? 7 : 5)).toFixed(1)}" font-size="${fs}" fill="${labelInk}">${esc(clipLabel(t.label, w, fs))}</text>`;
+        ? `<text class="tile-label" x="${(x + 12).toFixed(1)}" y="${(y + h - 10).toFixed(1)}" font-size="${fs}" transform="rotate(-90 ${(x + 12).toFixed(1)} ${(y + h - 10).toFixed(1)})">${esc(clipLabel(t.label, h, fs))}</text>`
+        : `<text class="tile-label ${fs >= 14 ? 'is-serif' : ''}" x="${(x + 8).toFixed(1)}" y="${nameY.toFixed(1)}" font-size="${fs}">${esc(clipLabel(t.label, w, fs))}</text>`;
+      /* Room for a note only exists on genuinely large tiles; everywhere else the
+         name plus the count is the whole story. */
+      const noteLines = !vertical && t.note && w > 200 && h > 150
+        ? wrapCJK(t.note, Math.max(6, Math.floor((w - 20) / 11)), 2)
+        : [];
+      const noteEl = noteLines.map((line, i) => `<text class="tile-note" x="${(x + 8).toFixed(1)}" y="${(nameY + 20 + i * 15).toFixed(1)}" font-size="10.5" fill-opacity=".82">${esc(line)}</text>`).join('');
+      /* Only the biggest category tiles get the inset; on anything smaller the
+         four rows would collide with the name. Anchored to the bottom edge so the
+         block frames the tile instead of floating in its middle. */
+      const insetRows = !vertical && t.top && w > 220 && h > 240 ? t.top : [];
+      const insetEl = insetRows.map((it, i) => {
+        const rowY = y + h - 26 - (insetRows.length - 1 - i) * 17;
+        return `<text class="tile-sub" x="${(x + 8).toFixed(1)}" y="${rowY.toFixed(1)}" font-size="10" fill-opacity=".8">${esc(clipLabel(it.name, w * 0.58, 10))}</text>` +
+          `<text class="tile-sub" x="${(x + w - 8).toFixed(1)}" y="${rowY.toFixed(1)}" font-size="10" text-anchor="end" fill-opacity=".62">${esc(fmtAbbr(it.stars, isEn()))} ★</text>`;
+      }).join('');
       return `<g class="tile ${t.dim ? 'is-dim' : ''} ${selected ? 'is-selected' : ''}" data-action="${t.action}" data-id="${esc(t.id)}" data-tip="${t.tip}" tabindex="0" role="button" aria-label="${esc(t.label)}">
-        <rect x="${x1}" y="${y1}" width="${w1}" height="${h1}" fill="${t.color}" stroke="var(--paper)" stroke-width="1.5"/>
+        <rect class="tile-bg" x="${x1}" y="${y1}" width="${w1}" height="${h1}" fill="${t.color}" stroke="var(--ink)" stroke-opacity=".16" stroke-width="1"/>
         ${showName ? nameEl : ''}
-        ${showSub ? `<text class="tile-sub" x="${(x + 9).toFixed(1)}" y="${subY.toFixed(1)}" font-size="10.5" fill="${labelInk}" fill-opacity=".9">${esc(clipLabel(subLine, w, 10.5))}</text>` : ''}
+        ${noteEl}
+        ${insetEl}
+        ${showSub ? `<text class="tile-sub" x="${(x + 8).toFixed(1)}" y="${subY.toFixed(1)}" font-size="10.5" fill-opacity=".9">${esc(clipLabel(baseSub, w, 10.5))}</text>` : ''}
       </g>`;
     }).join('');
-    body.innerHTML = `<svg class="treemap-svg" viewBox="0 0 ${W} ${H}" role="img" aria-label="${isEn() ? 'Treemap of categories and lists' : '分类与清单的树状地图'}">${rects}</svg>` +
-      `<p class="canvas-note">${state.metric === 'stars'
-        ? (isEn() ? 'Area uses a log scale of sampled stars so a few mega-repos do not swallow the map.' : '面积按采样 Star 的对数缩放，避免个别超级项目吞掉整张图。')
-        : (isEn() ? 'Area = number of lists; colour = average health; grey = no sampled metrics.' : '面积按清单条目数，颜色按该范围的平均健康分；灰色表示没有健康分采样。')}${dimmed
-        ? (isEn() ? ` ${dimmed} tiles outside the current filter are dimmed.` : ` 当前筛选外的 ${dimmed} 个瓦片已淡化。`)
-        : ''}</p>`;
+    main.innerHTML = `<svg class="treemap-svg" viewBox="0 0 ${W} ${H}" role="img" aria-label="${isEn() ? 'Treemap of categories and lists' : '分类与清单的树状地图'}">${rects}</svg>`;
+    $('#canvasFoot').innerHTML = `<p class="canvas-note">${state.metric === 'stars'
+      ? (isEn() ? 'Area uses a log scale of sampled stars so a few mega-repos do not swallow the map.' : '面积按采样 Star 的对数缩放，避免个别超级项目吞掉整张图。')
+      : (isEn() ? 'Area = number of lists; colour = average health; grey = no sampled metrics.' : '面积按清单条目数；颜色按该范围的平均健康分，灰色表示没有健康分采样。')}${dimmed
+      ? (isEn() ? ` ${dimmed} tiles outside the current filter are dimmed.` : ` 当前筛选外的 ${dimmed} 个瓦片已淡化。`)
+      : ''}</p>${scaleHtml()}`;
+  }
+  /* The same key serves the map and the graph, both of which colour by health. */
+  function scaleHtml() {
+    const [lo, hi] = healthDomain();
+    return `<div class="map-scale"><span>${ui('mapScale')}</span><span class="map-scale-track" style="background:${rampGradient()}"></span><span class="map-scale-cap">${lo} – ${hi}</span></div>`;
+  }
+
+  /* ---------- hero plate ---------- */
+  /* Not a decorative image: the same treemap algorithm, the same counts and the
+     same health ramp as the workspace map, so the fold shows exactly what the
+     click-through delivers. The plate only labels tiles big enough to hold a
+     name; everything else stays a block with a hover title. */
+  function renderHeroPlate() {
+    const host = $('#heroPlateMap');
+    if (!host) return;
+    const W = 340, H = 300;
+    const entries = DATA.categories
+      .map((c) => ({ key: c.id, label: catName(c), value: c.itemCount, health: avgHealth(c.id), count: c.itemCount }))
+      .sort((a, b) => b.value - a.value);
+    const focus = state.cat !== 'all' ? state.cat : null;
+    const cells = treemap(entries, 0, 0, W, H).map((t) => {
+      const gap = 2;
+      const x = t.x + gap, y = t.y + gap, w = Math.max(0, t.w - gap * 2), h = Math.max(0, t.h - gap * 2);
+      if (w < 2 || h < 2) return '';
+      const fs = w > 126 ? 11 : w > 78 ? 9.5 : 8;
+      const showName = w > 60 && h > 26;
+      return `<g class="plate-tile ${focus === t.key ? 'is-focus' : ''}"><title>${esc(t.label)} · ${t.count} ${isEn() ? 'lists' : '条'}</title>
+        <rect x="${x.toFixed(1)}" y="${y.toFixed(1)}" width="${w.toFixed(1)}" height="${h.toFixed(1)}" fill="${healthColor(t.health)}" stroke="var(--surface)" stroke-width="1.2"/>
+        ${showName ? `<text x="${(x + 5).toFixed(1)}" y="${(y + fs + 5).toFixed(1)}" font-size="${fs}">${esc(clipLabel(t.label, w, fs))}</text>` : ''}
+      </g>`;
+    }).join('');
+    host.innerHTML = `<svg viewBox="0 0 ${W} ${H}" role="img" aria-hidden="true">${cells}</svg>`;
   }
 
   /* ---------- view 2: radial graph ---------- */
   function renderGraph() {
     const body = $('#canvasBody');
-    const W = Math.max(340, body.clientWidth - 34);
-    const H = Math.max(430, body.clientHeight - 34);
+    body.innerHTML = '<div class="canvas-fill"><div class="canvas-main" id="canvasMain"></div><div class="canvas-foot" id="canvasFoot"></div></div>';
+    const main = $('#canvasMain');
+    const W = Math.max(340, main.clientWidth);
+    const H = Math.max(360, main.clientHeight);
     const cx = W / 2, cy = H / 2;
     const R = Math.min(W, H) * 0.35;
     const cats = DATA.categories;
@@ -706,8 +793,8 @@
         + `<text class="graph-guide" x="${cx}" y="${cy + 88}" text-anchor="middle">${isEn() ? 'colour = health · area = stars' : '颜色 = 健康分 · 面积 = Star'}</text>`
       : '';
     const core = `<circle class="graph-core" cx="${cx}" cy="${cy}" r="27" fill="var(--ink)"/><text class="graph-center-label" x="${cx}" y="${cy + 4}" text-anchor="middle" fill="var(--paper)">${esc(coreText)}</text>${guide}`;
-    body.innerHTML = `<svg class="graph-svg" viewBox="0 0 ${W} ${H}" role="img" aria-label="${isEn() ? 'Radial graph of categories and lists' : '分类与清单的径向关系图谱'}">${orbits}${spokes}${links}${catNodes}${nodes}${labels}${core}</svg>` +
-      `<p class="canvas-note">${isEn() ? `${pointCount} dots shown.` : `当前显示 ${pointCount} 个圆点。`}${state.scope === 'curated' ? (isEn() ? ' Default shows the 10 highest-starred verified lists per category.' : ` 默认每类只画 Star 最高的 10 个已验证清单，避免 ${DATA.items.length} 条清单糊成一团。`) : ''}${isEn() ? ' Colour is paired with text labels, never used alone.' : ' 颜色同时配有文字提示，不单独依赖颜色编码。'}</p>`;
+    main.innerHTML = `<svg class="graph-svg" viewBox="0 0 ${W} ${H}" role="img" aria-label="${isEn() ? 'Radial graph of categories and lists' : '分类与清单的径向关系图谱'}">${orbits}${spokes}${links}${catNodes}${nodes}${labels}${core}</svg>`;
+    $('#canvasFoot').innerHTML = `<p class="canvas-note">${isEn() ? `${pointCount} dots shown.` : `当前显示 ${pointCount} 个圆点。`}${state.scope === 'curated' ? (isEn() ? ' Default shows the 10 highest-starred verified lists per category.' : ` 默认每类只画 Star 最高的 10 个已验证清单，避免 ${DATA.items.length} 条清单糊成一团。`) : ''}${isEn() ? ' Colour is paired with text labels, never used alone.' : ' 颜色同时配有文字提示，不单独依赖颜色编码。'}</p>${scaleHtml()}`;
   }
 
   /* ---------- view 3: table ---------- */
@@ -911,7 +998,7 @@
     } else {
       const parts = m.parts || { freshness: 0, popularity: 0, activity: 0 };
       const circ = 2 * Math.PI * 22;
-      metricsHtml = `<div class="score-head"><svg class="score-ring" viewBox="0 0 54 54"><circle cx="27" cy="27" r="22" fill="none" stroke="var(--surface-3)" stroke-width="5"/><circle cx="27" cy="27" r="22" fill="none" stroke="${scoreColor(m.health)}" stroke-width="5" stroke-linecap="round" stroke-dasharray="${circ.toFixed(1)}" stroke-dashoffset="${(circ * (1 - m.health / 100)).toFixed(1)}" transform="rotate(-90 27 27)"/><text x="27" y="31" text-anchor="middle" fill="${scoreColor(m.health)}" font-size="14" font-family="var(--mono)" font-weight="600">${m.health}</text></svg>
+      metricsHtml = `<div class="score-head"><svg class="score-ring" viewBox="0 0 54 54"><circle cx="27" cy="27" r="22" fill="none" stroke="var(--surface-3)" stroke-width="5"/><circle cx="27" cy="27" r="22" fill="none" stroke="${scoreColor(m.health)}" stroke-width="5" stroke-linecap="round" stroke-dasharray="${circ.toFixed(1)}" stroke-dashoffset="${(circ * (1 - m.health / 100)).toFixed(1)}" transform="rotate(-90 27 27)"/><text x="27" y="31" text-anchor="middle" fill="${scoreColor(m.health)}" font-size="14" font-family="var(--font-mono)" font-weight="600">${m.health}</text></svg>
         <div class="score-head-txt"><span class="score-big" style="color:${scoreColor(m.health)}">${m.health}</span><span class="score-unit">${isEn() ? '/ 100 health score' : '/ 100 综合健康分'}</span></div></div>
         ${[['新鲜度', 'Freshness', parts.freshness], ['热度', 'Popularity', parts.popularity], ['活跃度', 'Activity', parts.activity]].map(([zhLabel, enLabel, v]) => `<div class="score-row"><span>${isEn() ? enLabel : zhLabel}</span><div class="score-track"><div class="score-fill" style="width:${v}%;background:${healthColor(v)}"></div></div><b>${v}</b></div>`).join('')}
         <div class="kv-grid" style="margin-top:16px">
@@ -959,7 +1046,7 @@
     }
   }
   function renderAll() {
-    renderStaticUI(); renderMetrics(); renderQuickChips(); renderSidebar(); renderViewState();
+    renderStaticUI(); renderMetrics(); renderHeroPlate(); renderQuickChips(); renderSidebar(); renderViewState();
     renderToolbar(); renderCanvas(); renderDetail(); renderSearchMeta(); renderInsights(); fillAbout(); writeURL();
   }
   function renderLight() { renderToolbar(); renderCanvas(); renderDetail(); renderSearchMeta(); }
@@ -1102,9 +1189,14 @@
     document.documentElement.dataset.theme = state.theme;
     localStorage.setItem('atlas-theme', state.theme);
     // The sequential data ramp is theme-aware, so swatches and charts must repaint.
-    renderSidebar(); renderLight(); renderInsights();
+    renderSidebar(); renderLight(); renderInsights(); renderHeroPlate();
   });
   $('#shareBtn').addEventListener('click', () => copyText(location.href, ui('copyOk')));
+  /* The plate is an <a href="#workspace">, so the jump itself is the browser's
+     job; this only makes sure the destination is actually the map view. */
+  $('#heroPlate').addEventListener('click', () => {
+    if (state.view !== 'map') { state.view = 'map'; state.page = 1; renderAll(); }
+  });
   $('#backToTop').addEventListener('click', () => {
     const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     window.scrollTo({ top: 0, behavior: reduce ? 'auto' : 'smooth' });

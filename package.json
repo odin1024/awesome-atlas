@@ -8,6 +8,9 @@
     "build:data": "node scripts/build-data.mjs",
     "enrich": "node scripts/enrich.mjs && node scripts/enrich-pass2.mjs && node scripts/enrich-pass3.mjs",
     "validate": "node scripts/validate.mjs",
+    "check:browser": "python scripts/browser-check.py",
+    "banner": "python scripts/make-banner.py",
+    "shots": "python scripts/shots.py",
     "serve": "python -m http.server 8765",
     "deploy:pages": "node scripts/deploy-pages.mjs"
   }
