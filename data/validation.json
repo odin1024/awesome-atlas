@@ -1,7 +1,7 @@
 {
-  "validatedAt": "2026-11-09T09:02:47.891Z",
-  "passed": 74,
-  "total": 74,
+  "validatedAt": "2026-11-09T10:05:05.504Z",
+  "passed": 84,
+  "total": 84,
   "allPassed": true,
   "source": {
     "sha256": "465cd781335e44587d238f666800104b63d4fc8ba2395d6422974dcba421c616",
@@ -371,7 +371,7 @@
       "group": "界面",
       "name": "社交卡片图已生成并被 og:image 引用",
       "ok": true,
-      "detail": "189 KB"
+      "detail": "231 KB"
     },
     {
       "group": "界面",
@@ -480,6 +480,66 @@
       "name": "深色主题不依赖浅色瓦片",
       "ok": true,
       "detail": "数据色阶随主题反转"
+    },
+    {
+      "group": "文档",
+      "name": "中英两版 README 相互链接",
+      "ok": true,
+      "detail": "中文版指向 README.en.md，英文版指回 README.md"
+    },
+    {
+      "group": "文档",
+      "name": "两版章节数一致",
+      "ok": true,
+      "detail": "11 / 11 个 H2"
+    },
+    {
+      "group": "文档",
+      "name": "两版共享同一组关键数字",
+      "ok": true,
+      "detail": "10 个数字两版都在"
+    },
+    {
+      "group": "文档",
+      "name": "两版引用的本地文件全部存在",
+      "ok": true,
+      "detail": "20 个引用均可解析"
+    },
+    {
+      "group": "文档",
+      "name": "首行即横幅且 alt 文本可读",
+      "ok": true,
+      "detail": "横幅是第一行，alt 描述图形而非文件名"
+    },
+    {
+      "group": "文档",
+      "name": "横幅与社交卡尺寸各自正确",
+      "ok": true,
+      "detail": "中文 3200×920 / 英文 3200×920 / 社交卡 2400×1260（均为 2x）"
+    },
+    {
+      "group": "文档",
+      "name": "徽章为自托管 PNG 且同高",
+      "ok": true,
+      "detail": "8 枚，逻辑高 30px（2x 输出 60px）"
+    },
+    {
+      "group": "文档",
+      "name": "README 不引用第三方图片服务",
+      "ok": true,
+      "detail": "徽章与横幅全部随仓库分发，不受第三方限流或墙影响"
+    },
+    {
+      "group": "文档",
+      "name": "文案里的断言数等于实测",
+      "ok": true,
+      "detail": "README 必须写 84 / 84"
+    },
+    {
+      "group": "文档",
+      "name": "徽章文案与实测同步",
+      "ok": true,
+      "detail": "徽章应显示 84 + 119，否则重跑 npm run banner"
     }
   ]
 }

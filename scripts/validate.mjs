@@ -275,6 +275,56 @@ add('设计', '无 emoji 充当图标', !/[\u{1F000}-\u{1FAFF}\u{FE0F}\u{1F1E6}-
 add('设计', '键盘焦点与减少动效均已覆盖', /:focus-visible/.test(css) && /prefers-reduced-motion/.test(css), 'focus-visible + reduced-motion');
 add('设计', '深色主题不依赖浅色瓦片', /RAMP_DARK/.test(js) && /isDark\(\)/.test(js), '数据色阶随主题反转');
 
+/* --- README layer: two language editions that must not drift apart --- */
+const readmeZh = read('README.md');
+const readmeEn = read('README.en.md');
+const h2count = (md) => (md.match(/^## .+$/gm) || []).length;
+const pngSize = (rel) => {
+  const b = fs.readFileSync(path.join(ROOT, rel));
+  if (b.slice(1, 4).toString() !== 'PNG') return { w: 0, h: 0 };
+  return { w: b.readUInt32BE(16), h: b.readUInt32BE(20) };
+};
+const localRefs = (md) => [...md.matchAll(/(?:src="|!\[[^\]]*\]\(|\[[^\]]*\]\()([^")\s]+)/g)]
+  .map((m) => m[1])
+  .filter((p) => !/^(?:https?:|#|mailto:)/.test(p));
+
+add('文档', '中英两版 README 相互链接', /README\.en\.md/.test(readmeZh) && /(?:\]\(|href=")README\.md/.test(readmeEn),
+  '中文版指向 README.en.md，英文版指回 README.md');
+add('文档', '两版章节数一致', h2count(readmeZh) === h2count(readmeEn) && h2count(readmeZh) >= 10,
+  `${h2count(readmeZh)} / ${h2count(readmeEn)} 个 H2`);
+const keyNumbers = ['27', '678', '673', '466', '212', '224', '24', '597', '81', '5,979,356'];
+const numberGaps = keyNumbers.filter((n) => !readmeZh.includes(n) || !readmeEn.includes(n));
+add('文档', '两版共享同一组关键数字', numberGaps.length === 0,
+  numberGaps.length ? `缺 ${numberGaps.join('、')}` : `${keyNumbers.length} 个数字两版都在`);
+const dangling = [...new Set([...localRefs(readmeZh), ...localRefs(readmeEn)])].filter((p) => !exists(p));
+add('文档', '两版引用的本地文件全部存在', dangling.length === 0,
+  dangling.length ? `缺失 ${dangling.join('、')}` : `${new Set([...localRefs(readmeZh), ...localRefs(readmeEn)]).size} 个引用均可解析`);
+const startsWithBanner = (md) => /^<p align="center"><img src="docs\/banner(?:-en)?\.png" alt="[^"]{10,}" width="100%"><\/p>/.test(md.trimStart());
+add('文档', '首行即横幅且 alt 文本可读', startsWithBanner(readmeZh) && startsWithBanner(readmeEn),
+  '横幅是第一行，alt 描述图形而非文件名');
+const zhBanner = pngSize('docs/banner.png');
+const enBanner = pngSize('docs/banner-en.png');
+const social = pngSize('docs/social-preview.png');
+add('文档', '横幅与社交卡尺寸各自正确',
+  zhBanner.w === 3200 && zhBanner.h === 920 && enBanner.w === 3200 && enBanner.h === 920 && social.w === 2400 && social.h === 1260,
+  `中文 ${zhBanner.w}×${zhBanner.h} / 英文 ${enBanner.w}×${enBanner.h} / 社交卡 ${social.w}×${social.h}（均为 2x）`);
+const badgeNames = ['index', 'verified', 'tests', 'dependency'];
+const badgeOk = ['zh', 'en'].every((lang) => badgeNames.every((n) => {
+  const s = pngSize(`docs/badges/${lang}/${n}.png`);
+  return s.h === 60 && s.w > 300 && s.w < 700;
+}));
+add('文档', '徽章为自托管 PNG 且同高', badgeOk, '8 枚，逻辑高 30px（2x 输出 60px）');
+add('文档', 'README 不引用第三方图片服务', !/shields\.io|badgen\.net|img\.shields/.test(readmeZh + readmeEn) && !/src="https?:/.test(readmeZh + readmeEn),
+  '徽章与横幅全部随仓库分发，不受第三方限流或墙影响');
+
+/* These two need the final check count, so they come last and count themselves. */
+const totalChecks = checks.length + 2;
+const browserPassed = exists('data/browser-check.json') ? JSON.parse(read('data/browser-check.json')).passed : 0;
+add('文档', '文案里的断言数等于实测', readmeZh.includes(`${totalChecks} / ${totalChecks}`) && readmeEn.includes(`${totalChecks} / ${totalChecks}`),
+  `README 必须写 ${totalChecks} / ${totalChecks}`);
+add('文档', '徽章文案与实测同步', read('docs/badges-zh.html').includes(`${totalChecks} + ${browserPassed}`) && read('docs/badges-en.html').includes(`${totalChecks} + ${browserPassed}`),
+  `徽章应显示 ${totalChecks} + ${browserPassed}，否则重跑 npm run banner`);
+
 const passed = checks.filter((c) => c.ok).length;
 const report = {
   validatedAt: new Date().toISOString(),

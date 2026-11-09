@@ -1,14 +1,41 @@
-<p align="center"><img src="docs/banner.png" alt="精选清单地图 — 把 678 份清单变成一张看得懂的地图" width="100%"></p>
+<p align="center"><img src="docs/banner.png" alt="精选清单地图：左侧为标题与五个视图编号，右侧为 27 个分类的树状地图" width="100%"></p>
 
-<h1 align="center">精选清单地图 · Awesome Atlas</h1>
+<p align="center">
+  <img src="docs/badges/zh/index.png" height="26" alt="27 个分类 · 678 份清单">
+  <img src="docs/badges/zh/verified.png" height="26" alt="673 / 673 个仓库已核验">
+  <img src="docs/badges/zh/tests.png" height="26" alt="数据层与浏览器层断言全部通过">
+  <img src="docs/badges/zh/dependency.png" height="26" alt="零依赖 · 纯静态">
+</p>
 
-<p align="center"><strong>在线访问 → <a href="https://odin1024.github.io/awesome-atlas/">odin1024.github.io/awesome-atlas</a></strong></p>
+<p align="center"><strong><a href="https://odin1024.github.io/awesome-atlas/">在线打开 → odin1024.github.io/awesome-atlas</a></strong></p>
 
-<p align="center">27 个分类 · 678 条清单 · 673 个仓库全量指标 · 598 万 Star<br>中文可读 · 结构可见 · 来源可追溯 · 纯静态零依赖</p>
+<p align="center"><a href="#这是什么">这是什么</a> · <a href="#五个视图">五个视图</a> · <a href="#数据管线">数据管线</a> · <a href="#交叉验证">交叉验证</a> · <a href="README.en.md">English</a></p>
 
-把 [sindresorhus/awesome](https://github.com/sindresorhus/awesome) 的 `readme.md`（27 个分类、678 条清单）变成一张可探索的**中文**数据地图：同一份 README，换一种读法——列表一份没少，只是终于有了形状。
+## 这是什么
 
-纯静态站点：无构建步骤、无运行时依赖、无后端、无外部 CDN、无追踪脚本。数据全部打包进 `data/catalog.js`，双击 `index.html` 也能用。
+`sindresorhus/awesome` 的 `readme.md` 是一份 866 行的英文清单，27 个分类、678 条资源。它写得好，但只能按顺序读：从头滚到尾，仍然不知道自己漏了什么，也看不出哪个领域在长、哪个仓库已经停更。
+
+这个项目把同一份 README 重排成一张可探索的地图，补上原文里不存在的四个维度——**层级关系、仓库热度、维护活跃度、时间演化**。列表一份没少，只是终于有了形状。
+
+具体能做的三件事：
+
+- **读结构。** 分类地图用面积表示清单数、颜色表示平均健康分，一眼看出哪个领域最繁荣；关系图谱把 27 个分类摊成星系，看它们怎么围着源索引转。
+- **查一条。** 678 条全文检索，中文、英文、仓库名、topics 都能搜；7 种排序、分页、收藏、导出。
+- **验真伪。** 673 个仓库全部用授权 API 核过 stars、forks、最近提交，覆盖率 100%。采集失败就保留上一版快照并在页面顶部标注日期，绝不用 0 或估算值填充。
+
+它不追求「把 README 排版得好看点」。排版解决不了「这份列表在怎么变」，也回答不了「这个分类还活着吗」。
+
+## 五个视图
+
+| 视图 | 回答的问题 | 编码方式 |
+| --- | --- | --- |
+| 01 分类地图 | 哪个领域最繁荣 | Treemap，面积 = 清单数或采样 Star（对数），颜色 = 平均健康分（按当前视图内的区间相对着色，图例打印该区间）；侧栏选分类或点瓦片都直接聚焦到该分类的清单 |
+| 02 关系图谱 | 分类与清单如何组织 | 径向星系，中心为源索引、外圈 27 个分类；圆点大小 = Star，颜色 = 健康分 |
+| 03 检索榜单 | 找到某一份具体清单 | 678 条全文检索（中文 / 英文 / 仓库名 / topics）、7 种排序、分页、收藏、导出 |
+| 04 生态时间轴 | 这个索引在怎么变 | 24 个真实 README 历史版本的增删 diff、已验证仓库近 18 个月的 push 分布、仓库创建年份分布 |
+| 05 数据洞察 | 全局分布长什么样 | 分类权重、健康分分布、语言构成、归档与停滞清单的聚合统计 |
+
+交互：首屏的分类地图预览可直接点进地图；全局搜索（`/` 或 `Ctrl+K` 唤起命令面板）、URL 状态同步（视图 / 分类 / 搜索 / 排序 / 选中项 / 语言均可分享，前进后退不重载页面）、收藏与对比存 localStorage、分享当前视图、深浅色主题、移动端底部导航、页脚「回到顶部」、键盘可访问、`prefers-reduced-motion` 降级。颜色从不单独承担信息编码。
 
 ## 界面预览
 
@@ -26,24 +53,10 @@
 | --- | --- |
 | ![深色主题](docs/screenshots/desktop-dark.png) | ![移动端](docs/screenshots/mobile-map.png) |
 
-## 为什么不是「把 README 排版得好看点」
-
-源 README 是一份线性列表，看不出结构。本站补上原文里不存在的四个维度：**层级关系、仓库热度、维护活跃度、时间演化**，并把其中有描述的 466 条译成中文——另外 212 条源清单本就没有描述，只补中文提示，不代写。
-
-| 视图 | 回答的问题 | 编码方式 |
-| --- | --- | --- |
-| 01 分类地图 | 哪个领域最繁荣 | Treemap，面积 = 清单数或采样 Star（对数），颜色 = 平均健康分（按当前视图内的区间相对着色，图例打印该区间）；侧栏选分类或点瓦片都直接聚焦到该分类的清单 |
-| 02 关系图谱 | 分类与清单如何组织 | 径向星系，中心为源索引、外圈 27 个分类；圆点大小 = Star，颜色 = 健康分 |
-| 03 检索榜单 | 找到某一份具体清单 | 678 条全文检索（中文 / 英文 / 仓库名 / topics）、7 种排序、分页、收藏、导出 |
-| 04 生态时间轴 | 这个索引在怎么变 | 24 个真实 README 历史版本的增删 diff、已验证仓库近 18 个月的 push 分布、仓库创建年份分布 |
-| 05 数据洞察 | 全局分布长什么样 | 分类权重、健康分分布、语言构成、归档与停滞清单的聚合统计 |
-
-交互：首屏的分类地图预览可直接点进地图；全局搜索（`/` 或 `Ctrl+K` 唤起命令面板）、URL 状态同步（视图 / 分类 / 搜索 / 排序 / 选中项 / 语言均可分享，前进后退不重载页面）、收藏与对比存 localStorage、分享当前视图、深浅色主题、移动端底部导航、页脚「回到顶部」、键盘可访问、`prefers-reduced-motion` 降级。颜色从不单独承担信息编码。
-
 ## 中文与国内友好
 
 - **两态语言**：顶栏 `中文 / EN` 一键切换。中文态显示译文，EN 态把界面文案、首屏、栏目标题与描述一并切到英文（并列对照会让长描述在窄栏里挤成两行小字，已移除）。
-- 27 个分类译名、466 条描述译文、224 条「原文无描述」条目的中文提示，全部人工校订；专有名词（React、Kubernetes、Rust…）保留英文原名，不硬译。
+- 27 个分类译名、466 条描述译文、224 条补充提示，全部人工校订；专有名词（React、Kubernetes、Rust…）保留英文原名，不硬译。另有 212 条源清单根本没有描述，只给中文提示，不代写。
 - 中文检索、万 / 亿计数、中文日期、外链明确标注、页面不请求任何境外 CDN 或字体，国内网络可直接打开。
 
 ## 数据管线
@@ -56,13 +69,26 @@ source/readme.md  →  build-data.mjs     →  data/catalog.json（结构解析�
 source/descriptions.tsv → i18n.json    →  中文译名 / 译文 / 提示
                   →  bundle.mjs        →  data/catalog.js（前端唯一数据源）
                   →  validate.mjs + browser-check.py（两层交叉验证）
-                  →  make-banner.py + shots.py（横幅与截图同样由脚本生成）
+                  →  make-banner.py    →  docs/banner.png 与 docs/social-preview.png
 ```
 
 - **结构解析**：行级 tokenizer 还原 H2 章节、Markdown 链接、Tab 缩进的父子关系与 HTML 区块；597 个主条目 + 81 个子条目；`Linux`、`macOS` 这类无链接纯标签保留为 `kind: label`；`github.com/topics/awesome` 这类保留路径不当作仓库。
-- **指标**：授权 GitHub API 全量核验，**673 / 673（100%）** 仓库拿到 stars、forks、pushedAt、createdAt、language、license、topics、archived，合计 5,979,356 Star。采集失败时保留上一版快照，页面顶部始终显示「数据快照」日期，绝不用 0 或估算值填充。
+- **指标**：授权 GitHub API 全量核验，**673 / 673（100%）** 仓库拿到 stars、forks、pushedAt、createdAt、language、license、topics、archived，合计 5,979,356 Star。采集失败时保留上一版快照，页面顶部始终显示「数据快照」日期。
 - **健康分**：`0.45 × 新鲜度(pushed_at) + 0.35 × 热度(log10 stars) + 0.20 × 活跃度(forks / 归档状态)`，三个分量都在 0–100，右侧详情面板展示构成，不做黑箱打分。
 - **时间轴**：`history.mjs` 从 Contents API 拉取 24 个真实历史版本逐版比对，得到新增 9 / 移除 27 / 换链接 2，不是模拟数据。
+
+## 仓库结构
+
+```
+index.html            单页入口，无构建步骤
+assets/app.js         全部视图与交互（IIFE，无框架）
+assets/styles.css     设计令牌与版式
+data/catalog.js       前端唯一数据源（由 catalog.json + i18n.json 打包）
+data/i18n.json        分类译名、描述译文、无描述条目的中文提示
+source/readme.md      上游快照，sha256 记录在 catalog 里
+scripts/              采集、打包、验证、出图
+docs/                 README 横幅、徽章、截图与验证报告
+```
 
 ## 视觉体系
 
@@ -88,17 +114,19 @@ npm run build:data                       # 解析 source/readme.md
 node scripts/enrich-full.mjs             # 需要 GitHub 授权
 node scripts/history.mjs                 # 拉取上游历史版本
 node scripts/bundle.mjs                  # 生成前端数据
-npm run banner                           # 重新生成 docs/banner.png
+npm run validate                         # 数据层验证（先跑，报告才完整）
+npm run check:browser                    # 浏览器实机验证
+npm run banner                           # 重新生成横幅、徽章与社交预览图
 npm run shots                            # 重新生成 docs/screenshots/
-npm run validate                         # 数据层验证
-npm run check:browser                    # 浏览器实机验证（先 validate 后 browser，报告才完整）
 ```
+
+徽章上的断言数来自 `data/validation.json` 与 `data/browser-check.json`，所以顺序是 **validate → check:browser → banner**。数字不是手写的，改一次检查项就要重出一次图。
 
 ## 交叉验证
 
 | 层 | 脚本 | 覆盖 | 结果 |
 | --- | --- | --- | --- |
-| 数据 | `scripts/validate.mjs` | 用独立方法重新统计原始 README，校验解析、URL 归一化、指标范围、i18n 覆盖、历史 diff、产物完整性、界面与设计约束，色阶的 ΔE 落差与瓦片文字对比度，以及品牌标记、副标题断行与文案口径 | **74 / 74** |
+| 数据 | `scripts/validate.mjs` | 用独立方法重新统计原始 README，校验解析、URL 归一化、指标范围、i18n 覆盖、历史 diff、产物完整性、界面与设计约束，色阶的 ΔE 落差与瓦片文字对比度，品牌标记、副标题断行，以及中英两版 README 的一致性 | **84 / 84** |
 | 浏览器 | `scripts/browser-check.py` | 真实 Chrome 无头浏览器**逐个点击每个控件**（顶栏锚点、首屏地图板、5 个视图、侧栏筛选与 3 个开关、面积依据、显示范围、排序、分页、行内收藏、详情 4 个按钮、时间轴榜单、洞察条形、命令面板、页脚 2 个按钮）、刷新回顶、语言两态、图谱标签几何碰撞、表格列溢出、画布图例与脚注可见、瓦片配色落差与图例区间、瓦片内文字行距、品牌标记几何、副标题断行位置、移动端 5 个标签、控制台异常 | **119 / 119**，控制台 0 异常 |
 | 线上 | 同上，`ATLAS_BASE=...` | 同一套断言直接打向已部署站点，避免「本地绿、线上坏」 | 部署后同套复核 |
 
@@ -106,11 +134,7 @@ npm run check:browser                    # 浏览器实机验证（先 validate 
 
 ## 部署到 GitHub Pages
 
-线上地址：**https://odin1024.github.io/awesome-atlas/**
-
-站点根目录即 Pages 根目录，`.nojekyll` 会跳过 Jekyll 处理。
-
-**仓库主页（About）建议**：在仓库页右上角 **⚙ → About** 勾选 **Use your GitHub Pages website**，主页地址会自动填成上面的线上地址；`README` 顶部也已写好入口，从 GitHub 点进项目能直接进站。
+线上地址：**https://odin1024.github.io/awesome-atlas/** 。站点根目录即 Pages 根目录，`.nojekyll` 会跳过 Jekyll 处理。
 
 **方式一：常规 git**（`github.com:443` 可达时）
 
@@ -131,11 +155,9 @@ GH_TOKEN=<有 Contents 写权限的令牌> node scripts/deploy-pages.mjs
 
 脚本里都已处理，改写部署逻辑时不要拆掉：
 
-1. **GitHub App 令牌是只读的。** WorkBuddy 连接器发的 `ghu_` 令牌带 `contents: read`，对任何写入路径（建库、`git/blobs`、Contents API）都返回 `403 Resource not accessible by integration`。部署必须用 classic PAT（`repo` scope）或 fine-grained PAT（Contents 写）。脚本在第一次写入返回 403 时立刻停下并打印替代路径，不再逐文件刷几十行同样的错误。
-
-2. **空仓库不能直接写 blob。** 没有任何提交的仓库，`git/blobs` 与 `git/refs` 一律返回 `409 Git Repository is empty.`。必须先用 Contents API 写一个文件建立第一棵树，之后原子提交才成立。脚本用 `.nojekyll` 作种子——它本来就要发布，所以不会留下额外文件。
-
-3. **开启 Pages 需要 `administration: write`。** `POST /repos/{owner}/{repo}/pages` 的接受权限是 `pages=write,administration=write`；只给 Pages 写权限的 fine-grained 令牌会失败。两条路：给令牌加 Administration 写，或在 **Settings → Pages** 手动把 Source 设为 **Deploy from a branch**、分支选 `main`、目录选 `/ (root)`。推荐后者——文件此时已经推送完成，点一次即可，不必为了这一步扩大令牌权限。
+1. **GitHub App 令牌是只读的。** WorkBuddy 连接器发的 `ghu_` 令牌带 `contents: read`，对任何写入路径（建库、`git/blobs`、Contents API）都返回 `403 Resource not accessible by integration`。部署必须用 classic PAT（`repo` scope）或 fine-grained PAT（Contents 写）。
+2. **空仓库不能直接写 blob。** 没有任何提交的仓库，`git/blobs` 与 `git/refs` 一律返回 `409 Git Repository is empty.`。必须先用 Contents API 写一个文件建立第一棵树，脚本用 `.nojekyll` 作种子。
+3. **开启 Pages 需要 `administration: write`。** 只给 Pages 写权限的 fine-grained 令牌会失败。两条路：给令牌加 Administration 写，或在 **Settings → Pages** 手动把 Source 设为 **Deploy from a branch**、分支 `main`、目录 `/ (root)`。
 
 ### 无凭据时的兜底
 
@@ -145,8 +167,15 @@ node scripts/bundle-single.mjs
 
 把样式、数据和脚本内联成单个 `dist/index.html`（816 KB），可直接拖进 GitHub 网页上传，已实测通过全部浏览器检查。
 
-> 内联有个值得记的陷阱：`String.prototype.replace` 的**字符串**替换串里，`$$` 会塌缩成一个 `$`。`app.js` 同时声明了 `$`（querySelector）和 `$$`（querySelectorAll），第一版因此把 `const $$ =` 写成第二个 `const $ =`，全文 `$$(...)` 调用静默退化成单元素查询——页面照常渲染，多元素逻辑全错却不报错。改用替换**函数**后解决，并加了「每段内容必须逐字出现在产物里」的构建后断言。
+> 内联有个值得记的陷阱：`String.prototype.replace` 的**字符串**替换串里，`$$` 会塌缩成一个 `$`。`app.js` 同时声明了 `$`（querySelector）和 `$$`（querySelectorAll），第一版因此把 `const $$ =` 写成第二个 `const $ =`，全文 `$$(...)` 调用静默退化成单元素查询。改用替换**函数**后解决，并加了「每段内容必须逐字出现在产物里」的构建后断言。
+
+### 仓库主页设置
+
+- **About**：勾选 **Use your GitHub Pages website**，主页地址自动填成线上地址；Topics 建议 `awesome-list`、`data-visualization`、`treemap`、`chinese`。
+- **社交预览图**：`Settings → General → Social preview` 上传 `docs/social-preview.png`（1200×630）。不传的话，把仓库链接发到聊天工具里只会显示 GitHub 自动生成的白底卡片。
 
 ## 许可与边界
 
 源内容来自 `sindresorhus/awesome`（CC0-1.0），本站保留原始名称、描述与链接，中文译文为本站增补。Star / Fork / 最近更新是**采样时点快照**，不是实时数据；生态时间轴反映的是上游 README 的变更与仓库 push 分布，不代表清单本身的质量评级。页面所有统计口径与「诚实边界」都写在页脚的数据说明里。
+
+<p align="center"><a href="#这是什么">回到顶部</a> · <a href="README.en.md">Read in English →</a></p>

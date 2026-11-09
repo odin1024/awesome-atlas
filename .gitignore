@@ -6,3 +6,7 @@ __pycache__/
 
 # Single-file build output (scripts/bundle-single.mjs); deploy uses the source files
 /dist/
+
+# 本地预览产物
+/preview/
+.preview/
