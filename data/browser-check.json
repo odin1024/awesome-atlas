@@ -1,6 +1,6 @@
 {
-  "passed": 119,
-  "total": 119,
+  "passed": 120,
+  "total": 120,
   "allPassed": true,
   "checks": [
     {
@@ -387,6 +387,11 @@
       "name": "英文模式不再残留中文量词",
       "ok": true,
       "detail": "total 678\nMatches names, descriptions, repos and categories"
+    },
+    {
+      "name": "英文模式详情与时间轴无中文字符",
+      "ok": true,
+      "detail": "clean · 637 chars"
     },
     {
       "name": "语言状态写入 URL",

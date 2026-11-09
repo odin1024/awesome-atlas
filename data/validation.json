@@ -1,5 +1,5 @@
 {
-  "validatedAt": "2026-11-09T10:58:04.058Z",
+  "validatedAt": "2026-11-09T11:05:09.906Z",
   "passed": 89,
   "total": 89,
   "allPassed": true,
@@ -557,7 +557,7 @@
       "group": "文档",
       "name": "浏览器断言数与最近一次实机结果一致",
       "ok": true,
-      "detail": "两版都写 119 / 119"
+      "detail": "两版都写 120 / 120"
     },
     {
       "group": "文档",

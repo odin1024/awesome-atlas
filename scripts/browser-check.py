@@ -389,6 +389,23 @@ with sync_playwright() as p:
     check('英文模式不再残留中文量词',
           '条' not in page.locator('.search-meta').inner_text(),
           page.locator('.search-meta').inner_text())
+    # Both date formatters used to have a Chinese branch only, so the English
+    # detail panel said "Age · 2 个月前" and the timeline said "2026 年 9 月 12 日".
+    page.locator('.view-tab[data-view="table"]').click()
+    page.wait_for_timeout(400)
+    page.locator('tbody tr').first.click()
+    page.wait_for_timeout(450)
+    en_text = page.locator('#detailContent').inner_text()
+    page.locator('.view-tab[data-view="timeline"]').click()
+    page.wait_for_timeout(450)
+    if page.locator('.commit-meta').count():
+        en_text += page.locator('.commit-meta').first.inner_text()
+    stray = ''.join(ch for ch in en_text if '\u4e00' <= ch <= '\u9fff')
+    # A length guard keeps the assertion from passing on an empty panel.
+    check('英文模式详情与时间轴无中文字符', not stray and len(en_text) > 60,
+          (stray[:16] or 'clean') + f' · {len(en_text)} chars')
+    page.locator('.view-tab[data-view="insight"]').click()
+    page.wait_for_timeout(300)
     check('语言状态写入 URL', 'lang=en' in page.url, page.url.split('?')[-1][:80])
     page.locator('#langSwitch [data-lang="zh"]').click()
     page.wait_for_timeout(280)

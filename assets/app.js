@@ -24,19 +24,27 @@
     return fmtInt(n);
   };
   const dateOnly = (s) => (s ? String(s).slice(0, 10) : '—');
-  const cnDate = (s) => {
+  const cnDate = (s, en) => {
     if (!s) return '—';
     const [y, m, d] = String(s).slice(0, 10).split('-');
+    if (en) return `${Number(d)} ${'Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec'.split(' ')[Number(m) - 1]} ${y}`;
     return `${y} 年 ${Number(m)} 月 ${Number(d)} 日`;
   };
   const daysSince = (s) => Math.floor((Date.now() - new Date(s).getTime()) / 86400000);
-  const ago = (s) => {
+  /* Two language states, so every human-readable unit needs two spellings. The
+     English detail panel used to print "Age · 2 个月前" because this function
+     only had a Chinese branch. */
+  const ago = (s, en) => {
     const d = daysSince(s);
     if (!Number.isFinite(d)) return '—';
-    if (d < 1) return '今天';
-    if (d < 30) return d + ' 天前';
-    if (d < 365) return Math.floor(d / 30) + ' 个月前';
-    return (d / 365).toFixed(1) + ' 年前';
+    if (d < 1) return en ? 'today' : '今天';
+    if (d < 30) return en ? `${d} day${d > 1 ? 's' : ''} ago` : d + ' 天前';
+    if (d < 365) {
+      const m = Math.floor(d / 30);
+      return en ? `${m} month${m > 1 ? 's' : ''} ago` : m + ' 个月前';
+    }
+    const y = (d / 365).toFixed(1);
+    return en ? `${y} years ago` : y + ' 年前';
   };
   const safeUrl = (u) => (/^https?:\/\//.test(u || '') ? esc(u) : '#');
   /* Sequential health scale.
@@ -940,7 +948,7 @@
       ].join('');
       const more = (s.added.length + s.removed.length + s.relinked.length) > 8 ? `<span>+${s.added.length + s.removed.length + s.relinked.length - 8}</span>` : '';
       return `<li class="commit-item ${chips ? '' : 'is-neutral'}"><div class="commit-msg">${esc(isEn() ? s.message : s.messageZh)}</div>
-        <div class="commit-meta">${cnDate(s.date)} · ${esc(s.sha)} · ${esc(s.author)}</div>${chips ? `<div class="commit-diff">${chips}${more}</div>` : ''}</li>`;
+        <div class="commit-meta">${esc(cnDate(s.date, isEn()))} · ${esc(s.sha)} · ${esc(s.author)}</div>${chips ? `<div class="commit-diff">${chips}${more}</div>` : ''}</li>`;
     }).join('');
 
     /* 16 rows, not 8: the ranked list is the actionable half of this view and the
@@ -1041,7 +1049,7 @@
           <div class="kv"><div class="kv-label">Star</div><div class="kv-value">${fmtAbbr(m.stars, isEn())}</div></div>
           <div class="kv"><div class="kv-label">Fork</div><div class="kv-value">${fmtInt(m.forks)}</div></div>
           <div class="kv"><div class="kv-label">${isEn() ? 'Last push' : '最近 push'}</div><div class="kv-value">${esc(dateOnly(m.pushedAt))}</div></div>
-          <div class="kv"><div class="kv-label">${isEn() ? 'Age' : '距今'}</div><div class="kv-value">${esc(ago(m.pushedAt))}</div></div>
+          <div class="kv"><div class="kv-label">${isEn() ? 'Age' : '距今'}</div><div class="kv-value">${esc(ago(m.pushedAt, isEn()))}</div></div>
           <div class="kv"><div class="kv-label">${isEn() ? 'Language' : '语言'}</div><div class="kv-value">${esc(m.language || '—')}</div></div>
           <div class="kv"><div class="kv-label">${isEn() ? 'License' : '许可'}</div><div class="kv-value">${esc(m.license || '—')}</div></div>
         </div>
@@ -1249,7 +1257,7 @@
     for (const id of favorites) {
       const it = itemById.get(id);
       if (!it) continue;
-      lines.push(`- [${it.name}](${it.url || ''}) — ${plainDesc(it) || it.description || '（源清单未提供描述）'} · ${catName(catById.get(it.categoryId))}${it.metrics ? ` · ★ ${fmtInt(it.metrics.stars)}` : ''}`);
+      lines.push(`- [${it.name}](${it.url || ''}) — ${plainDesc(it) || it.description || (isEn() ? 'no upstream description' : '（源清单未提供描述）')} · ${catName(catById.get(it.categoryId))}${it.metrics ? ` · ★ ${fmtInt(it.metrics.stars)}` : ''}`);
     }
     const blob = new Blob([lines.join('\n')], { type: 'text/markdown;charset=utf-8' });
     const a = document.createElement('a');
