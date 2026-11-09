@@ -142,9 +142,18 @@ const refs = [...html.matchAll(/(?:src|href)="(\.\/[^"]+)"/g)].map((m) => m[1].r
 const missing = refs.filter((r) => !exists(r));
 add('产物', 'index.html 引用的本地资源全部存在', missing.length === 0, `${refs.length} 个引用，缺失 ${missing.length}`);
 /* Metadata links (canonical, og:image) are allowed to be absolute; runtime
-   dependencies are not. The check has to name what it forbids, or a rel=canonical
-   tag would read as an external stylesheet. */
-add('产物', '无外部运行时依赖', !/<script[^>]+src="https?:/.test(html) && !/<link[^>]+rel="stylesheet"[^>]+href="https?:/.test(html), '脚本与样式均本地加载');
+   dependencies are not — with one deliberate exception. Cloudflare Web
+   Analytics is a deferred module: a slow or blocked beacon cannot delay
+   rendering, data loading or any interaction. It is the only third-party
+   runtime file, and the assertion pins its exact URL and token shape so an
+   extra tracker cannot slip in under the same exemption. */
+const BEACON = 'https://static.cloudflareinsights.com/beacon.min.js';
+const extScripts = [...html.matchAll(/<script[^>]+src="(https?:\/\/[^"]+)"/g)].map((m) => m[1]);
+const extStyles = /<link[^>]+rel="stylesheet"[^>]+href="https?:/.test(html);
+const beaconOk = /<script type="module" src="https:\/\/static\.cloudflareinsights\.com\/beacon\.min\.js" data-cf-beacon='\{"token": "[0-9a-f]{32}"\}'><\/script>/.test(html);
+add('产物', '除访问量统计外无外部运行时依赖',
+  extScripts.length === 1 && extScripts[0] === BEACON && !extStyles && beaconOk,
+  '仅放行 Cloudflare beacon（32 位 token），其余脚本与样式均本地加载');
 add('产物', '页面无占位文本与调试残留', !/TODO|FIXME|lorem ipsum|console\.log\(/i.test(html + js + css), '无 TODO / console.log');
 add('产物', '五个视图与命令面板齐备', (html.match(/data-view="(map|graph|table|timeline|insight)"/g) || []).length === 5 && html.includes('id="cmdk"') && html.includes('id="mobileTabs"'), '地图 / 图谱 / 榜单 / 时间轴 / 洞察');
 add('产物', '数据包体积适合静态托管', fs.statSync(path.join(ROOT, 'data/catalog.js')).size < 1024 * 1024, `${(fs.statSync(path.join(ROOT, 'data/catalog.js')).size / 1024).toFixed(0)} KB`);

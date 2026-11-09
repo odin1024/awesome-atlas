@@ -175,7 +175,7 @@ if ('scrollRestoration' in history) history.scrollRestoration = 'manual';</scrip
   <div class="footer-inner">
     <div class="footer-text">
       <span class="footer-line"><strong class="footer-brand" data-ui="brandName">精选清单地图</strong> <span data-ui="footerCreditA">· 基于</span> <a href="https://github.com/sindresorhus/awesome" target="_blank" rel="noopener noreferrer">sindresorhus/awesome</a> <span data-ui="footerCreditB">（CC0-1.0）结构化与中文译述</span></span>
-      <span class="footer-line" data-ui="footerNote">为国内读者优化：中文检索 · 万位计数 · 无外部 CDN · 外链已标注</span>
+      <span class="footer-line" data-ui="footerNote">为国内读者优化：中文检索 · 万位计数 · 仅访问量统计走外部 CDN · 外链已标注</span>
     </div>
     <div class="footer-actions">
       <a class="source-link" href="https://github.com/sindresorhus/awesome" target="_blank" rel="noopener noreferrer" id="upstreamLink">
@@ -209,5 +209,9 @@ if ('scrollRestoration' in history) history.scrollRestoration = 'manual';</scrip
 
 <script src="./data/catalog.js"></script>
 <script src="./assets/app.js"></script>
+<!-- Cloudflare Web Analytics — the only third-party runtime file. It is a
+     module (deferred by default), so it never blocks rendering or data loading. -->
+<script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "7fe7a3ce648a4086b953ae76fea87488"}'></script>
+<!-- End Cloudflare Web Analytics -->
 </body>
 </html>

@@ -23,6 +23,24 @@ errors = []
 with sync_playwright() as p:
     browser = p.chromium.launch(executable_path=CHROME, headless=True, args=['--no-sandbox', '--disable-gpu'])
     ctx = browser.new_context(viewport={'width': 1440, 'height': 900}, device_scale_factor=1, accept_downloads=True)
+    # The analytics beacon reports to a third-party endpoint. On a local preview
+    # origin Cloudflare rejects the preflight (it echoes the bare host, while the
+    # preview listens on :8765), and that CORS noise would be mistaken for a site
+    # JS error. Stub only that one request, and only on local runs: production
+    # runs keep the real request so a broken beacon still surfaces here.
+    def stub_analytics(route):
+        # The beacon sends credentials, so CORS requires an exact origin echo —
+        # a wildcard '*' is rejected for credentialed requests.
+        route.fulfill(status=204, headers={
+            'Access-Control-Allow-Origin': BASE,
+            'Access-Control-Allow-Credentials': 'true',
+            'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
+            'Access-Control-Allow-Headers': '*',
+            'Vary': 'Origin',
+        })
+    LOCAL = BASE.startswith('http://127.0.0.1') or BASE.startswith('http://localhost')
+    if LOCAL:
+        ctx.route('**/cdn-cgi/rum**', stub_analytics)
     page = ctx.new_page()
     page.on('pageerror', lambda e: errors.append('pageerror: ' + str(e)))
     page.on('console', lambda m: errors.append('console.error: ' + m.text) if m.type == 'error' else None)
@@ -618,6 +636,8 @@ with sync_playwright() as p:
 
     # --- mobile ---
     mobile = browser.new_context(viewport={'width': 390, 'height': 844}, device_scale_factor=1, is_mobile=True, has_touch=True)
+    if LOCAL:
+        mobile.route('**/cdn-cgi/rum**', stub_analytics)
     mp = mobile.new_page()
     mp.on('pageerror', lambda e: errors.append('mobile pageerror: ' + str(e)))
     mp.goto(BASE, wait_until='networkidle', timeout=60000)

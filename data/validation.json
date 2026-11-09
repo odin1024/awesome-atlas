@@ -1,5 +1,5 @@
 {
-  "validatedAt": "2026-11-09T11:05:09.906Z",
+  "validatedAt": "2026-11-09T16:07:57.649Z",
   "passed": 89,
   "total": 89,
   "allPassed": true,
@@ -261,9 +261,9 @@
     },
     {
       "group": "产物",
-      "name": "无外部运行时依赖",
+      "name": "除访问量统计外无外部运行时依赖",
       "ok": true,
-      "detail": "脚本与样式均本地加载"
+      "detail": "仅放行 Cloudflare beacon（32 位 token），其余脚本与样式均本地加载"
     },
     {
       "group": "产物",
