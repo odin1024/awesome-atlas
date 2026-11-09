@@ -3,7 +3,7 @@
 <p align="center">
   <a href="https://github.com/odin1024/awesome-atlas/releases"><img src="https://img.shields.io/github/v/release/odin1024/awesome-atlas?style=flat-square&amp;label=version&amp;labelColor=141413&amp;color=a82d22" alt="latest release"></a>
   <a href="https://github.com/odin1024/awesome-atlas/blob/main/LICENSE"><img src="https://img.shields.io/github/license/odin1024/awesome-atlas?style=flat-square&amp;label=license&amp;labelColor=141413&amp;color=a82d22" alt="license"></a>
-  <a href="https://github.com/odin1024/awesome-atlas/search?l=javascript"><img src="https://img.shields.io/github/languages/top/odin1024/awesome-atlas?style=flat-square&amp;label=language&amp;labelColor=141413&amp;color=a82d22" alt="top language"></a>
+  <a href="https://github.com/odin1024/awesome-atlas/search?l=javascript"><img src="https://img.shields.io/github/languages/top/odin1024/awesome-atlas?style=flat-square&amp;labelColor=141413&amp;color=a82d22" alt="top language"></a>
   <a href="https://github.com/odin1024/awesome-atlas/commits/main"><img src="https://img.shields.io/github/last-commit/odin1024/awesome-atlas?style=flat-square&amp;label=last%20commit&amp;labelColor=141413&amp;color=a82d22" alt="last commit"></a>
   <a href="https://github.com/odin1024/awesome-atlas/stargazers"><img src="https://img.shields.io/github/stars/odin1024/awesome-atlas?style=flat-square&amp;label=stars&amp;labelColor=141413&amp;color=a82d22" alt="stars"></a>
   <a href="https://github.com/odin1024/awesome-atlas/forks"><img src="https://img.shields.io/github/forks/odin1024/awesome-atlas?style=flat-square&amp;label=forks&amp;labelColor=141413&amp;color=a82d22" alt="forks"></a>
