@@ -308,22 +308,54 @@ const social = pngSize('docs/social-preview.png');
 add('文档', '横幅与社交卡尺寸各自正确',
   zhBanner.w === 3200 && zhBanner.h === 920 && enBanner.w === 3200 && enBanner.h === 920 && social.w === 2400 && social.h === 1260,
   `中文 ${zhBanner.w}×${zhBanner.h} / 英文 ${enBanner.w}×${enBanner.h} / 社交卡 ${social.w}×${social.h}（均为 2x）`);
-const badgeNames = ['index', 'verified', 'tests', 'dependency'];
-const badgeOk = ['zh', 'en'].every((lang) => badgeNames.every((n) => {
-  const s = pngSize(`docs/badges/${lang}/${n}.png`);
-  return s.h === 60 && s.w > 300 && s.w < 700;
-}));
-add('文档', '徽章为自托管 PNG 且同高', badgeOk, '8 枚，逻辑高 30px（2x 输出 60px）');
-add('文档', 'README 不引用第三方图片服务', !/shields\.io|badgen\.net|img\.shields/.test(readmeZh + readmeEn) && !/src="https?:/.test(readmeZh + readmeEn),
-  '徽章与横幅全部随仓库分发，不受第三方限流或墙影响');
+/* Badges are live shields.io images, not PNGs drawn by make-banner.py. A drawn
+   badge carries a number that is true on the day it was rendered; these read
+   GitHub's own API, so a new star or a new release shows up on its own. */
+const DYNAMIC = /src="https:\/\/img\.shields\.io\/github\/(?:[\w-]+\/)+odin1024\/awesome-atlas[^"]*"/g;
+const dynZh = (readmeZh.match(DYNAMIC) || []).length;
+const dynEn = (readmeEn.match(DYNAMIC) || []).length;
+add('文档', '页头徽章为 shields.io 动态徽章', dynZh === dynEn && dynZh >= 6,
+  `${dynZh} / ${dynEn} 枚，直读 GitHub 接口，随仓库状态自动更新`);
+add('文档', '徽章标签随语言本地化', /label=%E7%89%88%E6%9C%AC/.test(readmeZh) && /label=version/.test(readmeEn),
+  '中文版中文标签，英文版英文标签');
+add('文档', '除 shields.io 外不引用第三方图片',
+  !/badgen\.net|camo\.githubusercontent/.test(readmeZh + readmeEn)
+  && !/img\.shields\.io\/(?!github\/)/.test(readmeZh + readmeEn)
+  && !/src="https?:\/\/(?!img\.shields\.io)/.test(readmeZh + readmeEn),
+  '唯一允许的境外图源是 shields.io，其余图片随仓库分发');
+
+/* An English edition that embeds Chinese screenshots of a UI that has an
+   English state is simply wrong. shots.py writes the English set to
+   docs/screenshots/en/, and each edition may only reference its own. */
+const shotsZh = [...new Set(readmeZh.match(/docs\/screenshots\/[\w/-]+\.png/g) || [])];
+const shotsEn = [...new Set(readmeEn.match(/docs\/screenshots\/[\w/-]+\.png/g) || [])];
+add('文档', '英文版只引用英文界面截图',
+  shotsEn.length >= 8 && shotsZh.length >= 8
+  && shotsEn.every((p) => p.startsWith('docs/screenshots/en/'))
+  && shotsZh.every((p) => !p.includes('/en/')),
+  `英文 ${shotsEn.length} 张全在 en/ 下，中文 ${shotsZh.length} 张不带 en/`);
+const enHero = pngSize('docs/screenshots/en/hero.png');
+const enMobile = pngSize('docs/screenshots/en/mobile-map.png');
+add('文档', '英文截图与中文同一套渲染参数',
+  enHero.w === 1440 && enHero.h === 900 && enMobile.w === 780 && enMobile.h === 1688,
+  `桌面 ${enHero.w}×${enHero.h} / 移动 ${enMobile.w}×${enMobile.h}`);
+add('产物', 'LICENSE 随仓库分发且为 MIT',
+  exists('LICENSE') && /MIT License/.test(read('LICENSE')) && /MIT/.test(readmeZh) && /MIT/.test(readmeEn),
+  'GitHub 侧栏与许可徽章都据此显示');
+
+/* The published browser count has to match the last real run, otherwise the
+   README keeps claiming 119 after someone adds ten more assertions. */
+const browserPassed = exists('data/browser-check.json') ? JSON.parse(read('data/browser-check.json')).passed : 0;
+add('文档', '浏览器断言数与最近一次实机结果一致',
+  readmeZh.includes(`${browserPassed} / ${browserPassed}`) && readmeEn.includes(`${browserPassed} / ${browserPassed}`),
+  `两版都写 ${browserPassed} / ${browserPassed}`);
 
 /* These two need the final check count, so they come last and count themselves. */
 const totalChecks = checks.length + 2;
-const browserPassed = exists('data/browser-check.json') ? JSON.parse(read('data/browser-check.json')).passed : 0;
 add('文档', '文案里的断言数等于实测', readmeZh.includes(`${totalChecks} / ${totalChecks}`) && readmeEn.includes(`${totalChecks} / ${totalChecks}`),
   `README 必须写 ${totalChecks} / ${totalChecks}`);
-add('文档', '徽章文案与实测同步', read('docs/badges-zh.html').includes(`${totalChecks} + ${browserPassed}`) && read('docs/badges-en.html').includes(`${totalChecks} + ${browserPassed}`),
-  `徽章应显示 ${totalChecks} + ${browserPassed}，否则重跑 npm run banner`);
+add('文档', '两版截图集一一对应', shotsZh.length === shotsEn.length && shotsZh.every((p, i) => p.split('/').pop() === shotsEn[i].split('/').pop()),
+  `两版各 ${shotsZh.length} 张，文件名逐个对齐`);
 
 const passed = checks.filter((c) => c.ok).length;
 const report = {

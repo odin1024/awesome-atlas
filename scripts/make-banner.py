@@ -1,20 +1,18 @@
-"""Render every image the repository itself shows: two README mastheads, the
-badge rail, and the social preview card.
+"""Render every image the repository itself shows: two README mastheads and the
+social preview card.
 
-Three images, three jobs — that separation is the point:
+  docs/banner.png         1600x460   README header, Chinese
+  docs/banner-en.png      1600x460   README header, English
+  docs/social-preview.png 1200x630   the card GitHub shows when the repo is shared
 
-  docs/banner.png        1600x480   README header, Chinese
-  docs/banner-en.png     1600x480   README header, English
-  docs/social-preview.png 1200x630  the card GitHub shows when the repo is shared
-  docs/badges/{zh,en}/*.png         the fact rail under the header
+A header only identifies; it carries no statistics. The numbers a reader wants
+(lists, stars, assertions) live in the badge rail under the header, and that
+rail is now served by shields.io straight from GitHub rather than baked into
+PNGs -- a drawn badge goes stale the moment a check is added, a live one cannot.
 
-The previous single poster did all three jobs at once, which is why the README
-repeated its title and four numbers verbatim underneath it: a share card argues,
-a header only identifies. The header therefore carries no statistics; the badges
-carry the numbers; the prose carries the argument.
-
-Everything is drawn from data/catalog.json — category counts, the same sequential
-ramp, the same binary treemap as the site — so no image can drift from the data.
+Everything here is drawn from data/catalog.json -- category counts, the same
+sequential ramp, the same binary treemap as the site -- so no image can drift
+from the data.
 """
 import json
 import os
@@ -192,12 +190,6 @@ COPY = {
                         '译成中文、补上 Star 与最近提交——列表一份没少，只是终于有了形状。'),
         'stat_k': ['技术分类', '精选清单', '已验证仓库', '采样 Star'],
         'social_foot': '数据快照 {date} · 健康分 {lo}–{hi}',
-        'badges': [
-            ('index', 'INDEX', '{n} 分类 · {items} 清单', False),
-            ('verified', 'VERIFIED', '{v} / {v} 仓库', True),
-            ('tests', 'TESTS', '{d} + {b} 条断言', False),
-            ('dependency', 'DEPENDENCY', '0 · 纯静态', False),
-        ],
     },
     'en': {
         'mark_a': 'Data Index',
@@ -217,12 +209,6 @@ COPY = {
                         'Translated, with stars and last-push dates: the same lists, given a shape.'),
         'stat_k': ['categories', 'lists', 'verified repos', 'stars sampled'],
         'social_foot': 'snapshot {date} · health {lo}–{hi}',
-        'badges': [
-            ('index', 'INDEX', '{n} categories · {items} lists', False),
-            ('verified', 'VERIFIED', '{v} / {v} repos', True),
-            ('tests', 'TESTS', '{d} + {b} assertions', False),
-            ('dependency', 'DEPENDENCY', '0 · static only', False),
-        ],
     },
 }
 
@@ -360,54 +346,7 @@ def social():
 </body></html>"""
 
 
-BADGE_CSS = f"""
-  * {{ box-sizing: border-box; margin: 0; }}
-  body {{ width: 560px; background: {PAPER}; padding: 0; }}
-  .b {{ display: inline-flex; height: 30px; align-items: stretch; border: 1px solid {INK};
-        margin: 0 10px 10px 0; font-family: Consolas, "PingFang SC", "Microsoft YaHei", monospace;
-        white-space: nowrap; }}
-  .k {{ background: {INK}; color: {PAPER}; font-size: 10.5px; font-weight: 600;
-        letter-spacing: .14em; display: flex; align-items: center; padding: 0 9px; }}
-  .v {{ font-size: 13px; font-weight: 600; display: flex; align-items: center; padding: 0 11px;
-        letter-spacing: .01em; }}
-  .v.hot {{ color: {ACCENT}; }}
-"""
-
-
-def counts():
-    """Assertion counts come from the two reports, never from a hand-typed number.
-
-    If the artifacts are missing the badge would silently print a stale figure, so
-    this raises instead: `npm run validate && npm run check:browser` first, then
-    `npm run banner`.
-    """
-    out = {}
-    for key, rel in (('d', 'data/validation.json'), ('b', 'data/browser-check.json')):
-        path = os.path.join(ROOT, rel)
-        if not os.path.exists(path):
-            sys.exit(f'缺少 {rel}，先运行 validate / check:browser 再生成图片')
-        rep = json.load(open(path, encoding='utf-8'))
-        if not rep.get('allPassed'):
-            print(f'注意：{rel} 有失败项，徽章仍按断言总数渲染')
-        out[key] = rep['total']
-    return out
-
-
-def badges(lang):
-    c = COPY[lang]
-    verified = sum(1 for it in items if it.get('metrics'))
-    data = dict(n=catalog['stats']['categories'], items=catalog['stats']['items'],
-                v=verified, **counts())
-    rows = ''.join(
-        f'<div class="b" id="{key}"><span class="k">{label}</span>'
-        f'<span class="v{" hot" if hot else ""}">{value.format(**data)}</span></div>'
-        for key, label, value, hot in c['badges'])
-    return f'<!doctype html><html><head><meta charset="utf-8"><style>{BADGE_CSS}</style></head><body>{rows}</body></html>'
-
-
 # ---------------------------------------------------------------- render
-os.makedirs(os.path.join(DOCS, 'badges', 'zh'), exist_ok=True)
-os.makedirs(os.path.join(DOCS, 'badges', 'en'), exist_ok=True)
 
 jobs = [
     ('docs/banner.html', masthead('zh'), 1600, 460, 'docs/banner.png'),
@@ -429,22 +368,6 @@ with sync_playwright() as p:
         ctx.close()
         print(f'{out_rel}: {os.path.getsize(os.path.join(ROOT, out_rel)) // 1024} KB  {w}x{h}@2x')
 
-    for lang in ('zh', 'en'):
-        html_rel = f'docs/badges-{lang}.html'
-        html_path = os.path.join(ROOT, html_rel)
-        with open(html_path, 'w', encoding='utf-8') as fh:
-            fh.write(badges(lang))
-        ctx = browser.new_context(viewport={'width': 560, 'height': 140}, device_scale_factor=2)
-        page = ctx.new_page()
-        page.goto('file:///' + html_path.replace('\\', '/'), wait_until='load')
-        page.wait_for_timeout(200)
-        for key, _, _, _ in COPY[lang]['badges']:
-            el = page.locator('#' + key)
-            out = os.path.join(DOCS, 'badges', lang, key + '.png')
-            el.screenshot(path=out)
-            box = el.bounding_box()
-            print(f'  badges/{lang}/{key}.png  {box["width"]:.0f}x{box["height"]:.0f}')
-        ctx.close()
     browser.close()
 
 print('ok')

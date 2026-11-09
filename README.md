@@ -1,10 +1,12 @@
 <p align="center"><img src="docs/banner.png" alt="精选清单地图：左侧为标题与五个视图编号，右侧为 27 个分类的树状地图" width="100%"></p>
 
 <p align="center">
-  <img src="docs/badges/zh/index.png" height="26" alt="27 个分类 · 678 份清单">
-  <img src="docs/badges/zh/verified.png" height="26" alt="673 / 673 个仓库已核验">
-  <img src="docs/badges/zh/tests.png" height="26" alt="数据层与浏览器层断言全部通过">
-  <img src="docs/badges/zh/dependency.png" height="26" alt="零依赖 · 纯静态">
+  <a href="https://github.com/odin1024/awesome-atlas/releases"><img src="https://img.shields.io/github/v/release/odin1024/awesome-atlas?style=flat-square&amp;label=%E7%89%88%E6%9C%AC&amp;labelColor=141413&amp;color=a82d22" alt="最新版本"></a>
+  <a href="https://github.com/odin1024/awesome-atlas/blob/main/LICENSE"><img src="https://img.shields.io/github/license/odin1024/awesome-atlas?style=flat-square&amp;label=%E8%AE%B8%E5%8F%AF&amp;labelColor=141413&amp;color=a82d22" alt="许可协议"></a>
+  <a href="https://github.com/odin1024/awesome-atlas/search?l=javascript"><img src="https://img.shields.io/github/languages/top/odin1024/awesome-atlas?style=flat-square&amp;label=%E4%B8%BB%E8%AF%AD%E8%A8%80&amp;labelColor=141413&amp;color=a82d22" alt="主语言"></a>
+  <a href="https://github.com/odin1024/awesome-atlas/commits/main"><img src="https://img.shields.io/github/last-commit/odin1024/awesome-atlas?style=flat-square&amp;label=%E6%9C%80%E8%BF%91%E6%8F%90%E4%BA%A4&amp;labelColor=141413&amp;color=a82d22" alt="最近提交"></a>
+  <a href="https://github.com/odin1024/awesome-atlas/stargazers"><img src="https://img.shields.io/github/stars/odin1024/awesome-atlas?style=flat-square&amp;label=%E6%98%9F%E6%A0%87&amp;labelColor=141413&amp;color=a82d22" alt="星标数"></a>
+  <a href="https://github.com/odin1024/awesome-atlas/forks"><img src="https://img.shields.io/github/forks/odin1024/awesome-atlas?style=flat-square&amp;label=fork&amp;labelColor=141413&amp;color=a82d22" alt="派生数"></a>
 </p>
 
 <p align="center"><strong><a href="https://odin1024.github.io/awesome-atlas/">在线打开 → odin1024.github.io/awesome-atlas</a></strong></p>
@@ -87,7 +89,7 @@ data/catalog.js       前端唯一数据源（由 catalog.json + i18n.json 打�
 data/i18n.json        分类译名、描述译文、无描述条目的中文提示
 source/readme.md      上游快照，sha256 记录在 catalog 里
 scripts/              采集、打包、验证、出图
-docs/                 README 横幅、徽章、截图与验证报告
+docs/                 README 页头、分享卡、截图（en/ 为英文界面）与验证报告
 ```
 
 ## 视觉体系
@@ -116,21 +118,22 @@ node scripts/history.mjs                 # 拉取上游历史版本
 node scripts/bundle.mjs                  # 生成前端数据
 npm run validate                         # 数据层验证（先跑，报告才完整）
 npm run check:browser                    # 浏览器实机验证
-npm run banner                           # 重新生成横幅、徽章与社交预览图
-npm run shots                            # 重新生成 docs/screenshots/
+npm run banner                           # 重新生成中英页头与社交预览图
+npm run shots                            # 重新生成 docs/screenshots/（中文界面）
+ATLAS_LANG=en npm run shots              # 重新生成 docs/screenshots/en/（英文界面）
 ```
 
-徽章上的断言数来自 `data/validation.json` 与 `data/browser-check.json`，所以顺序是 **validate → check:browser → banner**。数字不是手写的，改一次检查项就要重出一次图。
+页头那排徽章不是画出来的图片：版本、许可、主语言、最近提交、星标、派生都由 shields.io 直读 GitHub 接口，随仓库状态自动更新，不用重出图。截图分两套——`docs/screenshots/` 是中文界面，`docs/screenshots/en/` 是英文界面，英文版 README 只引用后者。
 
 ## 交叉验证
 
 | 层 | 脚本 | 覆盖 | 结果 |
 | --- | --- | --- | --- |
-| 数据 | `scripts/validate.mjs` | 用独立方法重新统计原始 README，校验解析、URL 归一化、指标范围、i18n 覆盖、历史 diff、产物完整性、界面与设计约束，色阶的 ΔE 落差与瓦片文字对比度，品牌标记、副标题断行，以及中英两版 README 的一致性 | **84 / 84** |
+| 数据 | `scripts/validate.mjs` | 用独立方法重新统计原始 README，校验解析、URL 归一化、指标范围、i18n 覆盖、历史 diff、产物完整性、界面与设计约束，色阶的 ΔE 落差与瓦片文字对比度，品牌标记、副标题断行，以及中英两版 README 的一致性 | **89 / 89** |
 | 浏览器 | `scripts/browser-check.py` | 真实 Chrome 无头浏览器**逐个点击每个控件**（顶栏锚点、首屏地图板、5 个视图、侧栏筛选与 3 个开关、面积依据、显示范围、排序、分页、行内收藏、详情 4 个按钮、时间轴榜单、洞察条形、命令面板、页脚 2 个按钮）、刷新回顶、语言两态、图谱标签几何碰撞、表格列溢出、画布图例与脚注可见、瓦片配色落差与图例区间、瓦片内文字行距、品牌标记几何、副标题断行位置、移动端 5 个标签、控制台异常 | **119 / 119**，控制台 0 异常 |
 | 线上 | 同上，`ATLAS_BASE=...` | 同一套断言直接打向已部署站点，避免「本地绿、线上坏」 | 部署后同套复核 |
 
-详细报告与桌面 / 移动端截图见 [`docs/VALIDATION.md`](docs/VALIDATION.md) 和 `docs/screenshots/`。
+详细报告与桌面 / 移动端截图见 [`docs/VALIDATION.md`](docs/VALIDATION.md)、`docs/screenshots/`（中文）与 `docs/screenshots/en/`（英文）。
 
 ## 部署到 GitHub Pages
 
@@ -176,6 +179,6 @@ node scripts/bundle-single.mjs
 
 ## 许可与边界
 
-源内容来自 `sindresorhus/awesome`（CC0-1.0），本站保留原始名称、描述与链接，中文译文为本站增补。Star / Fork / 最近更新是**采样时点快照**，不是实时数据；生态时间轴反映的是上游 README 的变更与仓库 push 分布，不代表清单本身的质量评级。页面所有统计口径与「诚实边界」都写在页脚的数据说明里。
+本站代码（HTML / CSS / JS 与全部脚本）以 **MIT** 发布，见 [`LICENSE`](LICENSE)；26 个静态文件、零构建、零依赖。源内容来自 `sindresorhus/awesome`（CC0-1.0），本站保留原始名称、描述与链接，中文译文为本站增补，数据部分沿用 CC0。Star / Fork / 最近更新是**采样时点快照**，不是实时数据；生态时间轴反映的是上游 README 的变更与仓库 push 分布，不代表清单本身的质量评级。页面所有统计口径与「诚实边界」都写在页脚的数据说明里。
 
 <p align="center"><a href="#这是什么">回到顶部</a> · <a href="README.en.md">Read in English →</a></p>

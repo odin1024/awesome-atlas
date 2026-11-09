@@ -1,10 +1,12 @@
 <p align="center"><img src="docs/banner-en.png" alt="Awesome Atlas: the title and five view numbers on the left, a treemap of 27 categories on the right" width="100%"></p>
 
 <p align="center">
-  <img src="docs/badges/en/index.png" height="26" alt="27 categories · 678 lists">
-  <img src="docs/badges/en/verified.png" height="26" alt="673 / 673 repositories verified">
-  <img src="docs/badges/en/tests.png" height="26" alt="data and browser assertions all passing">
-  <img src="docs/badges/en/dependency.png" height="26" alt="zero dependencies, static only">
+  <a href="https://github.com/odin1024/awesome-atlas/releases"><img src="https://img.shields.io/github/v/release/odin1024/awesome-atlas?style=flat-square&amp;label=version&amp;labelColor=141413&amp;color=a82d22" alt="latest release"></a>
+  <a href="https://github.com/odin1024/awesome-atlas/blob/main/LICENSE"><img src="https://img.shields.io/github/license/odin1024/awesome-atlas?style=flat-square&amp;label=license&amp;labelColor=141413&amp;color=a82d22" alt="license"></a>
+  <a href="https://github.com/odin1024/awesome-atlas/search?l=javascript"><img src="https://img.shields.io/github/languages/top/odin1024/awesome-atlas?style=flat-square&amp;label=language&amp;labelColor=141413&amp;color=a82d22" alt="top language"></a>
+  <a href="https://github.com/odin1024/awesome-atlas/commits/main"><img src="https://img.shields.io/github/last-commit/odin1024/awesome-atlas?style=flat-square&amp;label=last%20commit&amp;labelColor=141413&amp;color=a82d22" alt="last commit"></a>
+  <a href="https://github.com/odin1024/awesome-atlas/stargazers"><img src="https://img.shields.io/github/stars/odin1024/awesome-atlas?style=flat-square&amp;label=stars&amp;labelColor=141413&amp;color=a82d22" alt="stars"></a>
+  <a href="https://github.com/odin1024/awesome-atlas/forks"><img src="https://img.shields.io/github/forks/odin1024/awesome-atlas?style=flat-square&amp;label=forks&amp;labelColor=141413&amp;color=a82d22" alt="forks"></a>
 </p>
 
 <p align="center"><strong><a href="https://odin1024.github.io/awesome-atlas/">Open the site → odin1024.github.io/awesome-atlas</a></strong></p>
@@ -39,19 +41,19 @@ Interaction: the map preview on the fold links straight into the workspace; glob
 
 ## Screenshots
 
-![Hero](docs/screenshots/hero.png)
+![Hero](docs/screenshots/en/hero.png)
 
 | Category map · area = list count, colour = average health | Relationship graph · source index at the centre, 27 categories around it |
 | --- | --- |
-| ![Category map](docs/screenshots/desktop-map.png) | ![Relationship graph](docs/screenshots/desktop-graph.png) |
+| ![Category map](docs/screenshots/en/desktop-map.png) | ![Relationship graph](docs/screenshots/en/desktop-graph.png) |
 | **Search and ranking · 678 entries, 7 sort orders** | **Timeline · diffs across 24 real README versions** |
-| ![Search](docs/screenshots/desktop-table.png) | ![Timeline](docs/screenshots/desktop-timeline.png) |
+| ![Search](docs/screenshots/en/desktop-table.png) | ![Timeline](docs/screenshots/en/desktop-timeline.png) |
 | **Insights · the full metrics set, re-aggregated** | **Entry profile · how the health score is built** |
-| ![Insights](docs/screenshots/desktop-insight.png) | ![Entry detail](docs/screenshots/desktop-detail.png) |
+| ![Insights](docs/screenshots/en/desktop-insight.png) | ![Entry detail](docs/screenshots/en/desktop-detail.png) |
 
 | Dark theme | Mobile (390px) |
 | --- | --- |
-| ![Dark theme](docs/screenshots/desktop-dark.png) | ![Mobile](docs/screenshots/mobile-map.png) |
+| ![Dark theme](docs/screenshots/en/desktop-dark.png) | ![Mobile](docs/screenshots/en/mobile-map.png) |
 
 ## Chinese first, and why
 
@@ -88,7 +90,7 @@ data/catalog.js       the only data source the page loads (bundled from catalog.
 data/i18n.json        category names, descriptions, hints for entries without one
 source/readme.md      upstream snapshot, sha256 recorded in the catalogue
 scripts/              fetch, bundle, validate, render
-docs/                 README headers, badges, screenshots, validation report
+docs/                 README headers, share card, screenshots (en/ = English UI), report
 ```
 
 ## Visual system
@@ -117,21 +119,22 @@ node scripts/history.mjs                 # pull historical README versions
 node scripts/bundle.mjs                  # build the front-end data file
 npm run validate                         # data-layer checks (run this first)
 npm run check:browser                    # real-browser checks
-npm run banner                           # re-render headers, badges, social preview
-npm run shots                            # re-render docs/screenshots/
+npm run banner                           # re-render both headers and the social card
+npm run shots                            # re-render docs/screenshots/ (Chinese UI)
+ATLAS_LANG=en npm run shots              # re-render docs/screenshots/en/ (English UI)
 ```
 
-The assertion counts on the badges come from `data/validation.json` and `data/browser-check.json`, which is why the order is **validate → check:browser → banner**. The numbers are not typed by hand: add a check and the images have to be re-rendered.
+The badges under the header are not drawn images. Version, license, top language, last commit, stars and forks are read from GitHub by shields.io and update themselves, so adding a check never leaves a stale number in a picture. Screenshots ship in two sets: `docs/screenshots/` is the Chinese UI, `docs/screenshots/en/` the English one, and this file only references the latter.
 
 ## Cross-validation
 
 | Layer | Script | Coverage | Result |
 | --- | --- | --- | --- |
-| Data | `scripts/validate.mjs` | Re-counts the raw README by an independent method and checks parsing, URL normalisation, metric ranges, i18n coverage, history diffs, artifact completeness, interface and design constraints, ΔE spacing of the colour ramp, tile text contrast, the brand mark, the subtitle line break, and the consistency of the two READMEs | **84 / 84** |
+| Data | `scripts/validate.mjs` | Re-counts the raw README by an independent method and checks parsing, URL normalisation, metric ranges, i18n coverage, history diffs, artifact completeness, interface and design constraints, ΔE spacing of the colour ramp, tile text contrast, the brand mark, the subtitle line break, and the consistency of the two READMEs | **89 / 89** |
 | Browser | `scripts/browser-check.py` | A real headless Chrome **clicks every control** (header anchors, the fold's map plate, 5 views, sidebar filters and 3 switches, area basis, display range, sorting, paging, inline favourites, 4 detail buttons, timeline ranking, insight bars, command palette, 2 footer buttons), plus scroll restoration, both language states, graph label collisions, table column overflow, canvas legend and footnote visibility, tile colour spacing, tile line height, mark geometry, subtitle line break, 5 mobile tabs and console errors | **119 / 119**, 0 console errors |
 | Production | same, with `ATLAS_BASE=...` | The same assertions run against the deployed site, so "green locally, broken online" cannot happen | re-run after each deploy |
 
-Full report and desktop / mobile screenshots: [`docs/VALIDATION.md`](docs/VALIDATION.md) and `docs/screenshots/`.
+Full report and desktop / mobile screenshots: [`docs/VALIDATION.md`](docs/VALIDATION.md), `docs/screenshots/` (中文) and `docs/screenshots/en/` (English).
 
 ## Deploying to GitHub Pages
 
@@ -177,6 +180,6 @@ Inlines styles, data and scripts into a single `dist/index.html` (816 KB) that c
 
 ## Licence and scope
 
-Source content comes from `sindresorhus/awesome` (CC0-1.0). Original names, descriptions and links are kept; the Chinese translation is this project's addition. Stars, forks and last-push dates are **point-in-time snapshots**, not live data. The timeline reflects changes to the upstream README and the push distribution of repositories, not a quality rating of the lists themselves. Every statistical definition — and every honest limitation — is written into the data note in the page footer.
+The code here — HTML, CSS, JS and every script — is **MIT** licensed, see [`LICENSE`](LICENSE): static files, no build step, no dependencies. Source content comes from `sindresorhus/awesome` (CC0-1.0). Original names, descriptions and links are kept; the Chinese translation is this project's addition, and the data stays CC0. Stars, forks and last-push dates are **point-in-time snapshots**, not live data. The timeline reflects changes to the upstream README and the push distribution of repositories, not a quality rating of the lists themselves. Every statistical definition — and every honest limitation — is written into the data note in the page footer.
 
 <p align="center"><a href="#what-this-is">Back to top</a> · <a href="README.md">以中文阅读 →</a></p>

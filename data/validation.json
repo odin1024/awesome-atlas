@@ -1,7 +1,7 @@
 {
-  "validatedAt": "2026-11-09T10:15:41.231Z",
-  "passed": 84,
-  "total": 84,
+  "validatedAt": "2026-11-09T10:51:19.376Z",
+  "passed": 89,
+  "total": 89,
   "allPassed": true,
   "source": {
     "sha256": "465cd781335e44587d238f666800104b63d4fc8ba2395d6422974dcba421c616",
@@ -503,7 +503,7 @@
       "group": "文档",
       "name": "两版引用的本地文件全部存在",
       "ok": true,
-      "detail": "20 个引用均可解析"
+      "detail": "22 个引用均可解析"
     },
     {
       "group": "文档",
@@ -519,27 +519,57 @@
     },
     {
       "group": "文档",
-      "name": "徽章为自托管 PNG 且同高",
+      "name": "页头徽章为 shields.io 动态徽章",
       "ok": true,
-      "detail": "8 枚，逻辑高 30px（2x 输出 60px）"
+      "detail": "6 / 6 枚，直读 GitHub 接口，随仓库状态自动更新"
     },
     {
       "group": "文档",
-      "name": "README 不引用第三方图片服务",
+      "name": "徽章标签随语言本地化",
       "ok": true,
-      "detail": "徽章与横幅全部随仓库分发，不受第三方限流或墙影响"
+      "detail": "中文版中文标签，英文版英文标签"
+    },
+    {
+      "group": "文档",
+      "name": "除 shields.io 外不引用第三方图片",
+      "ok": true,
+      "detail": "唯一允许的境外图源是 shields.io，其余图片随仓库分发"
+    },
+    {
+      "group": "文档",
+      "name": "英文版只引用英文界面截图",
+      "ok": true,
+      "detail": "英文 9 张全在 en/ 下，中文 9 张不带 en/"
+    },
+    {
+      "group": "文档",
+      "name": "英文截图与中文同一套渲染参数",
+      "ok": true,
+      "detail": "桌面 1440×900 / 移动 780×1688"
+    },
+    {
+      "group": "产物",
+      "name": "LICENSE 随仓库分发且为 MIT",
+      "ok": true,
+      "detail": "GitHub 侧栏与许可徽章都据此显示"
+    },
+    {
+      "group": "文档",
+      "name": "浏览器断言数与最近一次实机结果一致",
+      "ok": true,
+      "detail": "两版都写 119 / 119"
     },
     {
       "group": "文档",
       "name": "文案里的断言数等于实测",
       "ok": true,
-      "detail": "README 必须写 84 / 84"
+      "detail": "README 必须写 89 / 89"
     },
     {
       "group": "文档",
-      "name": "徽章文案与实测同步",
+      "name": "两版截图集一一对应",
       "ok": true,
-      "detail": "徽章应显示 84 + 119，否则重跑 npm run banner"
+      "detail": "两版各 9 张，文件名逐个对齐"
     }
   ]
 }
