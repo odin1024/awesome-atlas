@@ -233,14 +233,16 @@ if (pages.code === 409 || pages.code === 422) {
 if (pages.code !== 201 && pages.code !== 200 && pages.code !== 204 && pages.code !== 409) {
   console.log(`Pages 启用接口返回 ${pages.code}（${brief(pages)}）；若已启用可忽略。`);
 }
-gh('POST', `${base}/pages/builds`); // best-effort: kick off the first build
+// No explicit POST /pages/builds: updating the branch already queues a build,
+// and asking for a second one races it -- that produced a duplicate record that
+// finished as "Page build failed" while its sibling built fine.
 const status = gh('GET', `${base}/pages`);
 const url = status.data?.html_url || `https://${owner}.github.io/${REPO}/`;
 
 const result = {
   owner, repo: REPO, branch: BRANCH, commit: commit.data.sha,
   files: entries.length, bytes: totalBytes, failed,
-  pages: { createCode: pages.code, status: status.data?.status || null, url },
+  pages: { createCode: pages.code, url },
   deployedAt: new Date().toISOString(),
 };
 fs.writeFileSync(path.join(ROOT, 'data', 'deploy-result.json'), JSON.stringify(result, null, 2));
