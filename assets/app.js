@@ -78,6 +78,16 @@
   /* ---------- bilingual UI strings ---------- */
   const UI = {
     zh: {
+      brandName: '精选清单地图', brandSub: 'AWESOME ATLAS',
+      navStart: '开始探索', navInsight: '今日发现', navAbout: '数据说明',
+      eyebrow1: '一个 README 的另一种读法', eyebrow2: '全量中文译述', eyebrow3: 'CC0 数据',
+      heroTitle: '把 <span class="hero-num" id="heroCount">678</span> 份清单<br>变成一张<span class="hero-accent">看得懂的地图</span>',
+      heroSub: '一份英文 README 里藏着 27 个技术分类、近七百份人工策展的资源索引。这里把它译成中文，再补上层级、热度、活跃度与演化四个维度——不重复列表，只让结构显形。',
+      footerNote: '为国内读者优化：中文检索 · 万位计数 · 无外部 CDN · 外链已标注',
+      footerCreditA: '· 基于', footerCreditB: '（CC0-1.0）结构化与中文译述',
+      insightsKicker: '今日发现', insightsTitle: '这份数据自己会说话',
+      insightsLead: '以下结论全部由当前快照实时计算，点击可直接跳到对应条目。',
+      upstreamRepo: '上游仓库', backTop: '回到顶部',
       tabMap: '分类地图', tabGraph: '关系图谱', tabTable: '检索榜单', tabTimeline: '生态时间轴', tabInsight: '数据洞察',
       sideNav: '分类导航', reset: '重置', scopeTitle: '数据范围', enrichedOnly: '仅显示已验证仓库',
       favoritesOnly: '仅显示我的收藏', hideArchived: '隐藏已归档仓库', favTitle: '我的收藏', exportFav: '导出清单',
@@ -97,17 +107,26 @@
       updatedCol: '最近更新', healthCol: '健康分', prev: '上一页', next: '下一页', noMatch: '没有匹配的清单',
       noMatchHint: '试试清空搜索词或重置筛选条件。', clearSearch: '清空搜索', resetAll: '重置筛选',
       mainEntry: '主条目', subEntry: '子条目', noSample: '未采集', archived: '已归档', unavailable: '链接失效',
-      hintLabel: '中文提示 · 源清单未提供描述', origLabel: '原文', openGithub: '在 GitHub 打开',
+      hintLabel: '中文提示 · 源清单未提供描述', openGithub: '在 GitHub 打开',
       fav: '收藏', faved: '已收藏', sameCat: '看同分类', metrics: '仓库指标', relations: '来源与关系',
       close: '关闭详情', viewMap: '地图', viewGraph: '图谱', viewTable: '榜单', viewTimeline: '时间', viewInsight: '洞察',
       copyOk: '链接已复制，可直接分享', copyFail: '复制失败，请手动复制地址栏链接',
       exportEmpty: '还没有收藏，先在榜单里点 ☆ 收藏几条吧', exportOk: '收藏清单已导出为 Markdown',
-      favAdded: '已加入收藏', favRemoved: '已取消收藏', langZh: '已切换为中文', langBoth: '已切换为双语对照', langEn: '已切换为英文原文',
+      favAdded: '已加入收藏', favRemoved: '已取消收藏', langZh: '已切换为中文', langEn: '已切换为英文原文',
       dataLoaded: '数据快照', legendNote: '健康分只对已验证仓库计算；未命中或已失效的条目始终标注「未采集」，不按 0 分处理。',
-      hintOnly: '中文提示由本站补写，源清单本身没有描述；切到「原文」可核对。',
       countSuffix: '条', matchedPrefix: '匹配', totalPrefix: '共', inScope: '条在当前范围内',
     },
     en: {
+      brandName: 'Awesome Atlas', brandSub: 'CURATED INDEX',
+      navStart: 'Explore', navInsight: 'Insights', navAbout: 'About',
+      eyebrow1: 'Another way to read one README', eyebrow2: 'Fully translated', eyebrow3: 'CC0 data',
+      heroTitle: 'Turn <span class="hero-num" id="heroCount">678</span> curated lists<br>into a <span class="hero-accent">readable map</span>',
+      heroSub: 'One English README hides 27 technical categories and nearly seven hundred hand-curated indexes. This atlas keeps every source, then adds four dimensions — hierarchy, popularity, activity and evolution — so the structure becomes visible instead of being repeated as a list.',
+      footerNote: 'Built for readers in mainland China: Chinese search · no external CDN · external links labelled',
+      footerCreditA: '· structure and Chinese translation based on', footerCreditB: '(CC0-1.0)',
+      insightsKicker: 'Insights', insightsTitle: 'This dataset speaks for itself',
+      insightsLead: 'Every conclusion below is computed from the current snapshot; click one to jump to the entries behind it.',
+      upstreamRepo: 'Upstream repo', backTop: 'Back to top',
       tabMap: 'Category Map', tabGraph: 'Relation Graph', tabTable: 'Search & Rank', tabTimeline: 'Ecosystem Timeline', tabInsight: 'Data Insights',
       sideNav: 'Categories', reset: 'Reset', scopeTitle: 'Data scope', enrichedOnly: 'Verified repos only',
       favoritesOnly: 'My favorites only', hideArchived: 'Hide archived repos', favTitle: 'Favorites', exportFav: 'Export',
@@ -127,34 +146,37 @@
       updatedCol: 'Last push', healthCol: 'Health', prev: 'Previous', next: 'Next', noMatch: 'No lists match',
       noMatchHint: 'Try clearing the search or resetting the filters.', clearSearch: 'Clear search', resetAll: 'Reset filters',
       mainEntry: 'Top-level', subEntry: 'Nested', noSample: 'not sampled', archived: 'archived', unavailable: 'link dead',
-      hintLabel: 'Editor hint · no upstream description', origLabel: 'Original', openGithub: 'Open on GitHub',
+      hintLabel: 'Editor hint · no upstream description', openGithub: 'Open on GitHub',
       fav: 'Save', faved: 'Saved', sameCat: 'Same category', metrics: 'Repository metrics', relations: 'Source & relations',
       close: 'Close', viewMap: 'Map', viewGraph: 'Graph', viewTable: 'Table', viewTimeline: 'Time', viewInsight: 'Insight',
       copyOk: 'Link copied', copyFail: 'Copy failed, please copy the address bar manually',
       exportEmpty: 'No favorites yet — star a few rows first', exportOk: 'Favorites exported as Markdown',
-      favAdded: 'Added to favorites', favRemoved: 'Removed from favorites', langZh: 'Switched to Chinese', langBoth: 'Bilingual mode', langEn: 'Switched to English',
+      favAdded: 'Added to favorites', favRemoved: 'Removed from favorites', langZh: 'Switched to Chinese', langEn: 'Switched to English',
       dataLoaded: 'Snapshot', legendNote: 'Health is computed only for verified repositories. Missing entries are labelled, never treated as zero.',
-      hintOnly: 'These hints are written by this site; the upstream list has no description.',
       countSuffix: '', matchedPrefix: 'matched', totalPrefix: 'total', inScope: 'in current scope',
     },
   };
   const LANG_KEY = 'atlas-lang';
   let lang = localStorage.getItem(LANG_KEY) || 'zh';
-  if (!['zh', 'both', 'en'].includes(lang)) lang = 'zh';
+  /* Two states only. A stored 'both' from an older visit has to degrade to a
+     valid state or the whole UI would render with the 'both' code paths gone. */
+  if (!['zh', 'en'].includes(lang)) lang = 'zh';
   const isEn = () => lang === 'en';
-  const ui = (k) => (UI[isEn() ? 'en' : 'zh'][k] || UI.zh[k] || k);
+  /* `||` would treat a deliberate empty string (EN has countSuffix: '') as a
+     missing key and fall back to the Chinese value, which printed "total 678 条". */
+  const ui = (k) => {
+    const dict = UI[isEn() ? 'en' : 'zh'];
+    const v = dict[k];
+    if (v !== undefined && v !== null) return v;
+    return UI.zh[k] !== undefined ? UI.zh[k] : k;
+  };
 
   function catName(c) { return isEn() ? c.name : (I18N.categories[c.id]?.zh || c.name); }
   function catNote(c) { return I18N.categories[c.id]?.note || ''; }
-  function catLabel(c, withEn) {
-    const primary = catName(c);
-    return (withEn || lang === 'both') && !isEn()
-      ? `${esc(primary)}<small>${esc(c.name)}</small>` : esc(primary);
-  }
+  function catLabel(c) { return esc(catName(c)); }
   function descOf(it) {
     const zh = I18N.descriptions[it.id] || I18N.hints[it.name] || '';
     if (isEn()) return { main: it.description || '', orig: '', hint: false };
-    if (lang === 'both') return { main: zh, orig: it.description || '', hint: !it.description };
     return { main: zh, orig: '', hint: !it.description };
   }
   function plainDesc(it) { return descOf(it).main; }
@@ -163,7 +185,7 @@
     zh: {
       map: '面积 = 清单数量或采样 Star，颜色 = 分类平均健康分；点击分类可下钻到具体清单',
       graph: '中心为源索引，外圈为 27 个分类，圆点是清单；大小对应 Star，颜色对应健康分',
-      table: '678 条清单全文检索、排序、收藏；中文描述与英文原文可随时切换',
+      table: '678 条清单全文检索、排序、收藏；中文描述配英文原名，切到 EN 可核对原文',
       timeline: '来自 README 24 个真实历史版本的增删记录，以及已验证仓库的最近 push 分布',
       insight: '把全量指标重新聚合：分类热度、健康分分布、语言偏好与需要留意的清单',
     },
@@ -235,7 +257,7 @@
     hideArchived: P.get('archived') === '0',
     theme: localStorage.getItem('atlas-theme') === 'dark' ? 'dark' : 'light',
   };
-  if (['zh', 'both', 'en'].includes(P.get('lang'))) lang = P.get('lang');
+  if (['zh', 'en'].includes(P.get('lang'))) lang = P.get('lang');
   document.documentElement.dataset.theme = state.theme;
   document.documentElement.lang = isEn() ? 'en' : 'zh-CN';
 
@@ -250,6 +272,10 @@
       return true;
     });
   }
+
+  /* Mirrors the last value written to the address bar, so popstate can tell a
+     real state change from an in-page #anchor hop. */
+  let lastSearch = location.search;
 
   function writeURL() {
     const p = new URLSearchParams();
@@ -266,7 +292,36 @@
     if (state.favoritesOnly) p.set('fav', '1');
     if (state.hideArchived) p.set('archived', '0');
     if (lang !== 'zh') p.set('lang', lang);
-    try { history.replaceState(null, '', p.toString() ? '?' + p.toString() : location.pathname); } catch (_) { /* file:// */ }
+    const next = p.toString() ? '?' + p.toString() : '';
+    try { history.replaceState(null, '', next || location.pathname); } catch (_) { /* file:// */ }
+    lastSearch = next;
+  }
+
+  /* Back / forward restores the previous view. This used to be a blunt
+     `location.reload()`, which also fired for in-page #anchor navigation and
+     turned every top-nav click into a full reload that lost its own target. */
+  function applyURL() {
+    const q = new URLSearchParams(location.search);
+    state.view = VIEWS.includes(q.get('view')) ? q.get('view') : 'map';
+    state.cat = catById.has(q.get('cat')) ? q.get('cat') : 'all';
+    state.q = q.get('q') || '';
+    state.sort = SORTS.includes(q.get('sort')) ? q.get('sort') : 'stars';
+    state.metric = q.get('metric') === 'stars' ? 'stars' : 'count';
+    state.scope = SCOPES.includes(q.get('scope')) ? q.get('scope') : 'curated';
+    state.drill = catById.has(q.get('drill')) ? q.get('drill') : null;
+    state.selected = itemById.has(q.get('id')) ? q.get('id') : null;
+    state.page = Math.max(1, Number(q.get('page')) || 1);
+    state.enrichedOnly = q.get('enriched') === '1';
+    state.favoritesOnly = q.get('fav') === '1';
+    state.hideArchived = q.get('archived') === '0';
+    const nextLang = q.get('lang');
+    if (['zh', 'en'].includes(nextLang) && nextLang !== lang) {
+      lang = nextLang;
+      localStorage.setItem(LANG_KEY, lang);
+    }
+    document.documentElement.lang = isEn() ? 'en' : 'zh-CN';
+    $('#searchInput').value = state.q;
+    renderAll();
   }
 
   /* ---------- binary treemap ---------- */
@@ -294,14 +349,26 @@
   }
 
   /* ---------- static UI text ---------- */
+  let chromeLang = null;
   function renderStaticUI() {
     $$('[data-ui]').forEach((el) => { el.textContent = ui(el.dataset.ui); });
+    /* The hero copy carries markup (the live count and the accent span), so it
+       cannot go through the textContent loop above. Rebuild it only when the
+       language actually changes, not on every keystroke. */
+    if (chromeLang !== lang) {
+      chromeLang = lang;
+      $('#heroTitle').innerHTML = ui('heroTitle');
+      $('#heroSub').textContent = ui('heroSub');
+      $('#upstreamLink').title = isEn() ? 'Open the upstream repository on GitHub' : '打开上游仓库（境外站点，可能较慢）';
+      $('#backToTop').title = isEn() ? 'Back to the top of the page' : '回到页面顶部';
+    }
     $('#searchInput').placeholder = ui('searchPlaceholder');
     $('#searchHint').textContent = ui('searchHint');
     $('#catSearch').placeholder = ui('catPlaceholder');
     $('#cmdkInput').placeholder = ui('cmdkPlaceholder');
     $('#shareBtn span').textContent = ui('share');
     $('#statusText').textContent = (isEn() ? 'Snapshot ' : ui('dataLoaded') + ' ') + dateOnly(DATA.generatedAt);
+    $('#statusPill').title = isEn() ? 'Snapshot date' : '数据快照日期';
     $$('#langSwitch button').forEach((b) => b.classList.toggle('is-on', b.dataset.lang === lang));
     $('#legendNote').textContent = ui('legendNote');
     /* Print the real observed domain: a 0–100 legend would misrepresent a scale
@@ -393,9 +460,13 @@
     let html = '';
     if (state.view === 'map') {
       html = `<span class="toolbar-label">${ui('metricBase')}</span><span class="seg"><button type="button" data-metric="count" class="${state.metric === 'count' ? 'is-on' : ''}">${ui('count')}</button><button type="button" data-metric="stars" class="${state.metric === 'stars' ? 'is-on' : ''}">${ui('stars')}</button></span>`;
-      html += state.drill
-        ? `<span class="breadcrumb"><button type="button" data-action="drill-back">${ui('drillBack')}</button> / <span>${esc(catName(catById.get(state.drill)))}</span></span>`
-        : `<span class="breadcrumb"><span>${isEn() ? '27 categories · click a tile to drill down' : '27 个分类 · 点击瓦片下钻'}</span></span>`;
+      /* The sidebar, the quick chips, the command palette and the insight cards
+         all set `cat`. The map now treats that as "focus this category" instead
+         of highlighting one tile out of 27, so the breadcrumb has to follow it. */
+      const focusCat = state.drill || (state.cat !== 'all' ? state.cat : null);
+      html += focusCat
+        ? `<span class="breadcrumb"><button type="button" data-action="drill-back">${ui('drillBack')}</button> / <span>${esc(catName(catById.get(focusCat)))}</span></span>`
+        : `<span class="breadcrumb"><span>${isEn() ? `${DATA.categories.length} categories · click a tile to drill down` : `${DATA.categories.length} 个分类 · 点击瓦片下钻`}</span></span>`;
     } else if (state.view === 'graph') {
       html = `<span class="toolbar-label">${ui('scope')}</span><select class="tool-select" id="scopeSelect" aria-label="${ui('scope')}"><option value="curated" ${state.scope === 'curated' ? 'selected' : ''}>${ui('topPerCat')}</option><option value="enriched" ${state.scope === 'enriched' ? 'selected' : ''}>${ui('allVerified')}</option><option value="all" ${state.scope === 'all' ? 'selected' : ''}>${ui('allLists')}</option><option value="favorites" ${state.scope === 'favorites' ? 'selected' : ''}>${ui('myFavorites')}</option></select>`;
     } else if (state.view === 'table') {
@@ -443,6 +514,12 @@
     if (tc) tc.textContent = n + ' ' + ui('inScope');
   }
 
+  /* Both the map and the table can end up with nothing to draw. Sharing one
+     block keeps the copy and the two escape hatches identical. */
+  function emptyStateHtml() {
+    return `<div class="empty-state"><strong>${ui('noMatch')}</strong><span>${ui('noMatchHint')}</span><div class="empty-actions"><button type="button" data-action="clear-search">${ui('clearSearch')}</button><button type="button" data-action="reset-all">${ui('resetAll')}</button></div></div>`;
+  }
+
   /* ---------- view 1: treemap ---------- */
   function clipLabel(text, w, fs) {
     const perChar = /[\u4e00-\u9fa5]/.test(text) ? fs * 1.02 : fs * 0.62;
@@ -453,10 +530,16 @@
     const body = $('#canvasBody');
     const W = Math.max(340, body.clientWidth - 34);
     const H = Math.max(430, body.clientHeight - 34);
-    const matched = new Set(filteredItems().map((it) => it.id));
-    const catMatched = new Set(filteredItems().map((it) => it.categoryId));
+    const visible = filteredItems();
+    if (!visible.length) { body.innerHTML = emptyStateHtml(); return; }
+    const matched = new Set(visible.map((it) => it.id));
+    const catMatched = new Set(visible.map((it) => it.categoryId));
+    /* Same rule as the graph: a selected category means "show me this one".
+       Dimming 26 of 27 tiles turned the canvas into a pale wash that read like a
+       rendering failure, and it hid the thing the reader had just asked for. */
+    const focusCat = state.drill || (state.cat !== 'all' ? state.cat : null);
     let entries;
-    if (!state.drill) {
+    if (!focusCat) {
       entries = DATA.categories.map((c) => ({
         key: 'cat:' + c.id, label: catName(c), en: c.name,
         sub: c.itemCount + ' ' + ui('countSuffix') + ' · ' + (avgHealth(c.id) == null ? ui('noSample') : (isEn() ? 'health ' : '健康 ') + avgHealth(c.id)),
@@ -464,12 +547,15 @@
         value: state.metric === 'stars' ? Math.log10(totalStarsOf(c.id) + 10) : c.itemCount,
         color: healthColor(avgHealth(c.id)),
         health: avgHealth(c.id),
-        dim: state.q && !catMatched.has(c.id),
+        /* Any active filter has to be visible on the canvas. This used to be
+           gated on `state.q`, so choosing a category in the sidebar or turning on
+           「仅显示已验证仓库」 changed the counts but left the map untouched. */
+        dim: !catMatched.has(c.id),
         tip: tipAttr(catName(c), [catNote(c), c.itemCount + ' ' + ui('countSuffix'), avgHealth(c.id) == null ? ui('noSample') : (isEn() ? 'avg health ' : '平均健康分 ') + avgHealth(c.id), (isEn() ? 'stars ' : '采样 Star ') + fmtAbbr(totalStarsOf(c.id), isEn())]),
         action: 'drill', id: c.id,
       }));
     } else {
-      const cid = state.drill;
+      const cid = focusCat;
       entries = itemsOf(cid).map((it) => ({
         key: 'item:' + it.id, label: it.name, en: '',
         sub: it.metrics ? fmtAbbr(it.metrics.stars, isEn()) + ' ★ · ' + (isEn() ? 'health ' : '健康 ') + it.metrics.health : ui('noSample'),
@@ -484,6 +570,7 @@
     }
     entries.sort((a, b) => b.value - a.value);
     const tiles = treemap(entries, 0, 0, W, H);
+    const dimmed = tiles.filter((t) => t.dim).length;
     const rects = tiles.map((t, i) => {
       const pad = Math.min(3, Math.max(1, Math.min(t.w, t.h) * 0.02));
       const x = t.x + pad, y = t.y + pad, w = Math.max(0, t.w - pad * 2), h = Math.max(0, t.h - pad * 2);
@@ -501,14 +588,16 @@
       /* Narrow tiles get the bare count; only wide tiles can afford the health
          suffix without an ellipsis landing mid-word. */
       const baseSub = w > 158 ? t.sub : t.subShort;
-      const subLine = lang === 'both' && t.en ? `${t.en} · ${baseSub}` : baseSub;
+      const subLine = baseSub;
       const x1 = x.toFixed(1), y1 = y.toFixed(1), w1 = w.toFixed(1), h1 = h.toFixed(1);
       const labelInk = inkOn(t.health);
       /* Very tall tiles anchor the metadata to the bottom edge so the name and
          the numbers frame the block instead of both crowding the top corner. */
       const subY = h > 190 ? y + h - 10 : y + fs + 25;
+      /* Rotated labels run along the tile height, so the clip budget is `h`,
+         not `w` -- otherwise a long repo name spills into the tile below. */
       const nameEl = vertical
-        ? `<text class="tile-label" x="${(x + 12).toFixed(1)}" y="${(y + h - 10).toFixed(1)}" font-size="${fs}" fill="${labelInk}" transform="rotate(-90 ${(x + 12).toFixed(1)} ${(y + h - 10).toFixed(1)})">${esc(t.label)}</text>`
+        ? `<text class="tile-label" x="${(x + 12).toFixed(1)}" y="${(y + h - 10).toFixed(1)}" font-size="${fs}" fill="${labelInk}" transform="rotate(-90 ${(x + 12).toFixed(1)} ${(y + h - 10).toFixed(1)})">${esc(clipLabel(t.label, h, fs))}</text>`
         : `<text class="tile-label" x="${(x + 8).toFixed(1)}" y="${(y + fs + (w > 76 ? 7 : 5)).toFixed(1)}" font-size="${fs}" fill="${labelInk}">${esc(clipLabel(t.label, w, fs))}</text>`;
       return `<g class="tile ${t.dim ? 'is-dim' : ''} ${selected ? 'is-selected' : ''}" data-action="${t.action}" data-id="${esc(t.id)}" data-tip="${t.tip}" tabindex="0" role="button" aria-label="${esc(t.label)}">
         <rect x="${x1}" y="${y1}" width="${w1}" height="${h1}" fill="${t.color}" stroke="var(--paper)" stroke-width="1.5"/>
@@ -519,7 +608,9 @@
     body.innerHTML = `<svg class="treemap-svg" viewBox="0 0 ${W} ${H}" role="img" aria-label="${isEn() ? 'Treemap of categories and lists' : '分类与清单的树状地图'}">${rects}</svg>` +
       `<p class="canvas-note">${state.metric === 'stars'
         ? (isEn() ? 'Area uses a log scale of sampled stars so a few mega-repos do not swallow the map.' : '面积按采样 Star 的对数缩放，避免个别超级项目吞掉整张图。')
-        : (isEn() ? 'Area = number of lists; colour = average health; grey = no sampled metrics.' : '面积按清单条目数，颜色按该范围的平均健康分；灰色表示没有健康分采样。')}${state.q ? (isEn() ? ' Tiles without a match are dimmed.' : ' 当前搜索未命中的瓦片已淡化。') : ''}</p>`;
+        : (isEn() ? 'Area = number of lists; colour = average health; grey = no sampled metrics.' : '面积按清单条目数，颜色按该范围的平均健康分；灰色表示没有健康分采样。')}${dimmed
+        ? (isEn() ? ` ${dimmed} tiles outside the current filter are dimmed.` : ` 当前筛选外的 ${dimmed} 个瓦片已淡化。`)
+        : ''}</p>`;
   }
 
   /* ---------- view 2: radial graph ---------- */
@@ -659,7 +750,7 @@
     body.innerHTML = list.length
       ? `<div class="table-wrap"><table><thead><tr><th></th><th>${ui('nameDescCol')}</th><th>${ui('catCol')}</th><th class="col-star">Star</th><th class="col-updated">${ui('updatedCol')}</th><th>${ui('healthCol')}</th><th></th></tr></thead><tbody>${tr}</tbody></table>
         <div class="pager"><button type="button" data-action="page" data-id="${state.page - 1}" ${state.page <= 1 ? 'disabled' : ''}>${ui('prev')}</button><span>${state.page} / ${pages} · ${isEn() ? 'total' : '共'} ${list.length} ${ui('countSuffix')}</span><button type="button" data-action="page" data-id="${state.page + 1}" ${state.page >= pages ? 'disabled' : ''}>${ui('next')}</button></div></div>`
-      : `<div class="empty-state"><strong>${ui('noMatch')}</strong><span>${ui('noMatchHint')}</span><div class="empty-actions"><button type="button" data-action="clear-search">${ui('clearSearch')}</button><button type="button" data-action="reset-all">${ui('resetAll')}</button></div></div>`;
+      : emptyStateHtml();
   }
 
   /* ---------- view 4: timeline ---------- */
@@ -725,7 +816,7 @@
         ...s.relinked.slice(0, 2).map((x) => `<span class="relink">↗ ${esc(x.name)}</span>`),
       ].join('');
       const more = (s.added.length + s.removed.length + s.relinked.length) > 8 ? `<span>+${s.added.length + s.removed.length + s.relinked.length - 8}</span>` : '';
-      return `<li class="commit-item ${chips ? '' : 'is-neutral'}"><div class="commit-msg">${esc(isEn() ? s.message : s.messageZh)}${lang === 'both' && !isEn() ? `<small>${esc(s.message)}</small>` : ''}</div>
+      return `<li class="commit-item ${chips ? '' : 'is-neutral'}"><div class="commit-msg">${esc(isEn() ? s.message : s.messageZh)}</div>
         <div class="commit-meta">${cnDate(s.date)} · ${esc(s.sha)} · ${esc(s.author)}</div>${chips ? `<div class="commit-diff">${chips}${more}</div>` : ''}</li>`;
     }).join('');
 
@@ -791,7 +882,9 @@
     const host = $('#detailEmptyContext');
     if (!host) return;
     const cat = state.cat === 'all' ? null : catById.get(state.cat);
-    const list = (cat ? itemsOf(cat.id) : DATA.items.slice())
+    /* Follows the same filter as the canvas: a search that matches nothing must
+       not leave an unrelated 「此处 Star 最高」 list in the rail. */
+    const list = filteredItems()
       .filter((it) => it.metrics)
       .sort((a, b) => b.metrics.stars - a.metrics.stars)
       .slice(0, 3);
@@ -836,7 +929,7 @@
     }
 
     const descMain = d.main || (isEn() ? 'No description in the upstream list.' : '源清单未提供描述。');
-    content.innerHTML = `<div class="detail-top"><div><div class="detail-kicker">${esc(catName(catById.get(it.categoryId)))} · ${it.level ? ui('subEntry') : ui('mainEntry')}</div><h3 class="detail-title">${esc(it.name)}</h3>${!isEn() && (I18N.hints[it.name] || lang === 'both') ? `<p class="detail-title-en">${esc(I18N.hints[it.name] || it.name)}</p>` : ''}</div><button class="detail-close" type="button" data-action="close" aria-label="${ui('close')}">×</button></div>
+    content.innerHTML = `<div class="detail-top"><div><div class="detail-kicker">${esc(catName(catById.get(it.categoryId)))} · ${it.level ? ui('subEntry') : ui('mainEntry')}</div><h3 class="detail-title">${esc(it.name)}</h3></div><button class="detail-close" type="button" data-action="close" aria-label="${ui('close')}">×</button></div>
       <p class="detail-desc">${esc(descMain)}${d.orig ? `<span class="orig">${esc(d.orig)}</span>` : ''}</p>
       ${d.hint && !isEn() ? `<div class="detail-hint-tag">${ui('hintLabel')}</div>` : ''}
       <div class="detail-actions">
@@ -944,7 +1037,7 @@
     localStorage.setItem(LANG_KEY, lang);
     document.documentElement.lang = isEn() ? 'en' : 'zh-CN';
     renderAll();
-    toast(next === 'zh' ? ui('langZh') : next === 'both' ? ui('langBoth') : ui('langEn'));
+    toast(isEn() ? ui('langEn') : ui('langZh'));
   }
 
   document.addEventListener('click', (e) => {
@@ -1012,6 +1105,14 @@
     renderSidebar(); renderLight(); renderInsights();
   });
   $('#shareBtn').addEventListener('click', () => copyText(location.href, ui('copyOk')));
+  $('#backToTop').addEventListener('click', () => {
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    window.scrollTo({ top: 0, behavior: reduce ? 'auto' : 'smooth' });
+    /* Keep keyboard focus with the reader instead of leaving it on a button that
+       is now off-screen. */
+    const brand = $('.brand');
+    if (brand) brand.focus({ preventScroll: true });
+  });
   $('#cmdkOpen').addEventListener('click', openCmdk);
   $('#cmdkInput').addEventListener('input', (e) => { cmdkIndex = 0; renderCmdk(e.target.value); });
   $('#exportFav').addEventListener('click', () => {
@@ -1057,7 +1158,12 @@
     const active = $('.cmdk-item.is-active');
     if (active) active.scrollIntoView({ block: 'nearest' });
   }
-  window.addEventListener('popstate', () => { location.reload(); });
+  window.addEventListener('popstate', () => {
+    /* A #anchor hop fires popstate too. Re-rendering there would rebuild the
+       page under the reader and fight the browser's own scroll to the target. */
+    if (location.search === lastSearch) return;
+    applyURL();
+  });
 
   /* tooltip */
   const tip = $('#tooltip');
@@ -1088,7 +1194,7 @@
     const src = $('#aboutSourceText');
     if (src) src.innerHTML = isEn()
       ? 'Parsed from <a href="https://github.com/sindresorhus/awesome/blob/main/readme.md" target="_blank" rel="noopener noreferrer">sindresorhus/awesome/readme.md</a> (CC0-1.0). Chinese names and descriptions are editorial translations by this site; switch to EN to verify every wording against the source.'
-      : '内容解析自 <a href="https://github.com/sindresorhus/awesome/blob/main/readme.md" target="_blank" rel="noopener noreferrer">sindresorhus/awesome 的 readme.md</a>，原项目采用 CC0-1.0。中文分类名与 466 条描述为本站人工译述，另有 212 条源清单无描述、由本站补写中文提示；切换「原文」或「双语」可逐条核对。';
+      : '内容解析自 <a href="https://github.com/sindresorhus/awesome/blob/main/readme.md" target="_blank" rel="noopener noreferrer">sindresorhus/awesome 的 readme.md</a>，原项目采用 CC0-1.0。中文分类名与 466 条描述为本站人工译述，另有 212 条源清单无描述、由本站补写中文提示；右上角切到 EN 可逐条核对英文原文。';
     $('#aboutParse').textContent = isEn()
       ? `Structure-aware parse: ${DATA.stats.raw.h2Count} H2 sections (1 TOC + ${DATA.categories.length} categories + Related), ${DATA.stats.raw.listLines} list lines minus ${DATA.stats.raw.contentsAnchors} TOC anchors = ${DATA.stats.items} records; ${DATA.stats.githubRepos} GitHub repos, ${DATA.stats.labels} label-only rows, ${DATA.stats.level1} nested items. ${DATA.warnings.length} parse warnings.`
       : `按 Markdown 结构解析：${DATA.stats.raw.h2Count} 个 H2 章节（1 个目录 + ${DATA.categories.length} 个分类）、${DATA.stats.raw.listLines} 行列表项，扣除 ${DATA.stats.raw.contentsAnchors} 行目录锚点后得到 ${DATA.stats.items} 条记录；其中 ${DATA.stats.githubRepos} 个 GitHub 仓库、${DATA.stats.labels} 个无链接分组标签、${DATA.stats.level1} 条缩进子条目。解析告警 ${DATA.warnings.length} 条。`;
@@ -1102,4 +1208,8 @@
   }
   renderAll();
   positionGlider();
+  /* `history.scrollRestoration = 'manual'` is set inline in <head> so it lands
+     before the browser restores anything. Re-asserting here covers engines that
+     restore after load, while leaving an explicit #anchor deep link alone. */
+  if (!location.hash) window.scrollTo(0, 0);
 })();

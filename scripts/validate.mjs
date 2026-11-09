@@ -103,7 +103,8 @@ add('中文', '466 条英文描述全部有中文译文', needDesc.size === gotD
 add('中文', '212 条无描述条目全部有中文提示', unhinted.length === 0, `${noDesc.length} 条无描述，未覆盖 ${unhinted.length}`);
 add('中文', '27 个分类均有中文名与释义', missingCats.length === 0, `${Object.keys(i18n.categories).length} 个分类`);
 add('中文', '界面默认语言为中文', /<html lang="zh-CN"/.test(html) && /data-lang="zh" class="is-on"/.test(html), 'lang=zh-CN / 中文按钮默认选中');
-add('中文', '三态语言切换与中英字典齐备', /data-lang="both"/.test(html) && /data-lang="en"/.test(html) && /const UI = \{[\s\S]*?zh: \{[\s\S]*?en: \{/.test(js), '中文 / 双语 / EN');
+add('中文', '中英两态切换与双方字典齐备', /data-lang="zh"/.test(html) && /data-lang="en"/.test(html) && !/data-lang="both"/.test(html) && /const UI = \{[\s\S]*?zh: \{[\s\S]*?en: \{/.test(js), '中文 / EN');
+add('中文', '语言状态回退不会落入无效值', /!\['zh', 'en'\]\.includes\(lang\)\) lang = 'zh'/.test(js) && /\['zh', 'en'\]\.includes\(P\.get\('lang'\)\)/.test(js), 'localStorage 与 URL 均校验为 zh | en');
 add('中文', '中文检索索引包含译名与提示', /__search/.test(js) && /I18N\.descriptions/.test(js) && /I18N\.hints/.test(js), '名称 + 译文 + 提示 + 分类均入索引');
 add('中文', '国内友好：万位计数与中文日期', /fmtAbbr/.test(js) && /' 万'/.test(js) && /cnDate/.test(js), '万 / 亿、年月日');
 
@@ -146,6 +147,15 @@ add('产物', '五个视图与命令面板齐备', (html.match(/data-view="(map|
 add('产物', '数据包体积适合静态托管', fs.statSync(path.join(ROOT, 'data/catalog.js')).size < 1024 * 1024, `${(fs.statSync(path.join(ROOT, 'data/catalog.js')).size / 1024).toFixed(0)} KB`);
 add('产物', '部署所需文件齐备', ['.nojekyll', '.github/workflows/validate.yml', 'README.md', 'scripts/deploy-pages.mjs'].every(exists), '.nojekyll / CI 校验 / README / REST 部署脚本');
 add('产物', 'Pages 分支发布与 CI 不冲突', !fs.existsSync(path.join(ROOT, '.github/workflows/pages.yml')) && /Deploy from a branch|分支发布/.test(fs.readFileSync(path.join(ROOT, 'README.md'), 'utf8')), '采用 main/root 分支发布，CI 只做数据校验');
+
+/* --- 7b. page chrome, navigation and scroll ownership --- */
+const headerHtml = (html.match(/<header[\s\S]*?<\/header>/) || [''])[0];
+const footerHtml = (html.match(/<footer[\s\S]*?<\/footer>/) || [''])[0];
+add('界面', '品牌副标题不再出现「中文版」', /data-ui="brandSub"/.test(html) && !/中文版/.test(html + js) && /brandSub: 'AWESOME ATLAS'/.test(js), 'AWESOME ATLAS');
+add('界面', '上游仓库入口已移出顶栏、落在页脚', !/sindresorhus/.test(headerHtml) && /id="upstreamLink"/.test(footerHtml) && footerHtml.indexOf('id="upstreamLink"') > 0, '顶栏 0 个外链，页脚 1 个来源入口');
+add('界面', '刷新页面不恢复旧滚动位置', /'scrollRestoration' in history/.test(html) && /scrollRestoration = 'manual'/.test(html) && /if \(!location\.hash\) window\.scrollTo\(0, 0\)/.test(js), 'head 内 manual + 初始化回顶');
+add('界面', '回到顶部按钮有真实事件绑定', /id="backToTop"/.test(footerHtml) && /\$\('#backToTop'\)\.addEventListener\('click'/.test(js), '页脚按钮 → scrollTo(0)');
+add('界面', '语言切换仅保留中文与 EN 两态', (html.match(/data-lang="/g) || []).length === 2, `${(html.match(/data-lang="/g) || []).length} 个语言按钮`);
 
 /* --- 8. design system (UI/UX Pro Max checklist, mechanically verified) --- */
 function themeTokens(name) {
@@ -221,7 +231,7 @@ for (const g of groups) {
   md += '\n';
 }
 md += `## 已知边界（非缺陷）\n\n`;
-md += `1. 中文为本站人工译述，不是上游官方译本；专有名词保留英文原名，界面提供「中文 / 双语 / EN」三态切换以便逐条核对。\n`;
+md += `1. 中文为本站人工译述，不是上游官方译本；专有名词保留英文原名，界面提供「中文 / EN」两态切换以便逐条核对。\n`;
 md += `2. 源清单里有 ${noDesc.length} 条完全没有描述，本站补写中文提示并显式标注，不冒充上游内容。\n`;
 md += `3. 仓库指标来自带授权的 GitHub GraphQL 全量核验；仓库可能改名、归档或删除，页面对此显式标注，不按 0 分处理。\n`;
 md += `4. 历史增删对 ${snaps.length} 个真实 README 版本逐版解析比对，仅覆盖最近约 ${history.summary.spanDays} 天；更早的演化不在数据范围内。\n`;

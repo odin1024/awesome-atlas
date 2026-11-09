@@ -50,6 +50,53 @@ with sync_playwright() as p:
 
     page.screenshot(path=os.path.join(SHOTS, 'desktop-map.png'), full_page=False)
 
+    # --- page chrome: brand, nav anchors, footer source link ---
+    check('品牌副标题不再出现「中文版」',
+          '中文版' not in page.locator('.brand-text').inner_text(),
+          page.locator('.brand-text').inner_text().replace('\n', ' / '))
+    check('顶栏不再放外链按钮', page.locator('.topbar a[href^="http"]').count() == 0,
+          page.locator('.topbar a[href^="http"]').count())
+    upstream = page.locator('#upstreamLink')
+    check('页脚上游入口指向源仓库且新窗口打开',
+          upstream.count() == 1
+          and 'github.com/sindresorhus/awesome' in (upstream.get_attribute('href') or '')
+          and upstream.get_attribute('target') == '_blank',
+          upstream.get_attribute('href'))
+
+    landed = []
+    for sel in ('#workspace', '#insights', '#about'):
+        page.locator('.topnav-link[href="%s"]' % sel).click()
+        page.wait_for_timeout(950)
+        pos = page.evaluate("""() => {
+          const el = document.querySelector('%s');
+          return {top: Math.round(el.getBoundingClientRect().top), y: Math.round(window.scrollY)};
+        }""" % sel)
+        landed.append((sel, pos['top'], pos['y']))
+    check('顶栏三个锚点都真的滚到对应区块',
+          all(-8 <= t <= 620 and y > 0 for _, t, y in landed), landed)
+
+    # --- scroll ownership: a reload must start at the top ---
+    page.evaluate('window.scrollTo(0, document.body.scrollHeight)')
+    page.wait_for_timeout(250)
+    deep = page.evaluate('window.scrollY')
+    page.evaluate('setTimeout(() => location.reload(), 0)')
+    page.wait_for_timeout(1600)
+    page.wait_for_load_state('networkidle')
+    page.wait_for_timeout(300)
+    after_reload = page.evaluate('window.scrollY')
+    check('刷新后自动回到页面顶部', deep > 600 and after_reload == 0,
+          f'scrollY {deep} → {after_reload}')
+
+    page.evaluate('window.scrollTo(0, document.body.scrollHeight)')
+    page.wait_for_timeout(250)
+    page.locator('#backToTop').click()
+    page.wait_for_timeout(900)
+    check('页脚「回到顶部」按钮生效', page.evaluate('window.scrollY') <= 2,
+          page.evaluate('window.scrollY'))
+
+    page.goto(BASE, wait_until='networkidle')
+    page.wait_for_timeout(350)
+
     # --- map drill-down ---
     page.locator('.tile').first.click()
     page.wait_for_timeout(250)
@@ -182,18 +229,33 @@ with sync_playwright() as p:
     check('语言标签云非空', page.locator('.iv-tag').count() >= 5, page.locator('.iv-tag').count())
     page.screenshot(path=os.path.join(SHOTS, 'desktop-insight.png'), full_page=False)
 
-    # --- language switch ---
-    page.locator('#langSwitch [data-lang="both"]').click()
-    page.wait_for_timeout(260)
-    check('双语模式显示英文副标题', page.locator('.cat-name small').count() >= 20, page.locator('.cat-name small').count())
-    check('语言状态写入 URL', 'lang=both' in page.url, page.url.split('?')[-1][:80])
+    # --- language: two states only ---
+    check('语言切换只有中文与 EN 两个选项',
+          page.locator('#langSwitch button').count() == 2,
+          page.locator('#langSwitch button').all_inner_texts())
     page.locator('#langSwitch [data-lang="en"]').click()
-    page.wait_for_timeout(260)
-    check('英文模式恢复英文分类', 'Miscellaneous' in page.locator('#categoryList').inner_text(), page.locator('#categoryList').inner_text()[:60].replace('\n', ' / '))
-    check('英文模式界面文案切换', page.locator('.view-tab.is-active').inner_text().find('Map') >= 0 or 'Insight' in page.locator('.view-tab.is-active').inner_text(), page.locator('.view-tab.is-active').inner_text())
+    page.wait_for_timeout(280)
+    check('英文模式恢复英文分类',
+          'Miscellaneous' in page.locator('#categoryList').inner_text(),
+          page.locator('#categoryList').inner_text()[:60].replace('\n', ' / '))
+    check('英文模式界面文案切换',
+          'Insight' in page.locator('.view-tab.is-active').inner_text(),
+          page.locator('.view-tab.is-active').inner_text())
+    check('英文模式首屏与栏目同步翻译',
+          'curated lists' in page.locator('#heroTitle').inner_text()
+          and 'speaks for itself' in page.locator('#insights').inner_text(),
+          page.locator('#heroTitle').inner_text().replace('\n', ' | ')[:50])
+    # The `||` fallback used to treat EN's empty countSuffix as missing and print
+    # "total 678 条" in English mode.
+    check('英文模式不再残留中文量词',
+          '条' not in page.locator('.search-meta').inner_text(),
+          page.locator('.search-meta').inner_text())
+    check('语言状态写入 URL', 'lang=en' in page.url, page.url.split('?')[-1][:80])
     page.locator('#langSwitch [data-lang="zh"]').click()
-    page.wait_for_timeout(260)
+    page.wait_for_timeout(280)
     check('可切回中文', '综合与其他' in page.locator('#categoryList').inner_text(), 'zh restored')
+    check('中文首屏文案恢复', '份清单' in page.locator('#heroTitle').inner_text(),
+          page.locator('#heroTitle').inner_text()[:40])
 
     # --- command palette ---
     page.keyboard.press('Control+k')
@@ -222,6 +284,178 @@ with sync_playwright() as p:
     check('浅色主题可显式选中', page.locator('html').get_attribute('data-theme') == 'light', page.locator('html').get_attribute('data-theme'))
     page.screenshot(path=os.path.join(SHOTS, 'desktop-light.png'), full_page=False)
 
+    # --- every interactive control must produce a response ---
+    page.goto(BASE, wait_until='networkidle')
+    page.wait_for_timeout(350)
+
+    # Sidebar category used to highlight the row and change nothing on canvas.
+    page.locator('#categoryList .cat-row[data-cat="security"]').click()
+    page.wait_for_timeout(360)
+    focused = page.evaluate("""() => ({
+      tiles: document.querySelectorAll('.tile').length,
+      dim: document.querySelectorAll('.tile.is-dim').length,
+      crumb: (document.querySelector('.breadcrumb') || {}).textContent || '',
+      catItems: window.__ATLAS_DATA__.items.filter(i => i.categoryId === 'security').length,
+    })""")
+    check('侧栏选分类后地图聚焦到该分类',
+          focused['tiles'] == focused['catItems'] and focused['dim'] == 0
+          and '网络安全' in focused['crumb'] and 'cat=security' in page.url,
+          f"{focused['tiles']} 个瓦片 / 该分类 {focused['catItems']} 条 / 面包屑 {focused['crumb'].strip()[:24]}")
+    page.locator('#resetFilters').click()
+    page.wait_for_timeout(360)
+    check('「重置」清空分类与搜索',
+          page.locator('.tile').count() == 27
+          and page.locator('#searchInput').input_value() == '' and 'cat=' not in page.url,
+          page.evaluate('location.search') or '(empty)')
+
+    page.locator('#catSearch').fill('安全')
+    page.wait_for_timeout(240)
+    narrowed = page.locator('.cat-row').count()
+    check('侧栏分类筛选框生效', 1 < narrowed < 28, f'{narrowed} 行')
+    page.locator('#catSearch').fill('')
+    page.wait_for_timeout(220)
+    check('清空分类筛选后恢复 28 行', page.locator('.cat-row').count() == 28,
+          page.locator('.cat-row').count())
+
+    counts = page.evaluate("""() => {
+      const D = window.__ATLAS_DATA__;
+      return {all: D.items.length,
+              verified: D.items.filter(i => i.metrics).length,
+              archived: D.items.filter(i => i.metrics && i.metrics.archived).length};
+    }""")
+    page.locator('label.switch-row', has=page.locator('#enrichedOnly')).click()
+    page.wait_for_timeout(280)
+    check('「仅显示已验证仓库」改变结果集',
+          str(counts['verified']) in page.locator('#searchCount').inner_text(),
+          f"{page.locator('#searchCount').inner_text()} / 期望 {counts['verified']}")
+    page.locator('label.switch-row', has=page.locator('#enrichedOnly')).click()
+    page.wait_for_timeout(220)
+    page.locator('label.switch-row', has=page.locator('#hideArchived')).click()
+    page.wait_for_timeout(280)
+    check('「隐藏已归档仓库」改变结果集',
+          str(counts['all'] - counts['archived']) in page.locator('#searchCount').inner_text(),
+          f"{page.locator('#searchCount').inner_text()} / 期望 {counts['all'] - counts['archived']}")
+    page.locator('label.switch-row', has=page.locator('#hideArchived')).click()
+    page.wait_for_timeout(220)
+    fav_n = page.evaluate("JSON.parse(localStorage.getItem('atlas-favorites') || '[]').length")
+    page.locator('label.switch-row', has=page.locator('#favoritesOnly')).click()
+    page.wait_for_timeout(280)
+    check('「仅显示我的收藏」按收藏集过滤',
+          str(fav_n) in page.locator('#searchCount').inner_text(),
+          f"{page.locator('#searchCount').inner_text()} / 收藏 {fav_n} 条")
+    page.locator('label.switch-row', has=page.locator('#favoritesOnly')).click()
+    page.wait_for_timeout(220)
+
+    # map: the area-basis toggle has to re-lay the treemap, not just restyle
+    before_geom = page.evaluate("document.querySelector('.tile rect').getAttribute('width')")
+    page.locator('[data-metric="stars"]').click()
+    page.wait_for_timeout(320)
+    after_geom = page.evaluate("document.querySelector('.tile rect').getAttribute('width')")
+    check('地图「面积依据」切换会重排瓦片',
+          before_geom != after_geom and 'metric=stars' in page.url,
+          f'first tile {before_geom} → {after_geom}')
+    page.locator('[data-metric="count"]').click()
+    page.wait_for_timeout(260)
+
+    # graph: the scope select must change the dot cloud
+    page.locator('.view-tab[data-view="graph"]').click()
+    page.wait_for_timeout(320)
+    dots_curated = page.locator('.graph-node circle').count()
+    page.locator('#scopeSelect').select_option('all')
+    page.wait_for_timeout(380)
+    dots_all = page.locator('.graph-node circle').count()
+    check('图谱「显示范围」下拉改变节点数', dots_all > dots_curated,
+          f'{dots_curated} → {dots_all} 个节点')
+    page.locator('#scopeSelect').select_option('curated')
+    page.wait_for_timeout(260)
+
+    # table: sort, pagination, row-level favourite
+    page.locator('.view-tab[data-view="table"]').click()
+    page.wait_for_timeout(320)
+    row_before = page.locator('tbody tr').first.inner_text()
+    page.locator('#sortSelect').select_option('name')
+    page.wait_for_timeout(320)
+    check('榜单排序下拉真的重新排序',
+          page.locator('tbody tr').first.inner_text() != row_before,
+          page.locator('tbody tr').first.inner_text()[:40].replace('\n', ' / '))
+    page.locator('#sortSelect').select_option('stars')
+    page.wait_for_timeout(260)
+
+    pager_next, pager_prev = page.locator('.pager [data-action="page"]').nth(1), page.locator('.pager [data-action="page"]').nth(0)
+    pager_next.click()
+    page.wait_for_timeout(300)
+    check('分页「下一页」可用',
+          '2 /' in page.locator('.pager').inner_text() and 'page=2' in page.url,
+          page.locator('.pager').inner_text().replace('\n', ' '))
+    pager_prev.click()
+    page.wait_for_timeout(260)
+    check('分页「上一页」可返回第一页', '1 /' in page.locator('.pager').inner_text(),
+          page.locator('.pager').inner_text().replace('\n', ' '))
+
+    fav_before = page.evaluate("JSON.parse(localStorage.getItem('atlas-favorites') || '[]').length")
+    star = page.locator('tbody tr').first.locator('.star-btn')
+    icon_before = star.inner_text().strip()
+    star.click()
+    page.wait_for_timeout(240)
+    fav_after = page.evaluate("JSON.parse(localStorage.getItem('atlas-favorites') || '[]').length")
+    icon_after = page.locator('tbody tr').first.locator('.star-btn').inner_text().strip()
+    check('榜单行内 ☆ 可切换收藏',
+          abs(fav_after - fav_before) == 1 and icon_after != icon_before,
+          f"{fav_before} → {fav_after} 条 / {icon_before} → {icon_after}")
+    page.locator('tbody tr').first.locator('.star-btn').click()
+    page.wait_for_timeout(220)
+
+    # detail rail actions
+    page.locator('tbody tr').first.click()
+    page.wait_for_timeout(260)
+    page.locator('#detailContent [data-action="copy-link"]').click()
+    page.wait_for_timeout(280)
+    check('详情「复制链接」给出反馈',
+          page.locator('#toast').is_visible(),
+          page.locator('#toast').inner_text())
+    page.locator('#detailContent [data-action="focus-cat"]').click()
+    page.wait_for_timeout(320)
+    check('详情「看同分类」跳到该分类榜单',
+          'cat=' in page.url and 'is-active' in (page.locator('.view-tab[data-view="table"]').get_attribute('class') or ''),
+          page.url.split('?')[-1][:60])
+    page.locator('#detailContent [data-action="close"]').click()
+    page.wait_for_timeout(240)
+    check('详情关闭按钮恢复空态', page.locator('#detailEmpty').is_visible(), 'empty restored')
+
+    # timeline ranked list and insight bars are buttons too
+    page.locator('.view-tab[data-view="timeline"]').click()
+    page.wait_for_timeout(340)
+    stale_first = page.locator('.stale-list button').first.inner_text()
+    page.locator('.stale-list button').first.click()
+    page.wait_for_timeout(320)
+    check('时间轴「最久未更新」条目可打开详情',
+          page.locator('#detailContent').is_visible(), stale_first[:30].replace('\n', ' '))
+
+    page.locator('.view-tab[data-view="insight"]').click()
+    page.wait_for_timeout(340)
+    page.locator('.iv-bar-label').first.click()
+    page.wait_for_timeout(340)
+    check('洞察条形的分类标签可跳回地图',
+          page.locator('.treemap-svg').count() == 1, page.evaluate('location.search')[:50] or '(empty)')
+
+    # command palette via the toolbar button, arrow keys and the backdrop
+    page.locator('#cmdkOpen').click()
+    page.wait_for_timeout(280)
+    check('顶栏搜索按钮可打开命令面板', page.locator('#cmdk').is_visible(), 'visible')
+    page.keyboard.press('ArrowDown')
+    page.keyboard.press('ArrowDown')
+    page.wait_for_timeout(200)
+    check('命令面板方向键移动高亮', page.locator('.cmdk-item.is-active').count() == 1,
+          page.locator('.cmdk-item.is-active').count())
+    page.keyboard.press('Escape')
+    page.wait_for_timeout(220)
+    check('Esc 可关闭命令面板', page.locator('#cmdk').is_hidden(), 'hidden')
+    page.locator('#cmdkOpen').click()
+    page.wait_for_timeout(260)
+    page.locator('#cmdk').click(position={'x': 6, 'y': 6})
+    page.wait_for_timeout(240)
+    check('点击遮罩可关闭命令面板', page.locator('#cmdk').is_hidden(), 'hidden')
+
     # --- direct URL state restore ---
     page.goto(BASE + '/?view=graph&cat=security&q=web&lang=zh', wait_until='networkidle')
     page.wait_for_timeout(300)
@@ -237,11 +471,26 @@ with sync_playwright() as p:
     check('移动端无横向溢出', overflow <= 2, f'overflow={overflow}px')
     check('移动端地图仍渲染', mp.locator('.tile').count() == 27, mp.locator('.tile').count())
     check('移动端底部视图栏', mp.locator('.mobile-tabs button').count() == 5, mp.locator('.mobile-tabs button').count())
-    mp.locator('.mobile-tabs [data-view="table"]').click()
-    mp.wait_for_timeout(280)
-    check('移动端可切换榜单', mp.locator('tbody tr').count() == 40, mp.locator('tbody tr').count())
+    for view, sel, label in [('table', 'tbody tr', '榜单'), ('graph', '.graph-svg', '图谱'),
+                             ('timeline', '.tl-grid', '时间轴'), ('insight', '.iv-card', '洞察')]:
+        mp.locator('.mobile-tabs [data-view="%s"]' % view).click()
+        mp.wait_for_timeout(340)
+        check('移动端可切换到%s' % label, mp.locator(sel).count() > 0, mp.locator(sel).count())
     mp.locator('.mobile-tabs [data-view="map"]').click()
-    mp.wait_for_timeout(280)
+    mp.wait_for_timeout(300)
+    check('移动端可切回地图', mp.locator('.tile').count() == 27, mp.locator('.tile').count())
+    # A 420px rule used to hide the second language button; with 双语 gone that
+    # selector would have hidden EN instead.
+    check('移动端两个语言按钮都可见',
+          mp.locator('#langSwitch button').count() == 2
+          and mp.locator('#langSwitch [data-lang="en"]').is_visible(),
+          mp.locator('#langSwitch button').count())
+    mp.locator('#langSwitch [data-lang="en"]').click()
+    mp.wait_for_timeout(320)
+    check('移动端可切到英文', 'Miscellaneous' in mp.locator('#categoryList').inner_text(),
+          mp.locator('#categoryList').inner_text()[:40].replace('\n', ' / '))
+    mp.locator('#langSwitch [data-lang="zh"]').click()
+    mp.wait_for_timeout(320)
     mp.screenshot(path=os.path.join(SHOTS, 'mobile-map.png'), full_page=False)
     mobile.close()
 
@@ -267,7 +516,7 @@ with open(report_path, 'w', encoding='utf-8') as f:
     f.write('| 检查项 | 结果 | 观察值 |\n| --- | --- | --- |\n')
     for c in checks:
         f.write(f"| {c['name']} | {'通过' if c['ok'] else '**失败**'} | {str(c['detail']).replace('|', '\\|')[:110]} |\n")
-    f.write('\n截图：`docs/screenshots/desktop-map.png`（分类地图）、`desktop-workspace.png`（三栏工作区）、`desktop-timeline.png`、`desktop-insight.png`、`desktop-light.png`、`mobile-map.png`。\n')
+    f.write('\n截图：`docs/screenshots/desktop-map.png`（分类地图）、`desktop-timeline.png`、`desktop-insight.png`、`desktop-light.png`、`mobile-map.png`；`desktop-workspace.png` 为三栏工作区，单独生成。\n')
 
 print(json.dumps({'passed': passed, 'total': len(checks), 'errors': errors[:5]}, ensure_ascii=False, indent=2))
 for c in checks:

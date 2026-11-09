@@ -9,6 +9,9 @@
 <meta property="og:title" content="精选清单地图 · Awesome 中文可视化索引">
 <meta property="og:description" content="678 份清单、27 个分类、673 个仓库全量指标，中文可读、结构可见、来源可追溯。">
 <meta name="theme-color" content="#faf9f5">
+<script>/* Browsers restore the previous scroll offset on reload, which drops the reader
+   into the middle of a view with no context. Own the position explicitly. */
+if ('scrollRestoration' in history) history.scrollRestoration = 'manual';</script>
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%23faf9f5'/%3E%3Cpath d='M7 23 16 7l9 16' fill='none' stroke='%23141413' stroke-width='2.2' stroke-linejoin='round'/%3E%3Cpath d='M11.5 18h9' stroke='%23a82d22' stroke-width='2.4' stroke-linecap='round'/%3E%3C/svg%3E">
 <link rel="stylesheet" href="./assets/styles.css">
 </head>
@@ -19,18 +22,17 @@
       <span class="brand-mark" aria-hidden="true">
         <svg viewBox="0 0 32 32" width="30" height="30"><rect x="0.5" y="0.5" width="31" height="31" fill="none" stroke="currentColor"/><path d="M7 23 16 7l9 16" fill="none" stroke="var(--accent)" stroke-width="2.2" stroke-linejoin="round"/><path d="M11.5 18h9" stroke="var(--accent)" stroke-width="2.2" stroke-linecap="round"/></svg>
       </span>
-      <span class="brand-text"><strong>精选清单地图</strong><small>AWESOME ATLAS · 中文版</small></span>
+      <span class="brand-text"><strong data-ui="brandName">精选清单地图</strong><small data-ui="brandSub">AWESOME ATLAS</small></span>
     </a>
     <nav class="topnav" aria-label="页面导航">
-      <a href="#workspace" class="topnav-link">开始探索</a>
-      <a href="#insights" class="topnav-link">今日发现</a>
-      <a href="#about" class="topnav-link">数据说明</a>
+      <a href="#workspace" class="topnav-link" data-ui="navStart">开始探索</a>
+      <a href="#insights" class="topnav-link" data-ui="navInsight">今日发现</a>
+      <a href="#about" class="topnav-link" data-ui="navAbout">数据说明</a>
     </nav>
     <div class="topbar-right">
       <span class="status-pill" id="statusPill" title="数据快照日期"><span class="status-dot"></span><span id="statusText">数据加载中</span></span>
       <div class="lang-switch" id="langSwitch" role="group" aria-label="界面语言">
         <button type="button" data-lang="zh" class="is-on">中文</button>
-        <button type="button" data-lang="both">双语</button>
         <button type="button" data-lang="en">EN</button>
       </div>
       <button class="icon-btn" id="cmdkOpen" type="button" aria-label="打开快捷命令面板" title="快捷搜索（Ctrl+K）">
@@ -40,19 +42,15 @@
         <svg class="icon-moon" viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M20 14.5A8.5 8.5 0 0 1 9.5 4 8.5 8.5 0 1 0 20 14.5Z" stroke-linejoin="round"/></svg>
         <svg class="icon-sun" viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="12" cy="12" r="4"/><path d="M12 2v2m0 16v2M2 12h2m16 0h2M4.9 4.9l1.4 1.4m11.4 11.4 1.4 1.4M19.1 4.9l-1.4 1.4M6.3 17.7l-1.4 1.4" stroke-linecap="round"/></svg>
       </button>
-      <a class="ghost-btn" href="https://github.com/sindresorhus/awesome" target="_blank" rel="noopener noreferrer" title="打开上游仓库（境外站点）">
-        <svg viewBox="0 0 24 24" width="15" height="15" fill="currentColor" aria-hidden="true"><path d="M12 .5A11.5 11.5 0 0 0 .5 12a11.5 11.5 0 0 0 7.86 10.92c.58.1.79-.25.79-.56v-2c-3.2.7-3.88-1.37-3.88-1.37-.52-1.33-1.28-1.68-1.28-1.68-1.05-.72.08-.7.08-.7 1.16.08 1.77 1.19 1.77 1.19 1.03 1.77 2.7 1.26 3.36.96.1-.75.4-1.26.73-1.55-2.55-.29-5.24-1.28-5.24-5.68 0-1.25.45-2.28 1.18-3.08-.12-.29-.51-1.46.11-3.05 0 0 .96-.31 3.15 1.18a10.9 10.9 0 0 1 5.74 0c2.19-1.49 3.15-1.18 3.15-1.18.62 1.59.23 2.76.11 3.05.74.8 1.18 1.83 1.18 3.08 0 4.41-2.69 5.38-5.25 5.67.41.36.78 1.06.78 2.14v3.17c0 .31.21.67.8.56A11.5 11.5 0 0 0 23.5 12 11.5 11.5 0 0 0 12 .5Z"/></svg>
-        <span>上游仓库</span>
-      </a>
     </div>
   </div>
 </header>
 
 <section class="hero">
   <div class="hero-inner">
-    <div class="eyebrow"><span class="eyebrow-line"></span><span>一个 README 的另一种读法</span><span class="eyebrow-sep">·</span><span class="eyebrow-extra">全量中文译述</span><span class="eyebrow-sep">·</span><span class="eyebrow-extra">CC0 数据</span></div>
-    <h1>把 <span class="hero-num" id="heroCount">678</span> 份清单<br>变成一张<span class="hero-accent">看得懂的地图</span></h1>
-    <p class="hero-sub">一份英文 README 里藏着 27 个技术分类、近七百份人工策展的资源索引。这里把它译成中文，再补上层级、热度、活跃度与演化四个维度——不重复列表，只让结构显形。</p>
+    <div class="eyebrow"><span class="eyebrow-line"></span><span data-ui="eyebrow1">一个 README 的另一种读法</span><span class="eyebrow-sep">·</span><span class="eyebrow-extra" data-ui="eyebrow2">全量中文译述</span><span class="eyebrow-sep">·</span><span class="eyebrow-extra" data-ui="eyebrow3">CC0 数据</span></div>
+    <h1 id="heroTitle">把 <span class="hero-num" id="heroCount">678</span> 份清单<br>变成一张<span class="hero-accent">看得懂的地图</span></h1>
+    <p class="hero-sub" id="heroSub">一份英文 README 里藏着 27 个技术分类、近七百份人工策展的资源索引。这里把它译成中文，再补上层级、热度、活跃度与演化四个维度——不重复列表，只让结构显形。</p>
 
     <div class="search-wrap">
       <div class="search-box">
@@ -72,7 +70,7 @@
 
 <section class="insights" id="insights" aria-label="从数据中读出的结论">
   <div class="insights-inner">
-    <div class="insights-head"><span class="insights-kicker">今日发现</span><h2>这份数据自己会说话</h2><p>以下结论全部由当前快照实时计算，点击可直接跳到对应条目。</p></div>
+    <div class="insights-head"><span class="insights-kicker" data-ui="insightsKicker">今日发现</span><h2 data-ui="insightsTitle">这份数据自己会说话</h2><p data-ui="insightsLead">以下结论全部由当前快照实时计算，点击可直接跳到对应条目。</p></div>
     <div class="insight-grid" id="insightGrid"></div>
   </div>
 </section>
@@ -149,8 +147,21 @@
 
 <footer class="footer">
   <div class="footer-inner">
-    <span>精选清单地图 · 基于 <a href="https://github.com/sindresorhus/awesome" target="_blank" rel="noopener noreferrer">sindresorhus/awesome</a>（CC0-1.0）结构化与中文译述</span>
-    <span>为国内读者优化：中文检索 · 万位计数 · 无外部 CDN · 外链已标注</span>
+    <div class="footer-text">
+      <span class="footer-line"><strong class="footer-brand" data-ui="brandName">精选清单地图</strong> <span data-ui="footerCreditA">· 基于</span> <a href="https://github.com/sindresorhus/awesome" target="_blank" rel="noopener noreferrer">sindresorhus/awesome</a> <span data-ui="footerCreditB">（CC0-1.0）结构化与中文译述</span></span>
+      <span class="footer-line" data-ui="footerNote">为国内读者优化：中文检索 · 万位计数 · 无外部 CDN · 外链已标注</span>
+    </div>
+    <div class="footer-actions">
+      <a class="source-link" href="https://github.com/sindresorhus/awesome" target="_blank" rel="noopener noreferrer" id="upstreamLink">
+        <svg viewBox="0 0 24 24" width="15" height="15" fill="currentColor" aria-hidden="true"><path d="M12 .5A11.5 11.5 0 0 0 .5 12a11.5 11.5 0 0 0 7.86 10.92c.58.1.79-.25.79-.56v-2c-3.2.7-3.88-1.37-3.88-1.37-.52-1.33-1.28-1.68-1.28-1.68-1.05-.72.08-.7.08-.7 1.16.08 1.77 1.19 1.77 1.19 1.03 1.77 2.7 1.26 3.36.96.1-.75.4-1.26.73-1.55-2.55-.29-5.24-1.28-5.24-5.68 0-1.25.45-2.28 1.18-3.08-.12-.29-.51-1.46.11-3.05 0 0 .96-.31 3.15 1.18a10.9 10.9 0 0 1 5.74 0c2.19-1.49 3.15-1.18 3.15-1.18.62 1.59.23 2.76.11 3.05.74.8 1.18 1.83 1.18 3.08 0 4.41-2.69 5.38-5.25 5.67.41.36.78 1.06.78 2.14v3.17c0 .31.21.67.8.56A11.5 11.5 0 0 0 23.5 12 11.5 11.5 0 0 0 12 .5Z"/></svg>
+        <span data-ui="upstreamRepo">上游仓库</span>
+        <span class="source-arrow" aria-hidden="true">↗</span>
+      </a>
+      <button class="source-link" id="backToTop" type="button">
+        <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 19V6M5.5 12.5 12 6l6.5 6.5"/></svg>
+        <span data-ui="backTop">回到顶部</span>
+      </button>
+    </div>
   </div>
 </footer>
 

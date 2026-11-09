@@ -1,7 +1,7 @@
 {
-  "validatedAt": "2026-11-09T02:50:57.805Z",
-  "passed": 51,
-  "total": 51,
+  "validatedAt": "2026-11-09T04:07:33.647Z",
+  "passed": 57,
+  "total": 57,
   "allPassed": true,
   "source": {
     "sha256": "465cd781335e44587d238f666800104b63d4fc8ba2395d6422974dcba421c616",
@@ -183,9 +183,15 @@
     },
     {
       "group": "中文",
-      "name": "三态语言切换与中英字典齐备",
+      "name": "中英两态切换与双方字典齐备",
       "ok": true,
-      "detail": "中文 / 双语 / EN"
+      "detail": "中文 / EN"
+    },
+    {
+      "group": "中文",
+      "name": "语言状态回退不会落入无效值",
+      "ok": true,
+      "detail": "localStorage 与 URL 均校验为 zh | en"
     },
     {
       "group": "中文",
@@ -288,6 +294,36 @@
       "name": "Pages 分支发布与 CI 不冲突",
       "ok": true,
       "detail": "采用 main/root 分支发布，CI 只做数据校验"
+    },
+    {
+      "group": "界面",
+      "name": "品牌副标题不再出现「中文版」",
+      "ok": true,
+      "detail": "AWESOME ATLAS"
+    },
+    {
+      "group": "界面",
+      "name": "上游仓库入口已移出顶栏、落在页脚",
+      "ok": true,
+      "detail": "顶栏 0 个外链，页脚 1 个来源入口"
+    },
+    {
+      "group": "界面",
+      "name": "刷新页面不恢复旧滚动位置",
+      "ok": true,
+      "detail": "head 内 manual + 初始化回顶"
+    },
+    {
+      "group": "界面",
+      "name": "回到顶部按钮有真实事件绑定",
+      "ok": true,
+      "detail": "页脚按钮 → scrollTo(0)"
+    },
+    {
+      "group": "界面",
+      "name": "语言切换仅保留中文与 EN 两态",
+      "ok": true,
+      "detail": "2 个语言按钮"
     },
     {
       "group": "设计",

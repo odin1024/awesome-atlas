@@ -1,6 +1,6 @@
 {
-  "passed": 67,
-  "total": 67,
+  "passed": 104,
+  "total": 104,
   "allPassed": true,
   "checks": [
     {
@@ -72,6 +72,36 @@
       "name": "覆盖率标注为全量",
       "ok": true,
       "detail": "Star / Fork / 最近 push / 语言 / 归档状态来自带授权的 GitHub API 全量核验，覆盖 673 / 673 个仓库（100%）。健康分 = 0.45 "
+    },
+    {
+      "name": "品牌副标题不再出现「中文版」",
+      "ok": true,
+      "detail": "精选清单地图 / AWESOME ATLAS"
+    },
+    {
+      "name": "顶栏不再放外链按钮",
+      "ok": true,
+      "detail": "0"
+    },
+    {
+      "name": "页脚上游入口指向源仓库且新窗口打开",
+      "ok": true,
+      "detail": "https://github.com/sindresorhus/awesome"
+    },
+    {
+      "name": "顶栏三个锚点都真的滚到对应区块",
+      "ok": true,
+      "detail": "[('#workspace', 152, 821), ('#insights', 152, 617), ('#about', 401, 1457)]"
+    },
+    {
+      "name": "刷新后自动回到页面顶部",
+      "ok": true,
+      "detail": "scrollY 1457 → 0"
+    },
+    {
+      "name": "页脚「回到顶部」按钮生效",
+      "ok": true,
+      "detail": "0"
     },
     {
       "name": "点击瓦片可下钻到分类内部",
@@ -259,14 +289,9 @@
       "detail": "18"
     },
     {
-      "name": "双语模式显示英文副标题",
+      "name": "语言切换只有中文与 EN 两个选项",
       "ok": true,
-      "detail": "27"
-    },
-    {
-      "name": "语言状态写入 URL",
-      "ok": true,
-      "detail": "view=insight&id=miscellaneous%2Fawesome-548&lang=both"
+      "detail": "['中文', 'EN']"
     },
     {
       "name": "英文模式恢复英文分类",
@@ -279,9 +304,29 @@
       "detail": "05\nData Insights"
     },
     {
+      "name": "英文模式首屏与栏目同步翻译",
+      "ok": true,
+      "detail": "Turn 678 curated lists | into a readable map"
+    },
+    {
+      "name": "英文模式不再残留中文量词",
+      "ok": true,
+      "detail": "total 678\nMatches names, descriptions, repos and categories"
+    },
+    {
+      "name": "语言状态写入 URL",
+      "ok": true,
+      "detail": "view=insight&id=miscellaneous%2Fawesome-548&lang=en"
+    },
+    {
       "name": "可切回中文",
       "ok": true,
       "detail": "zh restored"
+    },
+    {
+      "name": "中文首屏文案恢复",
+      "ok": true,
+      "detail": "把 678 份清单\n变成一张看得懂的地图"
     },
     {
       "name": "Ctrl+K 打开命令面板",
@@ -309,6 +354,116 @@
       "detail": "light"
     },
     {
+      "name": "侧栏选分类后地图聚焦到该分类",
+      "ok": true,
+      "detail": "29 个瓦片 / 该分类 29 条 / 面包屑 全部分类 / 网络安全"
+    },
+    {
+      "name": "「重置」清空分类与搜索",
+      "ok": true,
+      "detail": "(empty)"
+    },
+    {
+      "name": "侧栏分类筛选框生效",
+      "ok": true,
+      "detail": "2 行"
+    },
+    {
+      "name": "清空分类筛选后恢复 28 行",
+      "ok": true,
+      "detail": "28"
+    },
+    {
+      "name": "「仅显示已验证仓库」改变结果集",
+      "ok": true,
+      "detail": "匹配 673 条 / 期望 673"
+    },
+    {
+      "name": "「隐藏已归档仓库」改变结果集",
+      "ok": true,
+      "detail": "匹配 675 条 / 期望 675"
+    },
+    {
+      "name": "「仅显示我的收藏」按收藏集过滤",
+      "ok": true,
+      "detail": "匹配 1 条 / 收藏 1 条"
+    },
+    {
+      "name": "地图「面积依据」切换会重排瓦片",
+      "ok": true,
+      "detail": "first tile 270.8 → 128.5"
+    },
+    {
+      "name": "图谱「显示范围」下拉改变节点数",
+      "ok": true,
+      "detail": "259 → 386 个节点"
+    },
+    {
+      "name": "榜单排序下拉真的重新排序",
+      "ok": true,
+      "detail": "☆\t / .NET / .NET 平台 / \t平台与运行环境\t2.2 万\t2026-03-2"
+    },
+    {
+      "name": "分页「下一页」可用",
+      "ok": true,
+      "detail": "上一页 2 / 17 · 共 678 条 下一页"
+    },
+    {
+      "name": "分页「上一页」可返回第一页",
+      "ok": true,
+      "detail": "上一页 1 / 17 · 共 678 条 下一页"
+    },
+    {
+      "name": "榜单行内 ☆ 可切换收藏",
+      "ok": true,
+      "detail": "1 → 0 条 / ★ → ☆"
+    },
+    {
+      "name": "详情「复制链接」给出反馈",
+      "ok": true,
+      "detail": "仓库链接已复制"
+    },
+    {
+      "name": "详情「看同分类」跳到该分类榜单",
+      "ok": true,
+      "detail": "view=table&cat=miscellaneous&id=miscellaneous%2Fawesome-548"
+    },
+    {
+      "name": "详情关闭按钮恢复空态",
+      "ok": true,
+      "detail": "empty restored"
+    },
+    {
+      "name": "时间轴「最久未更新」条目可打开详情",
+      "ok": true,
+      "detail": "DTrace 2017-07-21"
+    },
+    {
+      "name": "洞察条形的分类标签可跳回地图",
+      "ok": true,
+      "detail": "?cat=miscellaneous&metric=stars&id=miscellaneous%2"
+    },
+    {
+      "name": "顶栏搜索按钮可打开命令面板",
+      "ok": true,
+      "detail": "visible"
+    },
+    {
+      "name": "命令面板方向键移动高亮",
+      "ok": true,
+      "detail": "1"
+    },
+    {
+      "name": "Esc 可关闭命令面板",
+      "ok": true,
+      "detail": "hidden"
+    },
+    {
+      "name": "点击遮罩可关闭命令面板",
+      "ok": true,
+      "detail": "hidden"
+    },
+    {
       "name": "URL 参数可还原视图与筛选",
       "ok": true,
       "detail": "view=graph&cat=security&q=web"
@@ -329,9 +484,39 @@
       "detail": "5"
     },
     {
-      "name": "移动端可切换榜单",
+      "name": "移动端可切换到榜单",
       "ok": true,
       "detail": "40"
+    },
+    {
+      "name": "移动端可切换到图谱",
+      "ok": true,
+      "detail": "1"
+    },
+    {
+      "name": "移动端可切换到时间轴",
+      "ok": true,
+      "detail": "1"
+    },
+    {
+      "name": "移动端可切换到洞察",
+      "ok": true,
+      "detail": "4"
+    },
+    {
+      "name": "移动端可切回地图",
+      "ok": true,
+      "detail": "27"
+    },
+    {
+      "name": "移动端两个语言按钮都可见",
+      "ok": true,
+      "detail": "2"
+    },
+    {
+      "name": "移动端可切到英文",
+      "ok": true,
+      "detail": "All categories / 678 / Platforms / 57 / Programm"
     },
     {
       "name": "浏览器控制台无 JS 异常",

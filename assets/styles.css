@@ -131,13 +131,13 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
 .lang-switch button:last-child { border-right: 0; }
 .lang-switch button:hover { color: var(--ink); }
 .lang-switch button.is-on { color: var(--accent-ink); background: var(--accent); }
-.icon-btn, .ghost-btn, .share-btn {
+.icon-btn, .share-btn {
   display: inline-flex; align-items: center; justify-content: center; gap: 6px;
   height: 32px; padding: 0 10px;
   border: 1px solid var(--rule-2); background: transparent; color: var(--ink-2);
   font-size: 12px; transition: color var(--t), border-color var(--t), background var(--t);
 }
-.icon-btn:hover, .ghost-btn:hover, .share-btn:hover { color: var(--ink); border-color: var(--ink); background: var(--surface-2); }
+.icon-btn:hover, .share-btn:hover { color: var(--ink); border-color: var(--ink); background: var(--surface-2); }
 /* Only the theme glyphs swap; every other icon button keeps its SVG. */
 .icon-btn svg { display: block; }
 [data-theme="dark"] .icon-sun { display: none; }
@@ -254,7 +254,6 @@ h1 {
 .cat-row.is-on .cat-bar { background: var(--accent); opacity: 1; }
 .cat-swatch { width: 8px; height: 8px; flex-shrink: 0; }
 .cat-name { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.cat-name small { display: block; color: var(--ink-3); font-size: 10px; font-family: var(--font-mono); line-height: 1.2; }
 .cat-count { font-family: var(--font-mono); font-size: 11px; color: var(--ink-3); font-variant-numeric: tabular-nums; }
 .side-block { margin-top: var(--s4); padding: 14px 4px 0; border-top: 1px solid var(--rule); }
 .side-title { color: var(--ink-3); font-family: var(--font-mono); font-size: 10px; letter-spacing: .12em; text-transform: uppercase; margin-bottom: 12px; }
@@ -448,7 +447,6 @@ td { padding: 10px 10px; vertical-align: middle; }
 .detail-top { display: flex; align-items: flex-start; gap: 10px; }
 .detail-kicker { color: var(--accent); font-family: var(--font-mono); font-size: 10px; letter-spacing: .12em; text-transform: uppercase; }
 .detail-title { margin: 6px 0 0; font-family: var(--font-serif); font-size: 20px; line-height: 1.35; font-weight: 700; word-break: break-word; }
-.detail-title-en { margin: 3px 0 0; color: var(--ink-3); font-size: 11px; font-family: var(--font-mono); }
 .detail-close { margin-left: auto; border: 0; background: transparent; color: var(--ink-3); font-size: 18px; line-height: 1; padding: 0 3px; }
 .detail-close:hover { color: var(--ink); }
 .detail-desc { margin: 12px 0 8px; color: var(--ink-2); font-size: 12.5px; line-height: 1.8; }
@@ -497,9 +495,26 @@ td { padding: 10px 10px; vertical-align: middle; }
 .about-card a { color: var(--accent); text-decoration: underline; text-underline-offset: 3px; text-decoration-thickness: 1px; }
 .about-card strong { color: var(--ink); font-weight: 600; }
 .about-foot { display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; margin-top: var(--s5); padding-top: 16px; border-top: 1px solid var(--rule); color: var(--ink-3); font-size: 11px; font-family: var(--font-mono); }
-.footer { border-top: 1px solid var(--rule); padding: 18px 0 26px; }
-.footer-inner { display: flex; justify-content: space-between; gap: 14px; flex-wrap: wrap; color: var(--ink-3); font-size: 11.5px; }
-.footer a { color: var(--accent); }
+.footer { border-top: 1px solid var(--rule-3); padding: 22px 0 30px; }
+.footer-inner { display: flex; align-items: flex-start; justify-content: space-between; gap: var(--s5); flex-wrap: wrap; }
+.footer-text { display: grid; gap: 7px; color: var(--ink-3); font-size: 11.5px; line-height: 1.7; max-width: 74ch; }
+.footer-line { display: block; }
+.footer-brand { color: var(--ink); font-family: var(--font-serif); font-size: 13px; font-weight: 700; }
+.footer-text a { color: var(--accent); }
+.footer-actions { display: flex; gap: var(--s2); flex-wrap: wrap; }
+/* The source link used to sit in the top bar next to the theme toggle, where it
+   competed with the primary controls for a reference link that belongs at the
+   end of the page. Same button grammar as the icon buttons, one size up. */
+.source-link {
+  display: inline-flex; align-items: center; gap: 8px; height: 34px; padding: 0 13px;
+  border: 1px solid var(--rule-2); background: transparent; color: var(--ink-2);
+  font-size: 12px; white-space: nowrap;
+  transition: color var(--t), border-color var(--t), background var(--t);
+}
+.source-link:hover { color: var(--ink); border-color: var(--ink); background: var(--surface-2); }
+.source-link svg { display: block; flex-shrink: 0; }
+.source-arrow { color: var(--ink-3); font-family: var(--font-mono); }
+.source-link:hover .source-arrow { color: var(--accent); }
 
 /* ---------- overlays ---------- */
 .tooltip { position: fixed; z-index: 90; pointer-events: none; max-width: 300px; padding: 9px 11px; border: 1px solid var(--rule-3); background: var(--surface); box-shadow: var(--shadow-overlay); color: var(--ink); font-size: 12px; line-height: 1.6; }
@@ -558,7 +573,7 @@ td { padding: 10px 10px; vertical-align: middle; }
 @media (max-width: 760px) {
   :root { --gut: 16px; --bar: 56px; --bar2: 108px; }
   .topbar-inner { gap: 10px; }
-  .topnav, .status-pill, .ghost-btn, .brand-text small { display: none; }
+  .topnav, .status-pill, .brand-text small { display: none; }
   .brand-text strong { font-size: 15px; }
   .lang-switch button { padding: 4px 7px; font-size: 11px; }
   .hero { padding: var(--s7) 0 var(--s5); }
@@ -632,7 +647,6 @@ td { padding: 10px 10px; vertical-align: middle; }
   .cmdk-backdrop { padding-top: 8vh; }
 }
 @media (max-width: 420px) {
-  .lang-switch button:nth-child(2) { display: none; }
   .quick-chips { gap: 6px; }
   .quick-chip { padding: 5px 10px; font-size: 11.5px; }
   .iv-bar-row { grid-template-columns: 88px minmax(0, 1fr) 48px; }
