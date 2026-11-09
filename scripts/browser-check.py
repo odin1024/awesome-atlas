@@ -35,6 +35,50 @@ with sync_playwright() as p:
     check('四张指标卡渲染', page.locator('.metric').count() == 4, page.locator('.metric').count())
     check('侧栏 28 行（全部 + 27 分类）', page.locator('.cat-row').count() == 28, page.locator('.cat-row').count())
     check('地图默认 27 个分类瓦片', page.locator('.tile').count() == 27, page.locator('.tile').count())
+    # The map once painted all 27 tiles in one salmon, because the ramp itself
+    # spanned ΔE 8 end to end. A palette can regress silently -- nothing errors,
+    # the chart just stops encoding anything -- so measure the spread instead.
+    spread = page.evaluate("""() => {
+      const fills = [...document.querySelectorAll('.tile rect')].map(r => r.getAttribute('fill'));
+      const rgb = fills.map(f => f.match(/\\d+/g).map(Number));
+      const lum = c => {
+        const f = v => { const x = v / 255; return x <= 0.04045 ? x / 12.92 : ((x + 0.055) / 1.055) ** 2.4; };
+        return 0.2126 * f(c[0]) + 0.7152 * f(c[1]) + 0.0722 * f(c[2]);
+      };
+      const sorted = [...rgb].sort((a, b) => lum(a) - lum(b));
+      const [a, b] = [sorted[0], sorted[sorted.length - 1]];
+      return { distinct: new Set(fills).size, delta: Math.round(Math.hypot(a[0] - b[0], a[1] - b[1], a[2] - b[2])) };
+    }""")
+    check('分类瓦片颜色真的分得开', spread['distinct'] >= 12 and spread['delta'] >= 120,
+          f"{spread['distinct']} 种颜色，最浅与最深相差 {spread['delta']}")
+    # The description block used to start 5px under the count line, so 「77 条 ·
+    # 健康 64」 printed through the category note. Compare the drawn baselines
+    # rather than trusting the layout to have stayed put.
+    collide = page.evaluate("""() => {
+      const bad = [];
+      document.querySelectorAll('.tile').forEach(g => {
+        const notes = [...g.querySelectorAll('.tile-note')].map(e => +e.getAttribute('y'));
+        const subs = [...g.querySelectorAll('.tile-sub')].map(e => +e.getAttribute('y'));
+        for (const n of notes) for (const s of subs) {
+          if (Math.abs(n - s) < 12) bad.push([g.getAttribute('aria-label'), Math.round(n - s)]);
+        }
+      });
+      return bad;
+    }""")
+    check('瓦片内释义与计数行不重叠', len(collide) == 0, collide[:3])
+    # Re-derive the expected domain from the page's own data instead of quoting a
+    # snapshot number: the key must cover exactly the values the tiles were drawn
+    # from, so a silent domain change shows up here as a mismatch.
+    dom = page.evaluate("""() => {
+      const D = window.__ATLAS_DATA__;
+      const avgs = D.categories.map(c => {
+        const a = D.items.filter(i => i.categoryId === c.id && i.metrics);
+        return a.length ? Math.round(a.reduce((s, i) => s + i.metrics.health, 0) / a.length) : null;
+      }).filter(v => v !== null);
+      return { cap: document.querySelector('.map-scale-cap').textContent.trim(),
+               expect: Math.min(...avgs) + ' – ' + Math.max(...avgs) };
+    }""")
+    check('图例区间等于当前视图的真实极值', dom['cap'] == dom['expect'], f"{dom['cap']} vs {dom['expect']}")
     # Narrow slivers rotate their label instead of truncating it to 「去中心…」.
     clipped = page.locator('.tile-label', has_text='…').all_inner_texts()
     check('瓦片标签无截断残词', len(clipped) == 0, clipped)

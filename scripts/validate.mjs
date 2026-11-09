@@ -211,6 +211,45 @@ for (const theme of ['light', 'dark']) {
 
 const hue = (h) => { const [r, g, b] = hex2rgb(h).map((v) => v / 255); const mx = Math.max(r, g, b), mn = Math.min(r, g, b), d = mx - mn; if (!d) return 0; return ((mx === r ? (g - b) / d : mx === g ? 2 + (b - r) / d : 4 + (r - g) / d) * 60 + 360) % 360; };
 const lightT = themeTokens('light'), darkT = themeTokens('dark');
+
+/* --- 7d. the health ramp has to carry a real range, and keep text legible ---
+   The map once painted 27 tiles in one salmon because the ramp itself spanned
+   ΔE 8 from end to end; no amount of domain tuning could fix that. These checks
+   re-derive the numbers from the RAMP literals, so the palette cannot quietly
+   collapse back into a single tone. */
+const rampOf = (name) => {
+  const m = js.match(new RegExp(`const ${name} = \\[([\\s\\S]*?)\\];`));
+  return m ? [...m[1].matchAll(/\[(\d+),\s*(\d+),\s*(\d+)\]/g)].map(([, r, g, b]) => [+r, +g, +b]) : [];
+};
+const rgb2lab = (rgb) => {
+  const f = (v) => { const x = v / 255; return x <= 0.04045 ? x / 12.92 : ((x + 0.055) / 1.055) ** 2.4; };
+  const [r, g, b] = rgb.map(f);
+  const X = (0.4124 * r + 0.3576 * g + 0.1805 * b) / 0.95047;
+  const Y = 0.2126 * r + 0.7152 * g + 0.0722 * b;
+  const Z = (0.0193 * r + 0.1192 * g + 0.9505 * b) / 1.08883;
+  const t = (v) => (v > 0.008856 ? Math.cbrt(v) : 7.787 * v + 16 / 116);
+  const [fx, fy, fz] = [t(X), t(Y), t(Z)];
+  return [116 * fy - 16, 500 * (fx - fy), 200 * (fy - fz)];
+};
+const deltaE = (a, b) => {
+  const [x, y] = [rgb2lab(a), rgb2lab(b)];
+  return Math.sqrt(x.reduce((s, v, i) => s + (v - y[i]) ** 2, 0));
+};
+const contrastRgb = (a, b) => {
+  const [hi, lo] = [relLum(a), relLum(b)].sort((x, y) => y - x);
+  return (hi + 0.05) / (lo + 0.05);
+};
+const lightRamp = rampOf('RAMP_LIGHT');
+const darkRamp = rampOf('RAMP_DARK');
+add('设计', '数据色阶两端有真实落差', lightRamp.length === 5 && darkRamp.length === 5 && deltaE(lightRamp[0], lightRamp[lightRamp.length - 1]) >= 45 && deltaE(darkRamp[0], darkRamp[darkRamp.length - 1]) >= 45,
+  `浅色 ΔE ${deltaE(lightRamp[0], lightRamp[4]).toFixed(0)} / 深色 ΔE ${deltaE(darkRamp[0], darkRamp[4]).toFixed(0)}（旧色阶仅 8）`);
+add('设计', '最深瓦片上的文字仍过 4.5:1', lightRamp.every((c) => contrastRgb(c, hex2rgb(themeTokens('light').ink)) >= 4.5) && darkRamp.every((c) => contrastRgb(c, hex2rgb(themeTokens('dark').ink)) >= 4.5),
+  `浅色最低 ${Math.min(...lightRamp.map((c) => contrastRgb(c, hex2rgb(themeTokens('light').ink)))).toFixed(2)}:1 / 深色最低 ${Math.min(...darkRamp.map((c) => contrastRgb(c, hex2rgb(themeTokens('dark').ink)))).toFixed(2)}:1`);
+add('设计', '最浅瓦片不与页面底色糊在一起', deltaE(lightRamp[0], hex2rgb(themeTokens('light').paper)) >= 8 && deltaE(darkRamp[0], hex2rgb(themeTokens('dark').surface)) >= 8,
+  `浅色 ΔE ${deltaE(lightRamp[0], hex2rgb(themeTokens('light').ink)).toFixed(1)} / 深色 ΔE ${deltaE(darkRamp[0], hex2rgb(themeTokens('dark').surface)).toFixed(1)}`);
+add('界面', '地图色阶按当前视图的数值定标', /function rampDomain\(/.test(js) && /const dom = rampDomain\(entries\.map/.test(js) && /healthColor\(e\.health, dom\)/.test(js) && /scaleHtml\(dom\)/.test(js) && /mapScale: '健康分 · 相对'/.test(js),
+  'rampDomain + healthColor(value, domain)，图例打印同一区间');
+add('界面', '小样本不做百分位截尾', /vs\.length >= 40 \? pick\(0\.03\)/.test(js), '27 个分类用真实极值，图例区间覆盖全部瓦片');
 const hueGap = Math.abs(hue(lightT.accent) - hue(darkT.accent));
 add('设计', '单一强调色相（浅/深色同一色相）', Math.min(hueGap, 360 - hueGap) < 22, `浅色 ${Math.round(hue(lightT.accent))}° / 深色 ${Math.round(hue(darkT.accent))}°`);
 add('设计', '无渐变文字与玻璃拟态', !/background-clip:\s*text/.test(css) && !/backdrop-filter/.test(css), '无 gradient text / backdrop-filter');

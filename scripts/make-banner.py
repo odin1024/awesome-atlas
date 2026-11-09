@@ -19,12 +19,19 @@ items = catalog['items']
 
 # Same ramp as assets/app.js (RAMP_LIGHT) — a poster that invents its own colours
 # stops being a picture of the site.
-RAMP = [(217, 209, 196), (226, 201, 166), (224, 172, 140), (214, 154, 128), (196, 122, 99)]
+RAMP = [(226, 220, 202), (224, 207, 174), (222, 185, 140), (219, 151, 102), (216, 105, 65)]
 
 
 def health_domain():
-    hs = [it['metrics']['health'] for it in items if it.get('metrics')]
-    return min(hs), max(hs)
+    """The poster draws categories, so it is scaled over category averages, the
+    same population the site's category view uses. Scaling over individual repos
+    left the two deepest stops unused and flattened the panel."""
+    avgs = []
+    for c in catalog['categories']:
+        mine = [it['metrics']['health'] for it in items if it['categoryId'] == c['id'] and it.get('metrics')]
+        if mine:
+            avgs.append(round(sum(mine) / len(mine)))
+    return min(avgs), max(avgs)
 
 
 LO, HI = health_domain()

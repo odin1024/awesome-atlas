@@ -345,7 +345,10 @@ h1 {
 .tile.is-dim { opacity: .26; }
 .tile-label { pointer-events: none; font-weight: 600; fill: var(--ink); }
 .tile-label.is-serif { font-family: var(--font-serif); font-weight: 700; letter-spacing: .01em; }
-.tile-sub, .tile-note { pointer-events: none; fill: var(--ink-2); }
+.tile-sub, .tile-note { pointer-events: none; fill: var(--ink); }
+/* Tile fills now reach a deep terracotta, where --ink-2 drops to 2.6:1. The
+   labels on a data-coloured surface therefore use the full-strength ink and
+   separate by size and weight instead of by a lighter tint. */
 
 /* ---------- graph ---------- */
 .graph-svg { width: 100%; height: 100%; display: block; }

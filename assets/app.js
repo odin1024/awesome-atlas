@@ -40,15 +40,15 @@
   };
   const safeUrl = (u) => (/^https?:\/\//.test(u || '') ? esc(u) : '#');
   /* Sequential health scale.
-     The domain is the OBSERVED range across verified repos, not 0–100: real
-     category averages sit between ~29 and ~77, so a fixed 0–100 domain collapsed
-     every tile into one muddy shade. The ramp holds lightness inside the band
-     where ink text still clears 4.5:1, and spends its range on hue and saturation
-     instead — stone → sand → apricot → clay → terracotta. Dark mode inverts the
-     luminance direction so a filled tile never glares on a near-black page.
-     Every tile also prints its numeric score, so colour is never the only cue. */
-  const RAMP_LIGHT = [[217, 209, 196], [226, 201, 166], [224, 172, 140], [214, 154, 128], [196, 122, 99]];
-  const RAMP_DARK = [[36, 31, 27], [58, 47, 36], [86, 57, 42], [122, 70, 50], [160, 90, 65]];
+     The ramp holds lightness inside the band where ink text still clears 4.5:1
+     (measured: 5.3 – 13.5 on light, 4.9 – 12.3 on dark) and spends its range on hue
+     and saturation instead — warm paper → sand → apricot → clay → terracotta.
+     The previous ramp stayed inside one material (ΔE 8 across its whole length),
+     so every tile read as the same salmon no matter the value. Dark mode lifts
+     toward the accent rather than the surface, for the same reason.
+     Every tile prints its numeric score, so colour is never the only cue. */
+  const RAMP_LIGHT = [[226, 220, 202], [224, 207, 174], [222, 185, 140], [219, 151, 102], [216, 105, 65]];
+  const RAMP_DARK = [[52, 43, 35], [69, 53, 39], [112, 69, 41], [149, 78, 40], [174, 75, 36]];
   let _domain = null;
   function healthDomain() {
     if (!_domain) {
@@ -57,10 +57,30 @@
     }
     return _domain;
   }
+  /* Colour is scaled to the values a view actually draws. Category averages span
+     29–77 while individual repos span 22–100: one global domain left the two
+     deepest stops unused and flattened 27 tiles into a single wash. Trimming the
+     tails keeps one outlier from re-flattening the rest; every key prints the
+     domain it is drawn with, so the scale never lies about its range. */
+  function rampDomain(values) {
+    const vs = values.filter((v) => v != null).sort((a, b) => a - b);
+    if (!vs.length) return [0, 100];
+    const pick = (p) => vs[Math.max(0, Math.min(vs.length - 1, Math.round((vs.length - 1) * p)))];
+    /* Trimming only pays off on a big population. With 27 categories a 3% cut
+       throws away two real values, and the key would then quote a range that
+       does not contain every tile it paints. */
+    let lo = vs.length >= 40 ? pick(0.03) : vs[0];
+    let hi = vs.length >= 40 ? pick(0.97) : vs[vs.length - 1];
+    /* Amplifying a three-point spread to full ramp would turn noise into signal. */
+    if (hi - lo < 6) { const mid = (lo + hi) / 2; lo = mid - 3; hi = mid + 3; }
+    return [lo, hi];
+  }
+  let _catDomain = null;
+  const categoryDomain = () => (_catDomain || (_catDomain = rampDomain(DATA.categories.map((c) => avgHealth(c.id)))));
   const isDark = () => document.documentElement.dataset.theme === 'dark';
-  function healthRgb(h) {
+  function healthRgb(h, domain) {
     if (h == null) return [138, 134, 126];
-    const [lo, hi] = healthDomain();
+    const [lo, hi] = domain || healthDomain();
     const t = hi > lo ? (Math.max(lo, Math.min(hi, h)) - lo) / (hi - lo) : 0.5;
     const ramp = isDark() ? RAMP_DARK : RAMP_LIGHT;
     const pos = t * (ramp.length - 1);
@@ -68,13 +88,16 @@
     const k = pos - i;
     return ramp[i].map((v, j) => Math.round(v + (ramp[i + 1][j] - v) * k));
   }
-  const healthColor = (h) => `rgb(${healthRgb(h).join(',')})`;
+  const healthColor = (h, domain) => `rgb(${healthRgb(h, domain).join(',')})`;
   /* One source of truth for the legend swatches, so the key cannot drift away
-     from the ramp the map and the graph dots actually use. */
+     from the ramp the map and the graph dots actually use. The anchors are
+     placed at even steps and blended, because the fill interpolates rather than
+     snapping to five buckets -- a banded key would promise classes that do not
+     exist. */
   function rampGradient() {
     const ramp = isDark() ? RAMP_DARK : RAMP_LIGHT;
-    const step = 100 / ramp.length;
-    return 'linear-gradient(90deg,' + ramp.map((c, i) => `rgb(${c.join(',')}) ${(i * step).toFixed(1)}% ${((i + 1) * step).toFixed(1)}%`).join(',') + ')';
+    const step = 100 / (ramp.length - 1);
+    return 'linear-gradient(90deg,' + ramp.map((c, i) => `rgb(${c.join(',')}) ${(i * step).toFixed(1)}%`).join(',') + ')';
   }
   const scoreColor = (h) => h == null ? 'var(--ink-3)' : h >= 70 ? 'var(--accent)' : h >= 45 ? 'var(--ink-2)' : 'var(--ink-3)';
   const tipAttr = (name, lines) => esc(name) + '||' + esc(lines.filter(Boolean).join(' · '));
@@ -119,7 +142,7 @@
       favAdded: '已加入收藏', favRemoved: '已取消收藏', langZh: '已切换为中文', langEn: '已切换为英文原文',
       dataLoaded: '数据快照', legendNote: '健康分只对已验证仓库计算；未命中或已失效的条目始终标注「未采集」，不按 0 分处理。',
       countSuffix: '条', matchedPrefix: '匹配', totalPrefix: '共', inScope: '条在当前范围内',
-      plateKicker: '图 01 · 分类地图', plateFoot: '点按进入地图', mapScale: '健康分',
+      plateKicker: '图 01 · 分类地图', plateFoot: '点按进入地图', mapScale: '健康分 · 相对',
     },
     en: {
       brandName: 'Awesome Atlas', brandSub: 'CURATED INDEX',
@@ -159,7 +182,7 @@
       favAdded: 'Added to favorites', favRemoved: 'Removed from favorites', langZh: 'Switched to Chinese', langEn: 'Switched to English',
       dataLoaded: 'Snapshot', legendNote: 'Health is computed only for verified repositories. Missing entries are labelled, never treated as zero.',
       countSuffix: '', matchedPrefix: 'matched', totalPrefix: 'total', inScope: 'in current scope',
-      plateKicker: 'Plate 01 · Map', plateFoot: 'Open the map', mapScale: 'health',
+      plateKicker: 'Plate 01 · Map', plateFoot: 'Open the map', mapScale: 'health · relative',
     },
   };
   const LANG_KEY = 'atlas-lang';
@@ -385,11 +408,12 @@
         ? `${DATA.categories.length} categories · ${DATA.stats.items} lists`
         : `${DATA.categories.length} 类 · ${DATA.stats.items} 条`;
     }
-    /* Print the real observed domain: a 0–100 legend would misrepresent a scale
-       that is stretched over the actual data range. */
-    const [hLo, hHi] = healthDomain();
-    if ($('#legendLow')) $('#legendLow').textContent = `${hLo} · ${isEn() ? 'stale' : '停滞'}`;
-    if ($('#legendHigh')) $('#legendHigh').textContent = `${hHi} · ${isEn() ? 'active' : '活跃'}`;
+    /* The sidebar key is a category scale: it sits next to the 27 category
+       swatches, so it must show the range those swatches are drawn over. The
+       map carries its own key for the population it is currently drawing. */
+    const [cLo, cHi] = categoryDomain();
+    if ($('#legendLow')) $('#legendLow').textContent = `${Math.round(cLo)} · ${isEn() ? 'weaker' : '偏弱'}`;
+    if ($('#legendHigh')) $('#legendHigh').textContent = `${Math.round(cHi)} · ${isEn() ? 'stronger' : '偏强'}`;
     document.title = isEn() ? 'Awesome Atlas · A Visual Index of Curated Lists' : '精选清单地图 · Awesome 中文可视化索引';
   }
 
@@ -462,7 +486,7 @@
     const allRow = `<button class="cat-row ${state.cat === 'all' ? 'is-on' : ''}" type="button" data-cat="all"><span class="cat-swatch" style="background:var(--accent)"></span><span class="cat-name">${esc(ui('allCategories'))}</span><span class="cat-count">${DATA.stats.items}</span></button>`;
     $('#categoryList').innerHTML = allRow + rows.map((c) => {
       const h = avgHealth(c.id);
-      return `<button class="cat-row ${state.cat === c.id ? 'is-on' : ''}" type="button" data-cat="${esc(c.id)}" data-tip="${tipAttr(catName(c), [catNote(c), c.itemCount + ' ' + ui('countSuffix'), h == null ? ui('noSample') : (isEn() ? 'avg health ' : '平均健康分 ') + h])}"><span class="cat-swatch" style="background:${healthColor(h)}"></span><span class="cat-name">${catLabel(c)}</span><span class="cat-count">${c.itemCount}</span><span class="cat-bar" style="width:${Math.round((c.itemCount / max) * 100)}%"></span></button>`;
+      return `<button class="cat-row ${state.cat === c.id ? 'is-on' : ''}" type="button" data-cat="${esc(c.id)}" data-tip="${tipAttr(catName(c), [catNote(c), c.itemCount + ' ' + ui('countSuffix'), h == null ? ui('noSample') : (isEn() ? 'avg health ' : '平均健康分 ') + h])}"><span class="cat-swatch" style="background:${healthColor(h, categoryDomain())}"></span><span class="cat-name">${catLabel(c)}</span><span class="cat-count">${c.itemCount}</span><span class="cat-bar" style="width:${Math.round((c.itemCount / max) * 100)}%"></span></button>`;
     }).join('');
     $('#enrichedOnly').checked = state.enrichedOnly;
     $('#favoritesOnly').checked = state.favoritesOnly;
@@ -579,7 +603,6 @@
            block carries data instead of emptiness. */
         top: enrichedOf(c.id).slice().sort((a, b) => b.metrics.stars - a.metrics.stars).slice(0, 4).map((it) => ({ name: it.name, stars: it.metrics.stars })),
         value: state.metric === 'stars' ? Math.log10(totalStarsOf(c.id) + 10) : c.itemCount,
-        color: healthColor(avgHealth(c.id)),
         health: avgHealth(c.id),
         /* Any active filter has to be visible on the canvas. This used to be
            gated on `state.q`, so choosing a category in the sidebar or turning on
@@ -596,7 +619,6 @@
         subShort: it.metrics ? fmtAbbr(it.metrics.stars, isEn()) + ' ★' : ui('noSample'),
         note: '',
         value: state.metric === 'stars' ? Math.log10((it.metrics ? it.metrics.stars : 0) + 10) : 1,
-        color: healthColor(it.metrics ? it.metrics.health : null),
         health: it.metrics ? it.metrics.health : null,
         dim: !matched.has(it.id),
         tip: tipAttr(it.name, [catName(catById.get(cid)), it.level ? ui('subEntry') : ui('mainEntry'), it.metrics ? '★ ' + fmtAbbr(it.metrics.stars, isEn()) + ' · ' + (isEn() ? 'health ' : '健康 ') + it.metrics.health : ui('noSample')]),
@@ -604,6 +626,9 @@
       }));
     }
     entries.sort((a, b) => b.value - a.value);
+    /* One domain per render, taken from the tiles on screen. */
+    const dom = rampDomain(entries.map((e) => e.health));
+    entries.forEach((e) => { e.color = healthColor(e.health, dom); });
     const tiles = treemap(entries, 0, 0, W, H);
     const dimmed = tiles.filter((t) => t.dim).length;
     const rects = tiles.map((t) => {
@@ -640,15 +665,20 @@
       const noteLines = !vertical && t.note && w > 200 && h > 150
         ? wrapCJK(t.note, Math.max(6, Math.floor((w - 20) / 11)), 2)
         : [];
-      const noteEl = noteLines.map((line, i) => `<text class="tile-note" x="${(x + 8).toFixed(1)}" y="${(nameY + 20 + i * 15).toFixed(1)}" font-size="10.5" fill-opacity=".82">${esc(line)}</text>`).join('');
-      /* Only the biggest category tiles get the inset; on anything smaller the
-         four rows would collide with the name. Anchored to the bottom edge so the
-         block frames the tile instead of floating in its middle. */
-      const insetRows = !vertical && t.top && w > 220 && h > 240 ? t.top : [];
+      /* The count line owns the slot directly under the name, so the note block
+         starts below that slot. Starting it at nameY+20 printed the description
+         on top of 「77 条 · 健康 64」. */
+      const noteEl = noteLines.map((line, i) => `<text class="tile-note" x="${(x + 8).toFixed(1)}" y="${(nameY + 33 + i * 15).toFixed(1)}" font-size="10.5" fill-opacity=".85">${esc(line)}</text>`).join('');
+      /* Only tiles with room get the inset; below this the four rows would
+         collide with the note. Anchored to the bottom edge so the block frames
+         the tile instead of floating in its middle. 220×240 was so strict that
+         the second-largest tile sat half empty while the biggest one carried a
+         list. */
+      const insetRows = !vertical && t.top && w > 176 && h > 158 ? t.top : [];
       const insetEl = insetRows.map((it, i) => {
         const rowY = y + h - 26 - (insetRows.length - 1 - i) * 17;
         return `<text class="tile-sub" x="${(x + 8).toFixed(1)}" y="${rowY.toFixed(1)}" font-size="10" fill-opacity=".8">${esc(clipLabel(it.name, w * 0.58, 10))}</text>` +
-          `<text class="tile-sub" x="${(x + w - 8).toFixed(1)}" y="${rowY.toFixed(1)}" font-size="10" text-anchor="end" fill-opacity=".62">${esc(fmtAbbr(it.stars, isEn()))} ★</text>`;
+          `<text class="tile-sub" x="${(x + w - 8).toFixed(1)}" y="${rowY.toFixed(1)}" font-size="10" text-anchor="end" fill-opacity=".72">${esc(fmtAbbr(it.stars, isEn()))} ★</text>`;
       }).join('');
       return `<g class="tile ${t.dim ? 'is-dim' : ''} ${selected ? 'is-selected' : ''}" data-action="${t.action}" data-id="${esc(t.id)}" data-tip="${t.tip}" tabindex="0" role="button" aria-label="${esc(t.label)}">
         <rect class="tile-bg" x="${x1}" y="${y1}" width="${w1}" height="${h1}" fill="${t.color}" stroke="var(--ink)" stroke-opacity=".16" stroke-width="1"/>
@@ -661,14 +691,16 @@
     main.innerHTML = `<svg class="treemap-svg" viewBox="0 0 ${W} ${H}" role="img" aria-label="${isEn() ? 'Treemap of categories and lists' : '分类与清单的树状地图'}">${rects}</svg>`;
     $('#canvasFoot').innerHTML = `<p class="canvas-note">${state.metric === 'stars'
       ? (isEn() ? 'Area uses a log scale of sampled stars so a few mega-repos do not swallow the map.' : '面积按采样 Star 的对数缩放，避免个别超级项目吞掉整张图。')
-      : (isEn() ? 'Area = number of lists; colour = average health; grey = no sampled metrics.' : '面积按清单条目数；颜色按该范围的平均健康分，灰色表示没有健康分采样。')}${dimmed
+      : (isEn() ? `Area = number of lists; colour = health relative to the ${dom[0]}–${dom[1]} on screen; grey = no sampled metrics.` : `面积按清单条目数；颜色按当前视图 ${dom[0]}–${dom[1]} 区间内的相对健康分，灰色表示没有健康分采样。`)}${dimmed
       ? (isEn() ? ` ${dimmed} tiles outside the current filter are dimmed.` : ` 当前筛选外的 ${dimmed} 个瓦片已淡化。`)
-      : ''}</p>${scaleHtml()}`;
+      : ''}</p>${scaleHtml(dom)}`;
   }
-  /* The same key serves the map and the graph, both of which colour by health. */
-  function scaleHtml() {
-    const [lo, hi] = healthDomain();
-    return `<div class="map-scale"><span>${ui('mapScale')}</span><span class="map-scale-track" style="background:${rampGradient()}"></span><span class="map-scale-cap">${lo} – ${hi}</span></div>`;
+  /* The same key serves the map and the graph, both of which colour by health.
+     The domain is passed in rather than assumed, so the caption always matches
+     the values that were actually painted. */
+  function scaleHtml(domain) {
+    const [lo, hi] = domain || healthDomain();
+    return `<div class="map-scale"><span>${ui('mapScale')}</span><span class="map-scale-track" style="background:${rampGradient()}"></span><span class="map-scale-cap">${Math.round(lo)} – ${Math.round(hi)}</span></div>`;
   }
 
   /* ---------- hero plate ---------- */
@@ -684,6 +716,7 @@
       .map((c) => ({ key: c.id, label: catName(c), value: c.itemCount, health: avgHealth(c.id), count: c.itemCount }))
       .sort((a, b) => b.value - a.value);
     const focus = state.cat !== 'all' ? state.cat : null;
+    const plateDomain = categoryDomain();
     const cells = treemap(entries, 0, 0, W, H).map((t) => {
       const gap = 2;
       const x = t.x + gap, y = t.y + gap, w = Math.max(0, t.w - gap * 2), h = Math.max(0, t.h - gap * 2);
@@ -691,7 +724,7 @@
       const fs = w > 126 ? 11 : w > 78 ? 9.5 : 8;
       const showName = w > 60 && h > 26;
       return `<g class="plate-tile ${focus === t.key ? 'is-focus' : ''}"><title>${esc(t.label)} · ${t.count} ${isEn() ? 'lists' : '条'}</title>
-        <rect x="${x.toFixed(1)}" y="${y.toFixed(1)}" width="${w.toFixed(1)}" height="${h.toFixed(1)}" fill="${healthColor(t.health)}" stroke="var(--surface)" stroke-width="1.2"/>
+        <rect x="${x.toFixed(1)}" y="${y.toFixed(1)}" width="${w.toFixed(1)}" height="${h.toFixed(1)}" fill="${healthColor(t.health, plateDomain)}" stroke="var(--surface)" stroke-width="1.2"/>
         ${showName ? `<text x="${(x + 5).toFixed(1)}" y="${(y + fs + 5).toFixed(1)}" font-size="${fs}">${esc(clipLabel(t.label, w, fs))}</text>` : ''}
       </g>`;
     }).join('');

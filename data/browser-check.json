@@ -1,6 +1,6 @@
 {
-  "passed": 112,
-  "total": 112,
+  "passed": 115,
+  "total": 115,
   "allPassed": true,
   "checks": [
     {
@@ -22,6 +22,21 @@
       "name": "地图默认 27 个分类瓦片",
       "ok": true,
       "detail": "27"
+    },
+    {
+      "name": "分类瓦片颜色真的分得开",
+      "ok": true,
+      "detail": "21 种颜色，最浅与最深相差 179"
+    },
+    {
+      "name": "瓦片内释义与计数行不重叠",
+      "ok": true,
+      "detail": "[]"
+    },
+    {
+      "name": "图例区间等于当前视图的真实极值",
+      "ok": true,
+      "detail": "29 – 77 vs 29 – 77"
     },
     {
       "name": "瓦片标签无截断残词",

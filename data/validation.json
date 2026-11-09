@@ -1,7 +1,7 @@
 {
-  "validatedAt": "2026-11-09T04:54:28.952Z",
-  "passed": 64,
-  "total": 64,
+  "validatedAt": "2026-11-09T07:11:50.421Z",
+  "passed": 69,
+  "total": 69,
   "allPassed": true,
   "source": {
     "sha256": "465cd781335e44587d238f666800104b63d4fc8ba2395d6422974dcba421c616",
@@ -378,6 +378,36 @@
       "name": "深色主题文字对比度 ≥ 4.5:1",
       "ok": true,
       "detail": "最低 5.28:1（反白 accent-ink/accent）"
+    },
+    {
+      "group": "设计",
+      "name": "数据色阶两端有真实落差",
+      "ok": true,
+      "detail": "浅色 ΔE 61 / 深色 ΔE 56（旧色阶仅 8）"
+    },
+    {
+      "group": "设计",
+      "name": "最深瓦片上的文字仍过 4.5:1",
+      "ok": true,
+      "detail": "浅色最低 5.28:1 / 深色最低 4.85:1"
+    },
+    {
+      "group": "设计",
+      "name": "最浅瓦片不与页面底色糊在一起",
+      "ok": true,
+      "detail": "浅色 ΔE 82.0 / 深色 ΔE 13.8"
+    },
+    {
+      "group": "界面",
+      "name": "地图色阶按当前视图的数值定标",
+      "ok": true,
+      "detail": "rampDomain + healthColor(value, domain)，图例打印同一区间"
+    },
+    {
+      "group": "界面",
+      "name": "小样本不做百分位截尾",
+      "ok": true,
+      "detail": "27 个分类用真实极值，图例区间覆盖全部瓦片"
     },
     {
       "group": "设计",
