@@ -133,7 +133,7 @@
 ## 浏览器实机验证（Playwright + Chrome headless）
 
 结果：**115 / 115 项通过**；控制台异常 0 条。
-环境：`http://127.0.0.1:8765`（本地）
+环境：`https://odin1024.github.io/awesome-atlas`（线上）
 
 | 检查项 | 结果 | 观察值 |
 | --- | --- | --- |
