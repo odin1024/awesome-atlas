@@ -6,9 +6,11 @@ import sys
 from playwright.sync_api import sync_playwright
 
 ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
-BASE = 'http://127.0.0.1:8765'
+# ATLAS_BASE points the same suite at a deployed origin; ATLAS_SHOTS redirects
+# the screenshots so a production run cannot overwrite the README images.
+BASE = os.environ.get('ATLAS_BASE', 'http://127.0.0.1:8765')
 CHROME = r'C:\Program Files\Google\Chrome\Application\chrome.exe'
-SHOTS = os.path.join(ROOT, 'docs', 'screenshots')
+SHOTS = os.environ.get('ATLAS_SHOTS') or os.path.join(ROOT, 'docs', 'screenshots')
 os.makedirs(SHOTS, exist_ok=True)
 
 checks = []
@@ -257,7 +259,11 @@ with open(report_path, 'r', encoding='utf-8') as f:
 base = previous.split('## 浏览器实机验证')[0].rstrip() + '\n\n'
 with open(report_path, 'w', encoding='utf-8') as f:
     f.write(base + '## 浏览器实机验证（Playwright + Chrome headless）\n\n')
-    f.write(f'结果：**{passed} / {len(checks)} 项通过**；控制台异常 {len(errors)} 条。\n\n')
+    f.write(f'结果：**{passed} / {len(checks)} 项通过**；控制台异常 {len(errors)} 条。\n')
+    # The same suite runs locally and against the deployed origin, so the report
+    # has to say which one produced these numbers.
+    origin = '线上' if not BASE.startswith('http://127.0.0.1') else '本地'
+    f.write(f'环境：`{BASE}`（{origin}）\n\n')
     f.write('| 检查项 | 结果 | 观察值 |\n| --- | --- | --- |\n')
     for c in checks:
         f.write(f"| {c['name']} | {'通过' if c['ok'] else '**失败**'} | {str(c['detail']).replace('|', '\\|')[:110]} |\n")

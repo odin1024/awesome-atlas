@@ -74,34 +74,50 @@ npm run validate               # 数据层验证
 | --- | --- | --- | --- |
 | 数据 | `scripts/validate.mjs` | 用独立方法重新统计原始 README，校验解析、URL 归一化、指标范围、i18n 覆盖、历史 diff、产物完整性，并把设计规范变成可执行断言 | **51 / 51** |
 | 浏览器 | `scripts/browser-check.py` | 真实 Chrome 无头浏览器点击五个视图、语言切换、命令面板、收藏、空结果回归、图谱标签几何碰撞、表格列溢出、控制台异常 | **67 / 67**，控制台 0 异常 |
+| 线上 | 同上，`ATLAS_BASE=...` | 同一套 67 项断言直接打向已部署站点，避免「本地绿、线上坏」 | **67 / 67**，控制台 0 异常 |
 
 详细报告与桌面 / 移动端截图见 [`docs/VALIDATION.md`](docs/VALIDATION.md) 和 `docs/screenshots/`。
 
 ## 部署到 GitHub Pages
 
+线上地址：**https://odin1024.github.io/awesome-atlas/**
+
 站点根目录即 Pages 根目录，`.nojekyll` 会跳过 Jekyll 处理。
 
-**方式一：常规 git**（github.com 可达时）
+**方式一：常规 git**（`github.com:443` 可达时）
 
 ```bash
 git remote add origin https://github.com/<用户名>/awesome-atlas.git
 git push -u origin main
-# 仓库 Settings → Pages → Deploy from a branch → main / root
 ```
 
-**方式二：纯 REST API**（github.com 被代理拦截、只有 api.github.com 可达时）
+**方式二：纯 REST API**（`github.com` 被代理拦截、只有 `api.github.com` 可达时）
 
 ```bash
-node scripts/deploy-pages.mjs
+GH_TOKEN=<有 Contents 写权限的令牌> node scripts/deploy-pages.mjs
 ```
 
-脚本自动解析凭据（环境变量 `GH_TOKEN`，或本机已授权的 WorkBuddy GitHub 连接器），把全部文件作为 Git blob 上传并**合并为一次原子提交**，然后启用 Pages 并回显线上地址。`GH_DRY=1` 只打印清单、不做任何写操作；`GH_REPO` / `GH_BRANCH` 可指定目标仓库与分支。
+脚本把全部 40 个文件作为 Git blob 上传并**合并为一次原子提交**（`blob → tree → commit → ref`），再尝试启用 Pages 并回显地址。`GH_DRY=1` 只打印清单；`GH_REPO` / `GH_BRANCH` 指定目标仓库与分支。
 
-> **权限边界**：GitHub App 类型的授权令牌可以读写已存在的仓库，但**没有新建仓库的权限**（`POST /user/repos` 返回 403）。若目标仓库不存在，脚本会打印一键创建链接并安全退出，不会假装成功；此时用浏览器新建一个**空的公开仓库**后重跑即可。若持有 classic `repo` scope 的 PAT，脚本可自动创建。
->
-> **历史说明**：REST 部署在远端生成的是独立的一次提交，与本地 git 历史不同源（`github.com` 不可达时无法 push）。后续更新继续用本脚本即可，不要直接 `git push` 到该远端，以免因历史分叉被拒绝。
+### 三个实际撞到过的坑
 
-`.github/workflows/validate.yml` 是可选的 CI：每次 push 运行 `validate.mjs`。REST 部署不会上传 `.github/`（GitHub App 令牌通常缺少 `workflow` scope），Pages 采用分支发布，两者不冲突。
+脚本里都已处理，改写部署逻辑时不要拆掉：
+
+1. **GitHub App 令牌是只读的。** WorkBuddy 连接器发的 `ghu_` 令牌带 `contents: read`，对任何写入路径（建库、`git/blobs`、Contents API）都返回 `403 Resource not accessible by integration`。部署必须用 classic PAT（`repo` scope）或 fine-grained PAT（Contents 写）。脚本在第一次写入返回 403 时立刻停下并打印替代路径，不再逐文件刷几十行同样的错误。
+
+2. **空仓库不能直接写 blob。** 没有任何提交的仓库，`git/blobs` 与 `git/refs` 一律返回 `409 Git Repository is empty.`。必须先用 Contents API 写一个文件建立第一棵树，之后原子提交才成立。脚本用 `.nojekyll` 作种子——它本来就要发布，所以不会留下额外文件。
+
+3. **开启 Pages 需要 `administration: write`。** `POST /repos/{owner}/{repo}/pages` 的接受权限是 `pages=write,administration=write`；只给 Pages 写权限的 fine-grained 令牌会失败。两条路：给令牌加 Administration 写，或在 **Settings → Pages** 手动选 `main` / `/ (root)`。推荐后者——文件此时已经推送完成，点一次即可，不必为了这一步扩大令牌权限。
+
+### 无凭据时的兜底
+
+```bash
+node scripts/bundle-single.mjs
+```
+
+把样式、数据和脚本内联成单个 `dist/index.html`（816 KB），可直接拖进 GitHub 网页上传，已实测通过全部浏览器检查。
+
+> 内联有个值得记的陷阱：`String.prototype.replace` 的**字符串**替换串里，`$$` 会塌缩成一个 `$`。`app.js` 同时声明了 `$`（`querySelector`）和 `$$`（`querySelectorAll`），第一版因此把 `const $$ =` 写成第二个 `const $ =`，全文 `$$(...)` 调用静默退化成单元素查询——页面照常渲染，多元素逻辑全错却不报错。改用替换**函数**后解决，并加了「每段内容必须逐字出现在产物里」的构建后断言。
 
 ## 许可与边界
 
