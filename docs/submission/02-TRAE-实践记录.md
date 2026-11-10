@@ -80,7 +80,7 @@
 13. **文档真实性**：README 中英两版的体积、文件数、断言数量与隐私表述全部对齐实测。
 
 **可核验产物**
-- 本次修复提交：`【填 git log --oneline -1 的 7 位哈希】`
+- 本次修复提交：`22b2999`
 - `node scripts/validate.mjs` → **95 / 95 passed**
 - `python scripts/browser-check.py` → **127 / 127 passed，0 console errors**
 - axe-core（桌面 / 移动 / 深色 / 命令面板）→ **0 违规**
