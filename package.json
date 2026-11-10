@@ -6,7 +6,8 @@
   "description": "把 sindresorhus/awesome 的 README 变成可探索的数据地图",
   "scripts": {
     "build:data": "node scripts/build-data.mjs",
-    "enrich": "node scripts/enrich.mjs && node scripts/enrich-pass2.mjs && node scripts/enrich-pass3.mjs",
+    "enrich": "node scripts/enrich-full.mjs",
+    "enrich:legacy": "node scripts/enrich.mjs && node scripts/enrich-pass2.mjs && node scripts/enrich-pass3.mjs",
     "validate": "node scripts/validate.mjs",
     "check:browser": "python scripts/browser-check.py",
     "banner": "python scripts/make-banner.py",

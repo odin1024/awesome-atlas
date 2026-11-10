@@ -20,3 +20,25 @@ jobs:
           node-version: '20'
       - name: Cross-check parsed data against the upstream README
         run: node scripts/validate.mjs
+
+  browser:
+    # The data layer can be perfect while a click handler is broken, so the
+    # real-DOM suite runs in CI too instead of only on the author's machine.
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install Playwright and Chromium
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          python -m playwright install --with-deps chromium
+      - name: Serve the static site and run the browser suite
+        run: |
+          python -m http.server 8765 --bind 127.0.0.1 &
+          sleep 2
+          python scripts/browser-check.py

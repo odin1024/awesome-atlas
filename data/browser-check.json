@@ -1,6 +1,6 @@
 {
-  "passed": 120,
-  "total": 120,
+  "passed": 127,
+  "total": 127,
   "allPassed": true,
   "checks": [
     {
@@ -114,9 +114,9 @@
       "detail": "{'y': 791, 'top': 152, 'map': True}"
     },
     {
-      "name": "分享卡片图已声明",
+      "name": "分享卡片图指向独立社交卡",
       "ok": true,
-      "detail": "https://odin1024.github.io/awesome-atlas/docs/banner.png"
+      "detail": "https://odin1024.github.io/awesome-atlas/docs/social-preview.png"
     },
     {
       "name": "品牌副标题不再出现「中文版」",
@@ -549,6 +549,36 @@
       "detail": "view=graph&cat=security&q=web"
     },
     {
+      "name": "榜单行可按 Enter 打开详情",
+      "ok": true,
+      "detail": "keyboard open"
+    },
+    {
+      "name": "标签栏方向键切换视图并带走焦点",
+      "ok": true,
+      "detail": "timeline"
+    },
+    {
+      "name": "命令面板 Tab 焦点不会逃出面板",
+      "ok": true,
+      "detail": "0 次逃逸"
+    },
+    {
+      "name": "关闭命令面板后焦点回到触发按钮",
+      "ok": true,
+      "detail": "cmdkOpen"
+    },
+    {
+      "name": "浏览器后退 / 前进恢复上一视图",
+      "ok": true,
+      "detail": "graph / table"
+    },
+    {
+      "name": "localStorage 被禁用时页面仍完整渲染",
+      "ok": true,
+      "detail": "27 瓦片 / 4 指标"
+    },
+    {
       "name": "移动端无横向溢出",
       "ok": true,
       "detail": "overflow=0px"
@@ -587,6 +617,11 @@
       "name": "移动端可切回地图",
       "ok": true,
       "detail": "27"
+    },
+    {
+      "name": "移动端星标 / 外链触控目标 ≥ 44px",
+      "ok": true,
+      "detail": "{'star': [44, 44], 'ext': [44, 44], 'link': [44, 44]}"
     },
     {
       "name": "移动端两个语言按钮都可见",

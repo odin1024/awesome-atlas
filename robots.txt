@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://odin1024.github.io/awesome-atlas/sitemap.xml

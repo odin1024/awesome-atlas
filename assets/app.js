@@ -194,7 +194,20 @@
     },
   };
   const LANG_KEY = 'atlas-lang';
-  let lang = localStorage.getItem(LANG_KEY) || 'zh';
+  /* Safari private mode, a filed `file://` origin and enterprise policy all make
+     storage throw on access. A bare `localStorage.getItem` used to abort the
+     whole IIFE before the first render, leaving a blank canvas; reads and writes
+     now degrade to in-memory defaults instead. */
+  function readStore(key, fallback) {
+    try {
+      const v = localStorage.getItem(key);
+      return v == null ? fallback : v;
+    } catch (_) { return fallback; }
+  }
+  function writeStore(key, value) {
+    try { localStorage.setItem(key, value); } catch (_) { /* storage unavailable */ }
+  }
+  let lang = readStore(LANG_KEY, 'zh') || 'zh';
   /* Two states only. A stored 'both' from an older visit has to degrade to a
      valid state or the whole UI would render with the 'both' code paths gone. */
   if (!['zh', 'en'].includes(lang)) lang = 'zh';
@@ -275,7 +288,7 @@
   const SORTS = ['stars', 'health', 'updated', 'name', 'category', 'created', 'stale'];
   const SCOPES = ['curated', 'enriched', 'all', 'favorites'];
   let favorites = new Set();
-  try { favorites = new Set(JSON.parse(localStorage.getItem('atlas-favorites') || '[]')); } catch (_) { /* ignore */ }
+  try { favorites = new Set(JSON.parse(readStore('atlas-favorites', '[]'))); } catch (_) { /* ignore */ }
   for (const id of [...favorites]) if (!itemById.has(id)) favorites.delete(id);
 
   const state = {
@@ -292,7 +305,7 @@
     enrichedOnly: P.get('enriched') === '1',
     favoritesOnly: P.get('fav') === '1',
     hideArchived: P.get('archived') === '0',
-    theme: localStorage.getItem('atlas-theme') === 'dark' ? 'dark' : 'light',
+    theme: readStore('atlas-theme', 'light') === 'dark' ? 'dark' : 'light',
   };
   if (['zh', 'en'].includes(P.get('lang'))) lang = P.get('lang');
   document.documentElement.dataset.theme = state.theme;
@@ -314,7 +327,10 @@
      real state change from an in-page #anchor hop. */
   let lastSearch = location.search;
 
-  function writeURL() {
+  /* `push` is true only for deliberate navigations (view, category, selection,
+     sort, scope, language). Typing in the search box replaces the current entry
+     instead, otherwise every keystroke would become a separate history step. */
+  function writeURL(push) {
     const p = new URLSearchParams();
     if (state.view !== 'map') p.set('view', state.view);
     if (state.cat !== 'all') p.set('cat', state.cat);
@@ -330,8 +346,25 @@
     if (state.hideArchived) p.set('archived', '0');
     if (lang !== 'zh') p.set('lang', lang);
     const next = p.toString() ? '?' + p.toString() : '';
-    try { history.replaceState(null, '', next || location.pathname); } catch (_) { /* file:// */ }
+    const target = (next || location.pathname) + (location.hash || '');
+    try {
+      if (push && next !== lastSearch) history.pushState(null, '', target);
+      else history.replaceState(null, '', target);
+    } catch (_) { /* file:// */ }
     lastSearch = next;
+  }
+
+  /* The controls live in static HTML, so a popstate or a deep link has to push
+     state back into them; otherwise the sidebar shows a filter it is not using. */
+  function syncControls() {
+    $('#searchInput').value = state.q;
+    const scope = $('#scopeSelect');
+    if (scope) scope.value = state.scope;
+    const sort = $('#sortSelect');
+    if (sort) sort.value = state.sort;
+    $('#enrichedOnly').checked = state.enrichedOnly;
+    $('#favoritesOnly').checked = state.favoritesOnly;
+    $('#hideArchived').checked = state.hideArchived;
   }
 
   /* Back / forward restores the previous view. This used to be a blunt
@@ -354,10 +387,10 @@
     const nextLang = q.get('lang');
     if (['zh', 'en'].includes(nextLang) && nextLang !== lang) {
       lang = nextLang;
-      localStorage.setItem(LANG_KEY, lang);
+      writeStore(LANG_KEY, lang);
     }
     document.documentElement.lang = isEn() ? 'en' : 'zh-CN';
-    $('#searchInput').value = state.q;
+    syncControls();
     renderAll();
   }
 
@@ -535,6 +568,9 @@
       const on = b.dataset.view === state.view;
       b.classList.toggle('is-active', on);
       b.setAttribute('aria-selected', String(on));
+      /* Roving tabindex: the tab strip is one stop in the tab order, arrows move
+         between views. Without it every tab was a separate stop. */
+      b.tabIndex = on ? 0 : -1;
       b.querySelector('[data-ui]').textContent = ui('tab' + b.dataset.view.charAt(0).toUpperCase() + b.dataset.view.slice(1));
     });
     $('#viewCaption').textContent = (CAPTIONS[isEn() ? 'en' : 'zh'])[state.view];
@@ -552,7 +588,7 @@
     /* Numeric indices match the desktop tab numbering and avoid font-dependent
        dingbats, which render differently on every Chinese IME/font stack. */
     const conf = [['map', ui('viewMap'), '01'], ['graph', ui('viewGraph'), '02'], ['table', ui('viewTable'), '03'], ['timeline', ui('viewTimeline'), '04'], ['insight', ui('viewInsight'), '05']];
-    $('#mobileTabs').innerHTML = conf.map(([v, l, ico]) => `<button type="button" data-view="${v}" class="${state.view === v ? 'is-on' : ''}"><span class="mt-ico">${ico}</span><span>${esc(l)}</span></button>`).join('');
+    $('#mobileTabs').innerHTML = conf.map(([v, l, ico]) => `<button type="button" data-view="${v}" aria-pressed="${state.view === v}" class="${state.view === v ? 'is-on' : ''}"><span class="mt-ico">${ico}</span><span>${esc(l)}</span></button>`).join('');
   }
 
   function renderSearchMeta() {
@@ -699,7 +735,7 @@
         ${showSub ? `<text class="tile-sub" x="${(x + 8).toFixed(1)}" y="${subY.toFixed(1)}" font-size="10.5" fill-opacity=".9">${esc(clipLabel(baseSub, w, 10.5))}</text>` : ''}
       </g>`;
     }).join('');
-    main.innerHTML = `<svg class="treemap-svg" viewBox="0 0 ${W} ${H}" role="img" aria-label="${isEn() ? 'Treemap of categories and lists' : '分类与清单的树状地图'}">${rects}</svg>`;
+    main.innerHTML = `<svg class="treemap-svg" viewBox="0 0 ${W} ${H}" role="group" aria-label="${isEn() ? 'Treemap of categories and lists' : '分类与清单的树状地图'}">${rects}</svg>`;
     $('#canvasFoot').innerHTML = `<p class="canvas-note">${state.metric === 'stars'
       ? (isEn() ? 'Area uses a log scale of sampled stars so a few mega-repos do not swallow the map.' : '面积按采样 Star 的对数缩放，避免个别超级项目吞掉整张图。')
       : (isEn() ? `Area = number of lists; colour = health relative to the ${dom[0]}–${dom[1]} on screen; grey = no sampled metrics.` : `面积按清单条目数；颜色按当前视图 ${dom[0]}–${dom[1]} 区间内的相对健康分，灰色表示没有健康分采样。`)}${dimmed
@@ -789,7 +825,7 @@
       if (state.q) list = list.filter((it) => matched.has(it.id));
       const showLinks = list.length <= 14;
       const catR = single ? 9 : 5 + Math.min(7, Math.sqrt(c.itemCount));
-      catNodes += `<g class="graph-node" data-action="filter-cat" data-id="${esc(c.id)}" data-tip="${tipAttr(catName(c), [c.itemCount + ' ' + ui('countSuffix'), isEn() ? 'click to focus' : '点击聚焦该分类'])}"><circle cx="${px.toFixed(1)}" cy="${py.toFixed(1)}" r="${catR.toFixed(1)}" fill="${healthColor(avgHealth(c.id))}" stroke="var(--surface)" stroke-width="2"/></g>`;
+      catNodes += `<g class="graph-node" data-action="filter-cat" data-id="${esc(c.id)}" data-tip="${tipAttr(catName(c), [c.itemCount + ' ' + ui('countSuffix'), isEn() ? 'click to focus' : '点击聚焦该分类'])}" tabindex="0" role="button" aria-label="${esc(catName(c))} · ${c.itemCount} ${ui('countSuffix')}"><circle cx="${px.toFixed(1)}" cy="${py.toFixed(1)}" r="${catR.toFixed(1)}" fill="${healthColor(avgHealth(c.id))}" stroke="var(--surface)" stroke-width="2"/></g>`;
 
       list.forEach((it, i) => {
         const a = single ? i * 2.39996 : i * 2.39996 + angle;
@@ -837,7 +873,7 @@
         + `<text class="graph-guide" x="${cx}" y="${cy + 88}" text-anchor="middle">${isEn() ? 'colour = health · area = stars' : '颜色 = 健康分 · 面积 = Star'}</text>`
       : '';
     const core = `<circle class="graph-core" cx="${cx}" cy="${cy}" r="27" fill="var(--ink)"/><text class="graph-center-label" x="${cx}" y="${cy + 4}" text-anchor="middle" fill="var(--paper)">${esc(coreText)}</text>${guide}`;
-    main.innerHTML = `<svg class="graph-svg" viewBox="0 0 ${W} ${H}" role="img" aria-label="${isEn() ? 'Radial graph of categories and lists' : '分类与清单的径向关系图谱'}">${orbits}${spokes}${links}${catNodes}${nodes}${labels}${core}</svg>`;
+    main.innerHTML = `<svg class="graph-svg" viewBox="0 0 ${W} ${H}" role="group" aria-label="${isEn() ? 'Radial graph of categories and lists' : '分类与清单的径向关系图谱'}">${orbits}${spokes}${links}${catNodes}${nodes}${labels}${core}</svg>`;
     $('#canvasFoot').innerHTML = `<p class="canvas-note">${isEn() ? `${pointCount} dots shown.` : `当前显示 ${pointCount} 个圆点。`}${state.scope === 'curated' ? (isEn() ? ' Default shows the 10 highest-starred verified lists per category.' : ` 默认每类只画 Star 最高的 10 个已验证清单，避免 ${DATA.items.length} 条清单糊成一团。`) : ''}${isEn() ? ' Colour is paired with text labels, never used alone.' : ' 颜色同时配有文字提示，不单独依赖颜色编码。'}</p>${scaleHtml()}`;
   }
 
@@ -1089,9 +1125,9 @@
       body.classList.add('is-entering');
     }
   }
-  function renderAll() {
+  function renderAll(push) {
     renderStaticUI(); renderMetrics(); renderHeroPlate(); renderQuickChips(); renderSidebar(); renderViewState();
-    renderToolbar(); renderCanvas(); renderDetail(); renderSearchMeta(); renderInsights(); fillAbout(); writeURL();
+    renderToolbar(); renderCanvas(); renderDetail(); renderSearchMeta(); renderInsights(); fillAbout(); writeURL(push);
   }
   function renderLight() { renderToolbar(); renderCanvas(); renderDetail(); renderSearchMeta(); }
 
@@ -1115,15 +1151,29 @@
   }
 
   /* ---------- command palette ---------- */
-  let cmdkItems = [], cmdkIndex = 0;
+  let cmdkItems = [], cmdkIndex = 0, cmdkReturnFocus = null;
   function openCmdk() {
+    cmdkReturnFocus = document.activeElement;
     $('#cmdk').hidden = false;
+    $('#cmdkOpen').setAttribute('aria-expanded', 'true');
     $('#cmdkInput').value = '';
     cmdkIndex = 0;
     renderCmdk('');
     setTimeout(() => $('#cmdkInput').focus(), 20);
   }
-  function closeCmdk() { $('#cmdk').hidden = true; }
+  function closeCmdk() {
+    const panel = $('#cmdk');
+    if (panel.hidden) return;
+    panel.hidden = true;
+    $('#cmdkOpen').setAttribute('aria-expanded', 'false');
+    /* Focus goes back where it came from; before this it fell to <body> and
+       keyboard readers lost their place in the page. */
+    if (cmdkReturnFocus && document.contains(cmdkReturnFocus)) cmdkReturnFocus.focus({ preventScroll: true });
+    cmdkReturnFocus = null;
+  }
+  function cmdkFocusables() {
+    return $$('button, input, [tabindex]:not([tabindex="-1"])', $('#cmdk')).filter((el) => !el.disabled && el.offsetParent !== null);
+  }
   function renderCmdk(q) {
     const needle = q.trim().toLowerCase();
     const items = [];
@@ -1149,9 +1199,9 @@
     const x = cmdkItems[index];
     if (!x) return;
     closeCmdk();
-    if (x.action === 'cmdk-view') { state.view = x.id; state.page = 1; renderAll(); }
-    if (x.action === 'cmdk-cat') { state.cat = x.id; state.drill = null; state.page = 1; renderAll(); }
-    if (x.action === 'cmdk-item') { state.selected = x.id; state.view = 'table'; renderAll(); }
+    if (x.action === 'cmdk-view') { state.view = x.id; state.page = 1; renderAll(true); }
+    if (x.action === 'cmdk-cat') { state.cat = x.id; state.drill = null; state.page = 1; renderAll(true); }
+    if (x.action === 'cmdk-item') { state.selected = x.id; state.view = 'table'; renderAll(true); }
     if (state.view === 'table' || state.view === 'insight') $('#workspace').scrollIntoView({ behavior: 'smooth', block: 'start' });
   }
 
@@ -1161,13 +1211,13 @@
     state.catQuery = '';
     $('#catSearch').value = '';
     $('#searchInput').value = '';
-    renderAll();
+    renderAll(true);
   }
   function changeLang(next) {
     lang = next;
-    localStorage.setItem(LANG_KEY, lang);
+    writeStore(LANG_KEY, lang);
     document.documentElement.lang = isEn() ? 'en' : 'zh-CN';
-    renderAll();
+    renderAll(true);
     toast(isEn() ? ui('langEn') : ui('langZh'));
   }
 
@@ -1180,23 +1230,23 @@
     const target = e.target.closest('[data-action], [data-cat], [data-view], [data-metric]');
     if (!target) return;
     if (target.id === 'cmdkOpen') return;
-    if (target.dataset.view) { state.view = target.dataset.view; state.page = 1; renderAll(); return; }
-    if (target.dataset.cat) { state.cat = target.dataset.cat; state.drill = null; state.page = 1; renderAll(); return; }
-    if (target.dataset.metric) { state.metric = target.dataset.metric; renderAll(); return; }
+    if (target.dataset.view) { state.view = target.dataset.view; state.page = 1; renderAll(true); return; }
+    if (target.dataset.cat) { state.cat = target.dataset.cat; state.drill = null; state.page = 1; renderAll(true); return; }
+    if (target.dataset.metric) { state.metric = target.dataset.metric; renderAll(true); return; }
     const action = target.dataset.action;
     const id = target.dataset.id;
     if (!action) return;
-    if (action === 'drill') { state.drill = id; state.cat = id; renderAll(); return; }
-    if (action === 'drill-back') { state.drill = null; state.cat = 'all'; renderAll(); return; }
-    if (action === 'select') { state.selected = id; renderLight(); writeURL(); if (window.innerWidth <= 760) $('#detail').scrollIntoView({ behavior: 'smooth', block: 'start' }); return; }
-    if (action === 'close') { state.selected = null; renderLight(); writeURL(); return; }
-    if (action === 'filter-cat') { state.cat = id; state.drill = null; renderAll(); return; }
-    if (action === 'focus-cat') { state.cat = id; state.view = 'table'; state.drill = null; state.page = 1; renderAll(); return; }
-    if (action === 'insight-cat') { state.cat = id; state.view = 'map'; state.drill = null; state.metric = 'count'; renderAll(); $('#workspace').scrollIntoView({ behavior: 'smooth', block: 'start' }); return; }
-    if (action === 'insight-stars') { state.cat = id; state.view = 'map'; state.drill = null; state.metric = 'stars'; renderAll(); $('#workspace').scrollIntoView({ behavior: 'smooth', block: 'start' }); return; }
-    if (action === 'insight-item') { state.selected = id; state.view = 'table'; renderAll(); $('#workspace').scrollIntoView({ behavior: 'smooth', block: 'start' }); return; }
-    if (action === 'insight-view') { state.view = 'insight'; renderAll(); $('#workspace').scrollIntoView({ behavior: 'smooth', block: 'start' }); return; }
-    if (action === 'clear-search') { state.q = ''; $('#searchInput').value = ''; renderAll(); return; }
+    if (action === 'drill') { state.drill = id; state.cat = id; renderAll(true); return; }
+    if (action === 'drill-back') { state.drill = null; state.cat = 'all'; renderAll(true); return; }
+    if (action === 'select') { state.selected = id; renderLight(); writeURL(true); if (window.innerWidth <= 760) $('#detail').scrollIntoView({ behavior: 'smooth', block: 'start' }); return; }
+    if (action === 'close') { state.selected = null; renderLight(); writeURL(true); return; }
+    if (action === 'filter-cat') { state.cat = id; state.drill = null; renderAll(true); return; }
+    if (action === 'focus-cat') { state.cat = id; state.view = 'table'; state.drill = null; state.page = 1; renderAll(true); return; }
+    if (action === 'insight-cat') { state.cat = id; state.view = 'map'; state.drill = null; state.metric = 'count'; renderAll(true); $('#workspace').scrollIntoView({ behavior: 'smooth', block: 'start' }); return; }
+    if (action === 'insight-stars') { state.cat = id; state.view = 'map'; state.drill = null; state.metric = 'stars'; renderAll(true); $('#workspace').scrollIntoView({ behavior: 'smooth', block: 'start' }); return; }
+    if (action === 'insight-item') { state.selected = id; state.view = 'table'; renderAll(true); $('#workspace').scrollIntoView({ behavior: 'smooth', block: 'start' }); return; }
+    if (action === 'insight-view') { state.view = 'insight'; renderAll(true); $('#workspace').scrollIntoView({ behavior: 'smooth', block: 'start' }); return; }
+    if (action === 'clear-search') { state.q = ''; $('#searchInput').value = ''; renderAll(true); return; }
     if (action === 'reset-all') { resetFilters(); return; }
     if (action === 'copy-link') {
       const it = itemById.get(id);
@@ -1206,20 +1256,20 @@
     if (action === 'fav') {
       e.stopPropagation();
       if (favorites.has(id)) favorites.delete(id); else favorites.add(id);
-      localStorage.setItem('atlas-favorites', JSON.stringify([...favorites]));
+      writeStore('atlas-favorites', JSON.stringify([...favorites]));
       renderCanvas(); renderDetail(); renderSearchMeta(); renderSidebar();
       toast(favorites.has(id) ? ui('favAdded') : ui('favRemoved'));
       return;
     }
-    if (action === 'page') { state.page = Math.max(1, Number(id) || 1); renderTable(); renderSearchMeta(); writeURL(); return; }
+    if (action === 'page') { state.page = Math.max(1, Number(id) || 1); renderTable(); renderSearchMeta(); writeURL(true); return; }
   });
 
   document.addEventListener('change', (e) => {
-    if (e.target.id === 'scopeSelect') { state.scope = e.target.value; renderCanvas(); writeURL(); }
-    if (e.target.id === 'sortSelect') { state.sort = e.target.value; state.page = 1; renderTable(); writeURL(); }
-    if (e.target.id === 'enrichedOnly') { state.enrichedOnly = e.target.checked; state.page = 1; renderAll(); }
-    if (e.target.id === 'favoritesOnly') { state.favoritesOnly = e.target.checked; state.page = 1; renderAll(); }
-    if (e.target.id === 'hideArchived') { state.hideArchived = e.target.checked; state.page = 1; renderAll(); }
+    if (e.target.id === 'scopeSelect') { state.scope = e.target.value; renderCanvas(); writeURL(true); }
+    if (e.target.id === 'sortSelect') { state.sort = e.target.value; state.page = 1; renderTable(); writeURL(true); }
+    if (e.target.id === 'enrichedOnly') { state.enrichedOnly = e.target.checked; state.page = 1; renderAll(true); }
+    if (e.target.id === 'favoritesOnly') { state.favoritesOnly = e.target.checked; state.page = 1; renderAll(true); }
+    if (e.target.id === 'hideArchived') { state.hideArchived = e.target.checked; state.page = 1; renderAll(true); }
   });
 
   const search = $('#searchInput');
@@ -1231,7 +1281,7 @@
   $('#themeToggle').addEventListener('click', () => {
     state.theme = state.theme === 'dark' ? 'light' : 'dark';
     document.documentElement.dataset.theme = state.theme;
-    localStorage.setItem('atlas-theme', state.theme);
+    writeStore('atlas-theme', state.theme);
     // The sequential data ramp is theme-aware, so swatches and charts must repaint.
     renderSidebar(); renderLight(); renderInsights(); renderHeroPlate();
   });
@@ -1269,23 +1319,53 @@
   });
 
   document.addEventListener('keydown', (e) => {
-    const typing = /input|textarea|select/i.test(document.activeElement.tagName);
-    const cmdkOpen = !$('#cmdk').hidden;
-    if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') { e.preventDefault(); cmdkOpen ? closeCmdk() : openCmdk(); return; }
-    if (cmdkOpen) {
-      if (e.key === 'Escape') { closeCmdk(); return; }
+    const activeEl = document.activeElement;
+    const typing = /input|textarea|select/i.test(activeEl.tagName);
+    const cmdkVisible = !$('#cmdk').hidden;
+    if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') { e.preventDefault(); cmdkVisible ? closeCmdk() : openCmdk(); return; }
+    if (cmdkVisible) {
+      if (e.key === 'Escape') { e.preventDefault(); closeCmdk(); return; }
+      /* Modal focus trap: Tab cycles inside the panel instead of walking into
+         the page behind the scrim. */
+      if (e.key === 'Tab') {
+        const f = cmdkFocusables();
+        if (!f.length) { e.preventDefault(); return; }
+        const first = f[0], last = f[f.length - 1];
+        if (e.shiftKey && (activeEl === first || !$('#cmdk').contains(activeEl))) { e.preventDefault(); last.focus(); }
+        else if (!e.shiftKey && activeEl === last) { e.preventDefault(); first.focus(); }
+        return;
+      }
       if (e.key === 'ArrowDown') { e.preventDefault(); cmdkIndex = Math.min(cmdkItems.length - 1, cmdkIndex + 1); highlightCmdk(); return; }
       if (e.key === 'ArrowUp') { e.preventDefault(); cmdkIndex = Math.max(0, cmdkIndex - 1); highlightCmdk(); return; }
       if (e.key === 'Enter') { e.preventDefault(); runCmdk(cmdkIndex); return; }
       return;
     }
+    /* ARIA tab pattern: arrows move along the strip, Home/End jump to the ends. */
+    if (activeEl.classList.contains('view-tab') && /^(ArrowLeft|ArrowRight|Home|End)$/.test(e.key)) {
+      const tabs = $$('.view-tab');
+      const i = tabs.indexOf(activeEl);
+      let next = i;
+      if (e.key === 'ArrowLeft') next = (i - 1 + tabs.length) % tabs.length;
+      if (e.key === 'ArrowRight') next = (i + 1) % tabs.length;
+      if (e.key === 'Home') next = 0;
+      if (e.key === 'End') next = tabs.length - 1;
+      e.preventDefault();
+      tabs[next].focus();
+      tabs[next].click();
+      return;
+    }
     if (e.key === '/' && !typing) { e.preventDefault(); search.focus(); return; }
-    if (e.key === 'Enter' && document.activeElement.classList.contains('tile')) {
-      document.activeElement.dispatchEvent(new MouseEvent('click', { bubbles: true }));
+    /* Table rows and SVG nodes carry tabindex + data-action but have no native
+       key activation; buttons and links already fire their own click. */
+    if ((e.key === 'Enter' || e.key === ' ')
+      && activeEl.matches('[data-action][tabindex], [data-action][role="button"]')
+      && !/^(BUTTON|A|INPUT|SELECT|TEXTAREA)$/.test(activeEl.tagName)) {
+      e.preventDefault();
+      activeEl.dispatchEvent(new MouseEvent('click', { bubbles: true }));
       return;
     }
     if (e.key === 'Escape') {
-      if (typing) { if (document.activeElement === search) { state.q = ''; search.value = ''; renderAll(); } search.blur(); }
+      if (typing) { if (activeEl === search) { state.q = ''; search.value = ''; renderAll(); } search.blur(); }
       else if (state.selected) { state.selected = null; renderLight(); writeURL(); }
     }
   });

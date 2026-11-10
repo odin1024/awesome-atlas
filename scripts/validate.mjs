@@ -142,18 +142,15 @@ const refs = [...html.matchAll(/(?:src|href)="(\.\/[^"]+)"/g)].map((m) => m[1].r
 const missing = refs.filter((r) => !exists(r));
 add('产物', 'index.html 引用的本地资源全部存在', missing.length === 0, `${refs.length} 个引用，缺失 ${missing.length}`);
 /* Metadata links (canonical, og:image) are allowed to be absolute; runtime
-   dependencies are not — with one deliberate exception. Cloudflare Web
-   Analytics is a deferred module: a slow or blocked beacon cannot delay
-   rendering, data loading or any interaction. It is the only third-party
-   runtime file, and the assertion pins its exact URL and token shape so an
-   extra tracker cannot slip in under the same exemption. */
-const BEACON = 'https://static.cloudflareinsights.com/beacon.min.js';
+   dependencies are not. The page must load with zero third-party requests:
+   cloudflareinsights.com is frequently blocked on domestic connections, and a
+   blocked beacon used to show up as a CORS error in the console. */
 const extScripts = [...html.matchAll(/<script[^>]+src="(https?:\/\/[^"]+)"/g)].map((m) => m[1]);
-const extStyles = /<link[^>]+rel="stylesheet"[^>]+href="https?:/.test(html);
-const beaconOk = /<script type="module" src="https:\/\/static\.cloudflareinsights\.com\/beacon\.min\.js" data-cf-beacon='\{"token": "[0-9a-f]{32}"\}'><\/script>/.test(html);
-add('产物', '除访问量统计外无外部运行时依赖',
-  extScripts.length === 1 && extScripts[0] === BEACON && !extStyles && beaconOk,
-  '仅放行 Cloudflare beacon（32 位 token），其余脚本与样式均本地加载');
+const extStyles = [...html.matchAll(/<link[^>]+rel="stylesheet"[^>]+href="(https?:\/\/[^"]+)"/g)].map((m) => m[1]);
+const extFonts = html.match(/https?:\/\/fonts\.(?:googleapis|gstatic)\.com/g) || [];
+add('产物', '无任何第三方运行时依赖（脚本 / 样式 / 字体）',
+  extScripts.length === 0 && extStyles.length === 0 && extFonts.length === 0,
+  `外部脚本 ${extScripts.length} / 外部样式 ${extStyles.length} / 外部字体 ${extFonts.length}`);
 add('产物', '页面无占位文本与调试残留', !/TODO|FIXME|lorem ipsum|console\.log\(/i.test(html + js + css), '无 TODO / console.log');
 add('产物', '五个视图与命令面板齐备', (html.match(/data-view="(map|graph|table|timeline|insight)"/g) || []).length === 5 && html.includes('id="cmdk"') && html.includes('id="mobileTabs"'), '地图 / 图谱 / 榜单 / 时间轴 / 洞察');
 add('产物', '数据包体积适合静态托管', fs.statSync(path.join(ROOT, 'data/catalog.js')).size < 1024 * 1024, `${(fs.statSync(path.join(ROOT, 'data/catalog.js')).size / 1024).toFixed(0)} KB`);
@@ -192,7 +189,22 @@ const shotRefs = [...readme.matchAll(/docs\/screenshots\/([\w-]+\.png)/g)].map((
 const missingShots = [...new Set(shotRefs)].filter((p) => !exists(p));
 add('界面', '首屏地图预览板由真实数据渲染', /id="heroPlateMap"/.test(html) && /function renderHeroPlate/.test(js) && /const cells = treemap\(entries/.test(js), '预览板复用同一套 treemap 与色阶');
 add('界面', '首屏与下方版块共用同一条栅格', /\.hero-inner \{ display: grid; grid-template-columns: minmax\(0, 1fr\) 356px/.test(css) && !/\.hero-inner \{ max-width: 1080px/.test(css), 'hero 双栏，左边缘与指标带对齐');
-add('界面', '社交卡片图已生成并被 og:image 引用', exists('docs/banner.png') && /og:image" content="https:\/\/odin1024\.github\.io\/awesome-atlas\/docs\/banner\.png"/.test(html) && /docs\/banner\.png/.test(readmeHead), `${exists('docs/banner.png') ? Math.round(fs.statSync(path.join(ROOT, 'docs/banner.png')).size / 1024) + ' KB' : '缺文件'}`);
+const ogImage = (html.match(/<meta property="og:image" content="([^"]+)"/) || ['', ''])[1];
+const ogW = Number((html.match(/<meta property="og:image:width" content="(\d+)"/) || ['', 0])[1]);
+const ogH = Number((html.match(/<meta property="og:image:height" content="(\d+)"/) || ['', 0])[1]);
+const ogFile = 'docs/social-preview.png';
+let ogSize = { w: 0, h: 0 };
+if (exists(ogFile)) {
+  const b = fs.readFileSync(path.join(ROOT, ogFile));
+  ogSize = { w: b.readUInt32BE(16), h: b.readUInt32BE(20) };
+}
+/* The og:image used to point at the 3200x920 README banner while declaring
+   1200x630, so every share card was cropped or letterboxed. The social card is
+   a separate 2x export and the declared box has to match it. */
+add('界面', '社交卡片存在，og:image 指向它且声明尺寸一致',
+  ogSize.w > 0 && /\/docs\/social-preview\.png$/.test(ogImage)
+  && ogSize.w === ogW * 2 && ogSize.h === ogH * 2,
+  `${ogSize.w}×${ogSize.h} 文件 / 声明 ${ogW}×${ogH}（2x）`);
 add('界面', 'README 顶部给出线上地址与横幅', /odin1024\.github\.io\/awesome-atlas/.test(readmeHead) && /docs\/banner\.png/.test(readmeHead), '项目主页 = 在线入口 + 横幅 + 截图');
 add('界面', 'README 引用的截图全部存在', shotRefs.length >= 6 && missingShots.length === 0, `${new Set(shotRefs).size} 张，缺 ${missingShots.length}`);
 add('界面', '画布脚注有独立布局位，不再被裁剪', /\.canvas-fill \{ position: absolute; inset: 16px/.test(css) && /id="canvasFoot"/.test(js) && /\.canvas-foot \{/.test(css), '.canvas-fill / .canvas-main / .canvas-foot 三段式');
@@ -279,10 +291,41 @@ const hueGap = Math.abs(hue(lightT.accent) - hue(darkT.accent));
 add('设计', '单一强调色相（浅/深色同一色相）', Math.min(hueGap, 360 - hueGap) < 22, `浅色 ${Math.round(hue(lightT.accent))}° / 深色 ${Math.round(hue(darkT.accent))}°`);
 add('设计', '无渐变文字与玻璃拟态', !/background-clip:\s*text/.test(css) && !/backdrop-filter/.test(css), '无 gradient text / backdrop-filter');
 add('设计', '圆角系统为 0（Swiss 网格）', /--r:\s*0px/.test(css) && !/border-radius:\s*(?:[1-9]\d*(?:px|rem))/.test(css), '仅进度条与开关保留功能性圆角');
-add('设计', '基础字号与触控目标达标', /body\s*\{[^}]*font-size:\s*1[5-9]px/.test(css) && /min-height:\s*44px/.test(css), '正文 15px / 移动端标签 44px');
+/* The old assertion only looked for the string `min-height: 44px` anywhere in
+   the stylesheet — one rule was enough to pass while three icon controls stayed
+   15-26px. Each control is now required by name. */
+add('设计', '基础字号与移动端触控目标达标',
+  /body\s*\{[^}]*font-size:\s*1[5-9]px/.test(css)
+  && /\.mobile-tabs button[^{]*\{[^}]*min-height:\s*44px/.test(css)
+  && /\.star-btn\s*\{[^}]*min-height:\s*44px/.test(css)
+  && /\.ext-link\s*\{[^}]*height:\s*44px/.test(css)
+  && /\.link-btn\s*\{[^}]*min-height:\s*44px/.test(css),
+  '正文 15px / 标签栏、星标、外链、文字按钮均 ≥ 44px');
 add('设计', '无 emoji 充当图标', !/[\u{1F000}-\u{1FAFF}\u{FE0F}\u{1F1E6}-\u{1F1FF}]/u.test(html + js), '图标均为 SVG 或编号');
 add('设计', '键盘焦点与减少动效均已覆盖', /:focus-visible/.test(css) && /prefers-reduced-motion/.test(css), 'focus-visible + reduced-motion');
 add('设计', '深色主题不依赖浅色瓦片', /RAMP_DARK/.test(js) && /isDark\(\)/.test(js), '数据色阶随主题反转');
+/* The active sidebar row tints its background, which pushed the metadata count
+   from 5.4:1 down to 4.23:1. The override has to exist by name. */
+add('设计', '选中分类行的计数在着色背景上仍过 4.5:1',
+  /\.cat-row\.is-on \.cat-count\s*\{[^}]*var\(--ink-2\)/.test(css) && contrast(lightT['ink-2'], '#f2e2de') >= 4.5,
+  `ink-2 on 选中底色 ${contrast(lightT['ink-2'], '#f2e2de').toFixed(2)}:1`);
+
+/* --- 7e. state that has to survive a real navigation or a hostile environment --- */
+add('界面', '视图切换写入浏览器历史，后退 / 前进可回到上一视图',
+  /history\.pushState/.test(js) && /addEventListener\('popstate'/.test(js) && /renderAll\(true\)/.test(js),
+  '离散操作 pushState，popstate 重新应用 URL 状态');
+add('界面', '存储被禁用时页面仍会渲染',
+  /function readStore/.test(js) && /function writeStore/.test(js) && !/localStorage\.getItem\('atlas-theme'\)/.test(js),
+  'localStorage 读写均有 try/catch 兜底，不再中断首次渲染');
+add('界面', '命令面板具备模态焦点陷阱与焦点归还',
+  /function cmdkFocusables/.test(js) && /cmdkReturnFocus/.test(js) && /aria-expanded/.test(html + js),
+  'Tab 在面板内循环，关闭后焦点回到触发按钮');
+add('界面', '表格行与图谱分类节点支持键盘激活',
+  /\[data-action\]\[tabindex\]/.test(js) && /class="graph-node"[\s\S]{0,240}tabindex="0"/.test(js),
+  'Enter / Space 等价于点击，tr 与 SVG g 均覆盖');
+add('界面', '标签页符合 ARIA Tabs 键盘模式',
+  /aria-controls="canvas"/.test(html) && /ArrowRight/.test(js) && /b\.tabIndex = on \? 0 : -1/.test(js),
+  'roving tabindex + 左右方向键 / Home / End');
 
 /* --- README layer: two language editions that must not drift apart --- */
 const readmeZh = read('README.md');

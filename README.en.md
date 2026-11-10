@@ -130,8 +130,8 @@ The badges under the header are not drawn images. Version, license, top language
 
 | Layer | Script | Coverage | Result |
 | --- | --- | --- | --- |
-| Data | `scripts/validate.mjs` | Re-counts the raw README by an independent method and checks parsing, URL normalisation, metric ranges, i18n coverage, history diffs, artifact completeness, interface and design constraints, ΔE spacing of the colour ramp, tile text contrast, the brand mark, the subtitle line break, and the consistency of the two READMEs | **89 / 89** |
-| Browser | `scripts/browser-check.py` | A real headless Chrome **clicks every control** (header anchors, the fold's map plate, 5 views, sidebar filters and 3 switches, area basis, display range, sorting, paging, inline favourites, 4 detail buttons, timeline ranking, insight bars, command palette, 2 footer buttons), plus scroll restoration, both language states, graph label collisions, table column overflow, canvas legend and footnote visibility, tile colour spacing, tile line height, mark geometry, subtitle line break, 5 mobile tabs and console errors | **120 / 120**, 0 console errors |
+| Data | `scripts/validate.mjs` | Re-counts the raw README by an independent method and checks parsing, URL normalisation, metric ranges, i18n coverage, history diffs, artifact completeness, interface and design constraints, ΔE spacing of the colour ramp, tile text contrast, the brand mark, the subtitle line break, and the consistency of the two READMEs | **95 / 95** |
+| Browser | `scripts/browser-check.py` | A real headless Chrome **clicks every control** (header anchors, the fold's map plate, 5 views, sidebar filters and 3 switches, area basis, display range, sorting, paging, inline favourites, 4 detail buttons, timeline ranking, insight bars, command palette, 2 footer buttons), plus scroll restoration, both language states, graph label collisions, table column overflow, canvas legend and footnote visibility, tile colour spacing, tile line height, mark geometry, subtitle line break, 5 mobile tabs with measured 44px touch targets, back/forward view restore, rendering with localStorage denied, command-palette focus trap and restore, arrow-key tabs, keyboard row activation and console errors | **127 / 127**, 0 console errors |
 | Production | same, with `ATLAS_BASE=...` | The same assertions run against the deployed site, so "green locally, broken online" cannot happen | re-run after each deploy |
 
 Full report and desktop / mobile screenshots: [`docs/VALIDATION.md`](docs/VALIDATION.md), `docs/screenshots/` (中文) and `docs/screenshots/en/` (English).
@@ -169,7 +169,7 @@ All three are handled in the script; do not remove the handling when rewriting i
 node scripts/bundle-single.mjs
 ```
 
-Inlines styles, data and scripts into a single `dist/index.html` (816 KB) that can be dragged into the GitHub web uploader. It passes the full browser suite as tested.
+Inlines styles, data and scripts into a single `dist/index.html` (846 KB) that can be dragged into the GitHub web uploader. It passes the full browser suite as tested.
 
 > One trap worth remembering: in `String.prototype.replace`, `$$` in a **string** replacement collapses to `$`. `app.js` declares both `$` (querySelector) and `$$` (querySelectorAll), so the first version turned `const $$ =` into a second `const $ =` and every `$$(...)` call silently degraded to a single-element query — the page still rendered, multi-element logic was wrong, nothing threw. Switching to a replacement **function** fixed it, and a post-build assertion now requires every source chunk to appear verbatim in the output.
 

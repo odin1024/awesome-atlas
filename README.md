@@ -129,8 +129,8 @@ ATLAS_LANG=en npm run shots              # 重新生成 docs/screenshots/en/（�
 
 | 层 | 脚本 | 覆盖 | 结果 |
 | --- | --- | --- | --- |
-| 数据 | `scripts/validate.mjs` | 用独立方法重新统计原始 README，校验解析、URL 归一化、指标范围、i18n 覆盖、历史 diff、产物完整性、界面与设计约束，色阶的 ΔE 落差与瓦片文字对比度，品牌标记、副标题断行，以及中英两版 README 的一致性 | **89 / 89** |
-| 浏览器 | `scripts/browser-check.py` | 真实 Chrome 无头浏览器**逐个点击每个控件**（顶栏锚点、首屏地图板、5 个视图、侧栏筛选与 3 个开关、面积依据、显示范围、排序、分页、行内收藏、详情 4 个按钮、时间轴榜单、洞察条形、命令面板、页脚 2 个按钮）、刷新回顶、语言两态、图谱标签几何碰撞、表格列溢出、画布图例与脚注可见、瓦片配色落差与图例区间、瓦片内文字行距、品牌标记几何、副标题断行位置、移动端 5 个标签、控制台异常 | **120 / 120**，控制台 0 异常 |
+| 数据 | `scripts/validate.mjs` | 用独立方法重新统计原始 README，校验解析、URL 归一化、指标范围、i18n 覆盖、历史 diff、产物完整性、界面与设计约束，色阶的 ΔE 落差与瓦片文字对比度，品牌标记、副标题断行，以及中英两版 README 的一致性 | **95 / 95** |
+| 浏览器 | `scripts/browser-check.py` | 真实 Chrome 无头浏览器**逐个点击每个控件**（顶栏锚点、首屏地图板、5 个视图、侧栏筛选与 3 个开关、面积依据、显示范围、排序、分页、行内收藏、详情 4 个按钮、时间轴榜单、洞察条形、命令面板、页脚 2 个按钮）、刷新回顶、语言两态、图谱标签几何碰撞、表格列溢出、画布图例与脚注可见、瓦片配色落差与图例区间、瓦片内文字行距、品牌标记几何、副标题断行位置、移动端 5 个标签与实际触控尺寸 44px、后退 / 前进恢复视图、禁用 localStorage 仍渲染、命令面板焦点陷阱与归还、标签栏方向键、行级键盘回车、控制台异常 | **127 / 127**，控制台 0 异常 |
 | 线上 | 同上，`ATLAS_BASE=...` | 同一套断言直接打向已部署站点，避免「本地绿、线上坏」 | 部署后同套复核 |
 
 详细报告与桌面 / 移动端截图见 [`docs/VALIDATION.md`](docs/VALIDATION.md)、`docs/screenshots/`（中文）与 `docs/screenshots/en/`（英文）。
@@ -168,7 +168,7 @@ GH_TOKEN=<有 Contents 写权限的令牌> node scripts/deploy-pages.mjs
 node scripts/bundle-single.mjs
 ```
 
-把样式、数据和脚本内联成单个 `dist/index.html`（816 KB），可直接拖进 GitHub 网页上传，已实测通过全部浏览器检查。
+把样式、数据和脚本内联成单个 `dist/index.html`（846 KB），可直接拖进 GitHub 网页上传，已实测通过全部浏览器检查。
 
 > 内联有个值得记的陷阱：`String.prototype.replace` 的**字符串**替换串里，`$$` 会塌缩成一个 `$`。`app.js` 同时声明了 `$`（querySelector）和 `$$`（querySelectorAll），第一版因此把 `const $$ =` 写成第二个 `const $ =`，全文 `$$(...)` 调用静默退化成单元素查询。改用替换**函数**后解决，并加了「每段内容必须逐字出现在产物里」的构建后断言。
 
@@ -179,6 +179,6 @@ node scripts/bundle-single.mjs
 
 ## 许可与边界
 
-本站代码（HTML / CSS / JS 与全部脚本）以 **MIT** 发布，见 [`LICENSE`](LICENSE)；26 个静态文件、零构建、零依赖。源内容来自 `sindresorhus/awesome`（CC0-1.0），本站保留原始名称、描述与链接，中文译文为本站增补，数据部分沿用 CC0。Star / Fork / 最近更新是**采样时点快照**，不是实时数据；生态时间轴反映的是上游 README 的变更与仓库 push 分布，不代表清单本身的质量评级。页面所有统计口径与「诚实边界」都写在页脚的数据说明里。
+本站代码（HTML / CSS / JS 与全部脚本）以 **MIT** 发布，见 [`LICENSE`](LICENSE)；运行时只有 4 个文件（`index.html`、`styles.css`、`app.js`、`catalog.js`），零构建、零依赖、零第三方运行时请求。源内容来自 `sindresorhus/awesome`（CC0-1.0），本站保留原始名称、描述与链接，中文译文为本站增补，数据部分沿用 CC0。Star / Fork / 最近更新是**采样时点快照**，不是实时数据；生态时间轴反映的是上游 README 的变更与仓库 push 分布，不代表清单本身的质量评级。页面所有统计口径与「诚实边界」都写在页脚的数据说明里。
 
 <p align="center"><a href="#这是什么">回到顶部</a> · <a href="README.en.md">Read in English →</a></p>

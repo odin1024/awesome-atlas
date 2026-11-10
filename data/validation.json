@@ -1,7 +1,7 @@
 {
-  "validatedAt": "2026-11-09T16:07:57.649Z",
-  "passed": 89,
-  "total": 89,
+  "validatedAt": "2026-11-10T09:47:02.987Z",
+  "passed": 95,
+  "total": 95,
   "allPassed": true,
   "source": {
     "sha256": "465cd781335e44587d238f666800104b63d4fc8ba2395d6422974dcba421c616",
@@ -261,9 +261,9 @@
     },
     {
       "group": "产物",
-      "name": "除访问量统计外无外部运行时依赖",
+      "name": "无任何第三方运行时依赖（脚本 / 样式 / 字体）",
       "ok": true,
-      "detail": "仅放行 Cloudflare beacon（32 位 token），其余脚本与样式均本地加载"
+      "detail": "外部脚本 0 / 外部样式 0 / 外部字体 0"
     },
     {
       "group": "产物",
@@ -369,9 +369,9 @@
     },
     {
       "group": "界面",
-      "name": "社交卡片图已生成并被 og:image 引用",
+      "name": "社交卡片存在，og:image 指向它且声明尺寸一致",
       "ok": true,
-      "detail": "231 KB"
+      "detail": "2400×1260 文件 / 声明 1200×630（2x）"
     },
     {
       "group": "界面",
@@ -459,9 +459,9 @@
     },
     {
       "group": "设计",
-      "name": "基础字号与触控目标达标",
+      "name": "基础字号与移动端触控目标达标",
       "ok": true,
-      "detail": "正文 15px / 移动端标签 44px"
+      "detail": "正文 15px / 标签栏、星标、外链、文字按钮均 ≥ 44px"
     },
     {
       "group": "设计",
@@ -480,6 +480,42 @@
       "name": "深色主题不依赖浅色瓦片",
       "ok": true,
       "detail": "数据色阶随主题反转"
+    },
+    {
+      "group": "设计",
+      "name": "选中分类行的计数在着色背景上仍过 4.5:1",
+      "ok": true,
+      "detail": "ink-2 on 选中底色 7.27:1"
+    },
+    {
+      "group": "界面",
+      "name": "视图切换写入浏览器历史，后退 / 前进可回到上一视图",
+      "ok": true,
+      "detail": "离散操作 pushState，popstate 重新应用 URL 状态"
+    },
+    {
+      "group": "界面",
+      "name": "存储被禁用时页面仍会渲染",
+      "ok": true,
+      "detail": "localStorage 读写均有 try/catch 兜底，不再中断首次渲染"
+    },
+    {
+      "group": "界面",
+      "name": "命令面板具备模态焦点陷阱与焦点归还",
+      "ok": true,
+      "detail": "Tab 在面板内循环，关闭后焦点回到触发按钮"
+    },
+    {
+      "group": "界面",
+      "name": "表格行与图谱分类节点支持键盘激活",
+      "ok": true,
+      "detail": "Enter / Space 等价于点击，tr 与 SVG g 均覆盖"
+    },
+    {
+      "group": "界面",
+      "name": "标签页符合 ARIA Tabs 键盘模式",
+      "ok": true,
+      "detail": "roving tabindex + 左右方向键 / Home / End"
     },
     {
       "group": "文档",
@@ -557,13 +593,13 @@
       "group": "文档",
       "name": "浏览器断言数与最近一次实机结果一致",
       "ok": true,
-      "detail": "两版都写 120 / 120"
+      "detail": "两版都写 127 / 127"
     },
     {
       "group": "文档",
       "name": "文案里的断言数等于实测",
       "ok": true,
-      "detail": "README 必须写 89 / 89"
+      "detail": "README 必须写 95 / 95"
     },
     {
       "group": "文档",

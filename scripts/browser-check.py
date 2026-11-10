@@ -9,7 +9,12 @@ ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
 # ATLAS_BASE points the same suite at a deployed origin; ATLAS_SHOTS redirects
 # the screenshots so a production run cannot overwrite the README images.
 BASE = os.environ.get('ATLAS_BASE', 'http://127.0.0.1:8765')
-CHROME = r'C:\Program Files\Google\Chrome\Application\chrome.exe'
+# A system Chrome keeps local runs close to what readers actually use, but CI and
+# non-Windows machines have no such path — fall back to Playwright's own build.
+CHROME = os.environ.get('CHROME_PATH') or r'C:\Program Files\Google\Chrome\Application\chrome.exe'
+LAUNCH = {'headless': True, 'args': ['--no-sandbox', '--disable-gpu']}
+if os.path.exists(CHROME):
+    LAUNCH['executable_path'] = CHROME
 SHOTS = os.environ.get('ATLAS_SHOTS') or os.path.join(ROOT, 'docs', 'screenshots')
 os.makedirs(SHOTS, exist_ok=True)
 # Frames for the README are produced by scripts/shots.py; this suite only
@@ -21,26 +26,8 @@ def check(name, ok, detail=''):
 
 errors = []
 with sync_playwright() as p:
-    browser = p.chromium.launch(executable_path=CHROME, headless=True, args=['--no-sandbox', '--disable-gpu'])
+    browser = p.chromium.launch(**LAUNCH)
     ctx = browser.new_context(viewport={'width': 1440, 'height': 900}, device_scale_factor=1, accept_downloads=True)
-    # The analytics beacon reports to a third-party endpoint. On a local preview
-    # origin Cloudflare rejects the preflight (it echoes the bare host, while the
-    # preview listens on :8765), and that CORS noise would be mistaken for a site
-    # JS error. Stub only that one request, and only on local runs: production
-    # runs keep the real request so a broken beacon still surfaces here.
-    def stub_analytics(route):
-        # The beacon sends credentials, so CORS requires an exact origin echo —
-        # a wildcard '*' is rejected for credentialed requests.
-        route.fulfill(status=204, headers={
-            'Access-Control-Allow-Origin': BASE,
-            'Access-Control-Allow-Credentials': 'true',
-            'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
-            'Access-Control-Allow-Headers': '*',
-            'Vary': 'Origin',
-        })
-    LOCAL = BASE.startswith('http://127.0.0.1') or BASE.startswith('http://localhost')
-    if LOCAL:
-        ctx.route('**/cdn-cgi/rum**', stub_analytics)
     page = ctx.new_page()
     page.on('pageerror', lambda e: errors.append('pageerror: ' + str(e)))
     page.on('console', lambda m: errors.append('console.error: ' + m.text) if m.type == 'error' else None)
@@ -131,7 +118,7 @@ with sync_playwright() as p:
               map: document.querySelector('.view-tab[data-view="map"]').classList.contains('is-active')};
     }""")
     check('点预览板真的落到分类地图', merged['y'] > 200 and merged['map'] and -8 <= merged['top'] <= 620, merged)
-    check('分享卡片图已声明', 'docs/banner.png' in (page.locator('meta[property="og:image"]').get_attribute('content') or ''),
+    check('分享卡片图指向独立社交卡', 'docs/social-preview.png' in (page.locator('meta[property="og:image"]').get_attribute('content') or ''),
           page.locator('meta[property="og:image"]').get_attribute('content'))
     page.goto(BASE, wait_until='networkidle')
     page.wait_for_timeout(400)
@@ -634,10 +621,68 @@ with sync_playwright() as p:
     page.wait_for_timeout(300)
     check('URL 参数可还原视图与筛选', 'is-active' in (page.locator('.view-tab[data-view="graph"]').get_attribute('class') or '') and page.locator('#searchInput').input_value() == 'web', page.url.split('?')[-1])
 
+    # --- keyboard parity: every mouse action has a key path ---
+    page.goto(BASE + '/?view=table', wait_until='networkidle')
+    page.wait_for_timeout(340)
+    page.locator('tbody tr').first.focus()
+    page.keyboard.press('Enter')
+    page.wait_for_timeout(300)
+    check('榜单行可按 Enter 打开详情', page.locator('#detailContent').is_visible(), 'keyboard open')
+
+    page.locator('.view-tab[data-view="table"]').focus()
+    page.keyboard.press('ArrowRight')
+    page.wait_for_timeout(340)
+    check('标签栏方向键切换视图并带走焦点',
+          page.evaluate("document.activeElement.dataset.view") == 'timeline'
+          and 'is-active' in (page.locator('.view-tab[data-view="timeline"]').get_attribute('class') or ''),
+          page.evaluate("document.activeElement.dataset.view"))
+
+    # --- command palette: modal focus trap and focus return ---
+    page.locator('#cmdkOpen').focus()
+    page.locator('#cmdkOpen').click()
+    page.wait_for_timeout(280)
+    escaped = 0
+    for _ in range(30):
+        page.keyboard.press('Tab')
+        if not page.evaluate("document.querySelector('#cmdk').contains(document.activeElement)"):
+            escaped += 1
+            break
+    check('命令面板 Tab 焦点不会逃出面板', escaped == 0, f'{escaped} 次逃逸')
+    page.keyboard.press('Escape')
+    page.wait_for_timeout(240)
+    check('关闭命令面板后焦点回到触发按钮',
+          page.evaluate("document.activeElement.id") == 'cmdkOpen',
+          page.evaluate("document.activeElement.id"))
+
+    # --- history: back / forward restore the previous view without a reload ---
+    page.goto(BASE, wait_until='networkidle')
+    page.wait_for_timeout(340)
+    page.locator('.view-tab[data-view="graph"]').click()
+    page.wait_for_timeout(320)
+    page.locator('.view-tab[data-view="table"]').click()
+    page.wait_for_timeout(320)
+    page.go_back()
+    page.wait_for_timeout(360)
+    back_view = page.evaluate("document.querySelector('.view-tab.is-active').dataset.view")
+    page.go_forward()
+    page.wait_for_timeout(360)
+    fwd_view = page.evaluate("document.querySelector('.view-tab.is-active').dataset.view")
+    check('浏览器后退 / 前进恢复上一视图', back_view == 'graph' and fwd_view == 'table', f'{back_view} / {fwd_view}')
+
+    # --- storage denied: the page must still render, not white-screen ---
+    hard = browser.new_context(viewport={'width': 1440, 'height': 900})
+    dp = hard.new_page()
+    dp.add_init_script("Object.defineProperty(window, 'localStorage', { get() { throw new Error('denied'); } });")
+    dp.on('pageerror', lambda e: errors.append('storage pageerror: ' + str(e)))
+    dp.goto(BASE, wait_until='networkidle', timeout=60000)
+    dp.wait_for_timeout(520)
+    check('localStorage 被禁用时页面仍完整渲染',
+          dp.locator('.tile').count() == 27 and dp.locator('.metric').count() == 4,
+          f"{dp.locator('.tile').count()} 瓦片 / {dp.locator('.metric').count()} 指标")
+    hard.close()
+
     # --- mobile ---
     mobile = browser.new_context(viewport={'width': 390, 'height': 844}, device_scale_factor=1, is_mobile=True, has_touch=True)
-    if LOCAL:
-        mobile.route('**/cdn-cgi/rum**', stub_analytics)
     mp = mobile.new_page()
     mp.on('pageerror', lambda e: errors.append('mobile pageerror: ' + str(e)))
     mp.goto(BASE, wait_until='networkidle', timeout=60000)
@@ -654,6 +699,27 @@ with sync_playwright() as p:
     mp.locator('.mobile-tabs [data-view="map"]').click()
     mp.wait_for_timeout(300)
     check('移动端可切回地图', mp.locator('.tile').count() == 27, mp.locator('.tile').count())
+    # Real measured boxes: the star measured 26x22 and the external link 15x15.
+    mp.locator('.mobile-tabs [data-view="table"]').click()
+    mp.wait_for_timeout(380)
+    targets = mp.evaluate("""() => {
+      const out = {};
+      const rec = (k, sel) => {
+        const el = document.querySelector(sel);
+        if (!el || el.offsetParent === null) return;
+        const r = el.getBoundingClientRect();
+        out[k] = [Math.round(r.width), Math.round(r.height)];
+      };
+      rec('star', '.star-btn');
+      rec('ext', '.ext-link');
+      rec('link', '#resetFilters');
+      return out;
+    }""")
+    check('移动端星标 / 外链触控目标 ≥ 44px',
+          all(w >= 44 and h >= 44 for w, h in targets.values()) and 'star' in targets and 'ext' in targets,
+          targets)
+    mp.locator('.mobile-tabs [data-view="map"]').click()
+    mp.wait_for_timeout(300)
     # A 420px rule used to hide the second language button; with 双语 gone that
     # selector would have hidden EN instead.
     check('移动端两个语言按钮都可见',

@@ -11,10 +11,10 @@
 <meta property="og:type" content="website">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:url" content="https://odin1024.github.io/awesome-atlas/">
-<meta property="og:image" content="https://odin1024.github.io/awesome-atlas/docs/banner.png">
+<meta property="og:image" content="https://odin1024.github.io/awesome-atlas/docs/social-preview.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
-<meta property="og:image:alt" content="精选清单地图：678 条清单、27 个分类的深蓝与纸白版式横幅">
+<meta property="og:image:alt" content="精选清单地图：678 条清单、27 个分类的纸白与朱红版式社交卡片">
 <meta name="twitter:card" content="summary_large_image">
 <link rel="canonical" href="https://odin1024.github.io/awesome-atlas/">
 <meta name="theme-color" content="#faf9f5">
@@ -51,7 +51,7 @@ if ('scrollRestoration' in history) history.scrollRestoration = 'manual';</scrip
         <button type="button" data-lang="zh" class="is-on">中文</button>
         <button type="button" data-lang="en">EN</button>
       </div>
-      <button class="icon-btn" id="cmdkOpen" type="button" aria-label="打开快捷命令面板" title="快捷搜索（Ctrl+K）">
+      <button class="icon-btn" id="cmdkOpen" type="button" aria-label="打开快捷命令面板" aria-haspopup="dialog" aria-expanded="false" aria-controls="cmdk" title="快捷搜索（Ctrl+K）">
         <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m15.5 15.5 4.5 4.5" stroke-linecap="round"/></svg>
       </button>
       <button class="icon-btn" id="themeToggle" type="button" aria-label="切换深浅色主题" title="切换主题">
@@ -105,11 +105,11 @@ if ('scrollRestoration' in history) history.scrollRestoration = 'manual';</scrip
   <div class="viewbar">
     <div class="view-tabs" role="tablist" aria-label="可视化视图">
       <span class="tab-glider" id="tabGlider" aria-hidden="true"></span>
-      <button class="view-tab is-active" role="tab" data-view="map" aria-selected="true"><span class="tab-idx">01</span><span data-ui="tabMap">分类地图</span></button>
-      <button class="view-tab" role="tab" data-view="graph" aria-selected="false"><span class="tab-idx">02</span><span data-ui="tabGraph">关系图谱</span></button>
-      <button class="view-tab" role="tab" data-view="table" aria-selected="false"><span class="tab-idx">03</span><span data-ui="tabTable">检索榜单</span></button>
-      <button class="view-tab" role="tab" data-view="timeline" aria-selected="false"><span class="tab-idx">04</span><span data-ui="tabTimeline">生态时间轴</span></button>
-      <button class="view-tab" role="tab" data-view="insight" aria-selected="false"><span class="tab-idx">05</span><span data-ui="tabInsight">数据洞察</span></button>
+      <button class="view-tab is-active" role="tab" data-view="map" aria-selected="true" aria-controls="canvas"><span class="tab-idx">01</span><span data-ui="tabMap">分类地图</span></button>
+      <button class="view-tab" role="tab" data-view="graph" aria-selected="false" aria-controls="canvas" tabindex="-1"><span class="tab-idx">02</span><span data-ui="tabGraph">关系图谱</span></button>
+      <button class="view-tab" role="tab" data-view="table" aria-selected="false" aria-controls="canvas" tabindex="-1"><span class="tab-idx">03</span><span data-ui="tabTable">检索榜单</span></button>
+      <button class="view-tab" role="tab" data-view="timeline" aria-selected="false" aria-controls="canvas" tabindex="-1"><span class="tab-idx">04</span><span data-ui="tabTimeline">生态时间轴</span></button>
+      <button class="view-tab" role="tab" data-view="insight" aria-selected="false" aria-controls="canvas" tabindex="-1"><span class="tab-idx">05</span><span data-ui="tabInsight">数据洞察</span></button>
     </div>
     <p class="view-caption" id="viewCaption"></p>
     <button class="share-btn" id="shareBtn" type="button" aria-label="复制当前视图链接">
@@ -142,7 +142,7 @@ if ('scrollRestoration' in history) history.scrollRestoration = 'manual';</scrip
     </div>
   </aside>
 
-  <section class="canvas" id="canvas" aria-live="polite">
+  <section class="canvas" id="canvas" role="tabpanel" aria-label="可视化内容" aria-live="polite">
     <div class="canvas-toolbar" id="canvasToolbar"></div>
     <div class="canvas-body" id="canvasBody"></div>
   </section>
@@ -175,7 +175,7 @@ if ('scrollRestoration' in history) history.scrollRestoration = 'manual';</scrip
   <div class="footer-inner">
     <div class="footer-text">
       <span class="footer-line"><strong class="footer-brand" data-ui="brandName">精选清单地图</strong> <span data-ui="footerCreditA">· 基于</span> <a href="https://github.com/sindresorhus/awesome" target="_blank" rel="noopener noreferrer">sindresorhus/awesome</a> <span data-ui="footerCreditB">（CC0-1.0）结构化与中文译述</span></span>
-      <span class="footer-line" data-ui="footerNote">为国内读者优化：中文检索 · 万位计数 · 仅访问量统计走外部 CDN · 外链已标注</span>
+      <span class="footer-line" data-ui="footerNote">为国内读者优化：中文检索 · 万位计数 · 全站无境外 CDN 依赖 · 外链已标注</span>
     </div>
     <div class="footer-actions">
       <a class="source-link" href="https://github.com/sindresorhus/awesome" target="_blank" rel="noopener noreferrer" id="upstreamLink">
@@ -205,13 +205,9 @@ if ('scrollRestoration' in history) history.scrollRestoration = 'manual';</scrip
 
 <div class="tooltip" id="tooltip" role="tooltip" hidden></div>
 <div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
-<div class="mobile-tabs" id="mobileTabs" aria-label="移动端视图切换"></div>
+<div class="mobile-tabs" id="mobileTabs" role="group" aria-label="移动端视图切换"></div>
 
 <script src="./data/catalog.js"></script>
 <script src="./assets/app.js"></script>
-<!-- Cloudflare Web Analytics — the only third-party runtime file. It is a
-     module (deferred by default), so it never blocks rendering or data loading. -->
-<script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "7fe7a3ce648a4086b953ae76fea87488"}'></script>
-<!-- End Cloudflare Web Analytics -->
 </body>
 </html>

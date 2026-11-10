@@ -41,8 +41,9 @@ const DRY = process.env.GH_DRY === '1' || !TOKEN;
 
 // Internal build caches and anything that needs a `workflow` OAuth scope.
 // `dist` is the single-file build output (scripts/bundle-single.mjs); it is a
-// local fallback artifact, not part of the site that Pages serves.
-const SKIP_DIRS = new Set(['.git', 'node_modules', '__pycache__', '.github', 'dist']);
+// local fallback artifact, not part of the site that Pages serves. `.preview`
+// holds local screenshot renders — 8 files / 0.8 MB that used to be pushed too.
+const SKIP_DIRS = new Set(['.git', 'node_modules', '__pycache__', '.github', 'dist', '.preview', 'submission']);
 const SKIP_FILES = new Set([
   'data/repo-pool.json',      // 5 MB internal GitHub search cache
   'data/deploy-result.json',  // generated on every deploy
