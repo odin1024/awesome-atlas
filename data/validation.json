@@ -1,5 +1,5 @@
 {
-  "validatedAt": "2026-11-10T10:46:14.242Z",
+  "validatedAt": "2026-11-10T11:32:19.310Z",
   "passed": 95,
   "total": 95,
   "allPassed": true,
@@ -12,7 +12,7 @@
     "reposTotal": 673,
     "reposEnriched": 673,
     "coveragePct": 100,
-    "totalStarsSampled": 5979356,
+    "totalStarsSampled": 5983414,
     "archived": 3,
     "verified": 673,
     "unavailable": 0,
@@ -143,7 +143,7 @@
       "group": "指标",
       "name": "star 总量可由明细独立重算",
       "ok": true,
-      "detail": "5,979,356 star"
+      "detail": "5,983,414 star"
     },
     {
       "group": "指标",

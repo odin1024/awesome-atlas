@@ -148,7 +148,7 @@
       copyOk: '链接已复制，可直接分享', copyFail: '复制失败，请手动复制地址栏链接',
       exportEmpty: '还没有收藏，先在榜单里点 ☆ 收藏几条吧', exportOk: '收藏清单已导出为 Markdown',
       favAdded: '已加入收藏', favRemoved: '已取消收藏', langZh: '已切换为中文', langEn: '已切换为英文原文',
-      dataLoaded: '数据快照', legendNote: '健康分只对已验证仓库计算；未命中或已失效的条目始终标注「未采集」，不按 0 分处理。',
+      legendNote: '健康分只对已验证仓库计算；未命中或已失效的条目始终标注「未采集」，不按 0 分处理。',
       countSuffix: '条', matchedPrefix: '匹配', totalPrefix: '共', inScope: '条在当前范围内',
       plateKicker: '图 01 · 分类地图', plateFoot: '点按进入地图', mapScale: '健康分 · 相对',
     },
@@ -188,7 +188,7 @@
       copyOk: 'Link copied', copyFail: 'Copy failed, please copy the address bar manually',
       exportEmpty: 'No favorites yet — star a few rows first', exportOk: 'Favorites exported as Markdown',
       favAdded: 'Added to favorites', favRemoved: 'Removed from favorites', langZh: 'Switched to Chinese', langEn: 'Switched to English',
-      dataLoaded: 'Snapshot', legendNote: 'Health is computed only for verified repositories. Missing entries are labelled, never treated as zero.',
+      legendNote: 'Health is computed only for verified repositories. Missing entries are labelled, never treated as zero.',
       countSuffix: '', matchedPrefix: 'matched', totalPrefix: 'total', inScope: 'in current scope',
       plateKicker: 'Plate 01 · Map', plateFoot: 'Open the map', mapScale: 'health · relative',
     },
@@ -441,8 +441,6 @@
     $('#catSearch').placeholder = ui('catPlaceholder');
     $('#cmdkInput').placeholder = ui('cmdkPlaceholder');
     $('#shareBtn span').textContent = ui('share');
-    $('#statusText').textContent = (isEn() ? 'Snapshot ' : ui('dataLoaded') + ' ') + dateOnly(DATA.generatedAt);
-    $('#statusPill').title = isEn() ? 'Snapshot date' : '数据快照日期';
     $$('#langSwitch button').forEach((b) => b.classList.toggle('is-on', b.dataset.lang === lang));
     $('#legendNote').textContent = ui('legendNote');
     const scaleEl = $('.legend-scale');

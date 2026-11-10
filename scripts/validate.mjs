@@ -344,7 +344,8 @@ add('文档', '中英两版 README 相互链接', /README\.en\.md/.test(readmeZh
   '中文版指向 README.en.md，英文版指回 README.md');
 add('文档', '两版章节数一致', h2count(readmeZh) === h2count(readmeEn) && h2count(readmeZh) >= 10,
   `${h2count(readmeZh)} / ${h2count(readmeEn)} 个 H2`);
-const keyNumbers = ['27', '678', '673', '466', '212', '224', '24', '597', '81', '5,979,356'];
+const keyNumbers = ['27', '678', '673', '466', '212', '224', '24', '597', '81',
+  catalog.enrichment.coverage.totalStarsSampled.toLocaleString('en-US')];
 const numberGaps = keyNumbers.filter((n) => !readmeZh.includes(n) || !readmeEn.includes(n));
 add('文档', '两版共享同一组关键数字', numberGaps.length === 0,
   numberGaps.length ? `缺 ${numberGaps.join('、')}` : `${keyNumbers.length} 个数字两版都在`);

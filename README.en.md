@@ -24,7 +24,7 @@ Three things you can actually do:
 
 - **Read the structure.** The category map uses area for list count and colour for average health, so the busiest field is obvious at a glance. The relationship graph spreads all 27 categories into a galaxy around the source index.
 - **Look one thing up.** Full-text search across 678 entries — Chinese, English, repo name, topics — with 7 sort orders, paging, favourites and export.
-- **Check the numbers.** All 673 repositories were verified through the authenticated API for stars, forks and last push, at 100% coverage. When a fetch fails the previous snapshot is kept and its date is shown at the top of the page; nothing is filled with zeros or estimates.
+- **Check the numbers.** All 673 repositories were verified through the authenticated API for stars, forks and last push, at 100% coverage. When a fetch fails the previous snapshot is kept and its date is shown in the data-notes panel; nothing is filled with zeros or estimates.
 
 This is not an attempt to typeset the README more prettily. Typography cannot answer "how is this list changing", and it cannot tell you whether a category is still alive.
 
@@ -77,7 +77,7 @@ source/descriptions.tsv → i18n.json    →  Chinese names / descriptions / hin
 ```
 
 - **Parsing.** A line-level tokenizer rebuilds H2 sections, Markdown links, tab-indented parent/child relationships and raw HTML blocks: 597 top-level entries plus 81 children. Link-less labels such as `Linux` and `macOS` stay as `kind: label`, and reserved paths like `github.com/topics/awesome` are not counted as repositories.
-- **Metrics.** An authenticated GitHub API run covers **673 / 673 (100%)** of repositories with stars, forks, `pushedAt`, `createdAt`, language, licence, topics and archived state — 5,979,356 stars in total. A failed fetch keeps the previous snapshot rather than writing a zero.
+- **Metrics.** An authenticated GitHub API run covers **673 / 673 (100%)** of repositories with stars, forks, `pushedAt`, `createdAt`, language, licence, topics and archived state — 5,983,414 stars in total. A failed fetch keeps the previous snapshot rather than writing a zero.
 - **Health score.** `0.45 × freshness(pushed_at) + 0.35 × popularity(log10 stars) + 0.20 × activity(forks / archived)`, each term on a 0–100 scale, with the breakdown shown in the detail panel. No black box.
 - **Timeline.** `history.mjs` pulls 24 real versions through the Contents API and diffs them pairwise: 9 additions, 27 removals, 2 relinked URLs. None of it is simulated.
 

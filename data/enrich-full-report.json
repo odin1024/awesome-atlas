@@ -1,10 +1,10 @@
 {
-  "finishedAt": "2026-11-08T18:30:52.999Z",
+  "finishedAt": "2026-11-10T11:30:08.133Z",
   "coverage": {
     "reposTotal": 673,
     "reposEnriched": 673,
     "coveragePct": 100,
-    "totalStarsSampled": 5979356,
+    "totalStarsSampled": 5983414,
     "archived": 3,
     "verified": 673,
     "unavailable": 0,
