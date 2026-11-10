@@ -10,3 +10,6 @@ __pycache__/
 # 本地预览产物
 /preview/
 .preview/
+
+# 仅保留在本地的工作草稿
+/docs/submission/

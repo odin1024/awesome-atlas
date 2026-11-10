@@ -4,21 +4,19 @@
  *
  *   node scripts/deploy-pages.mjs
  *
- * Token resolution order: GH_TOKEN / GITHUB_TOKEN -> WorkBuddy GitHub connector
- * (see scripts/gh-auth.mjs). The token is never printed or written to disk.
+ * The token comes from GH_TOKEN / GITHUB_TOKEN (see scripts/gh-auth.mjs).
  *
- * Why REST instead of `git push`: in this environment github.com:443 is blocked
- * by the proxy (CONNECT 502) while api.github.com is reachable. Files are sent
- * as Git blobs and committed in ONE atomic commit, so the repository history
- * stays clean and GitHub Pages only rebuilds once.
+ * Why REST instead of `git push`: a network that blocks github.com while
+ * api.github.com still answers leaves no other push path. Files are sent as Git
+ * blobs and committed in ONE atomic commit, so the repository history stays
+ * clean and GitHub Pages only rebuilds once.
  *
- * The WorkBuddy connector credential is a GitHub App *user* token. Verified
- * behaviour of that token: it can read any repository the account can see, but
- * it carries `contents: read` only, so it can neither create a repository nor
- * write a blob. The script detects the 403 at the first write and prints the two
- * remedies (a fine-grained PAT via GH_TOKEN, or the single-file build that can be
- * committed through the web UI) instead of failing 39 times in a row. A classic
- * PAT with `repo` scope can do everything automatically.
+ * A token with `contents: read` only (a GitHub App installation token, for
+ * example) can read any repository the account can see but can neither create a
+ * repository nor write a blob. The script detects the 403 at the first write and
+ * prints the two remedies (a fine-grained PAT via GH_TOKEN, or the single-file
+ * build that can be committed through the web UI) instead of failing once per
+ * file. A classic PAT with `repo` scope can do everything automatically.
  *
  * Options:
  *   GH_REPO=awesome-atlas   target repository name
@@ -182,10 +180,9 @@ for (const f of FILES) {
   const content = fs.readFileSync(path.join(ROOT, f)).toString('base64');
   const r = gh('POST', `${base}/git/blobs`, { content, encoding: 'base64' });
   if (r.code === 403) {
-    /* Stop at the first 403 instead of printing 39 identical lines. A GitHub
-       App user token issued by the WorkBuddy connector carries contents:read
-       only, so every write path fails the same way and the useful information
-       is the remedy, not the per-file tally. */
+    /* Stop at the first 403 instead of printing one line per file. A token with
+       contents:read only fails every write path the same way, so the useful
+       information is the remedy, not the per-file tally. */
     console.error(`\n无法写入仓库：${f} → 403 (${brief(r)})`);
     console.error('这个凭据只有 contents:read，不能提交文件。两条可行路径：');
     console.error('  1) 用有 Contents: Read and write 的 fine-grained PAT：');

@@ -148,7 +148,7 @@ git remote add origin https://github.com/<user>/awesome-atlas.git
 git push -u origin main
 ```
 
-**Option 2: REST only** (when `github.com` is blocked by a proxy and only `api.github.com` is reachable)
+**Option 2: REST only** (when `git push` is unavailable but `api.github.com` is reachable)
 
 ```bash
 GH_TOKEN=<token with Contents write> node scripts/deploy-pages.mjs
@@ -156,11 +156,11 @@ GH_TOKEN=<token with Contents write> node scripts/deploy-pages.mjs
 
 The script uploads every file as a Git blob and commits them as **one atomic commit** (`blob → tree → commit → ref`), then enables Pages and prints the URL. `GH_DRY=1` prints the plan without writing; `GH_REPO` / `GH_BRANCH` retarget it.
 
-### Three traps we actually hit
+### Three constraints of the deploy script
 
 All three are handled in the script; do not remove the handling when rewriting it.
 
-1. **GitHub App tokens are read-only here.** The `ghu_` token issued by the WorkBuddy connector carries `contents: read`, so every write path (create repo, `git/blobs`, Contents API) returns `403 Resource not accessible by integration`. Deploying needs a classic PAT (`repo` scope) or a fine-grained PAT with Contents write.
+1. **A read-only token cannot write.** A token carrying `contents: read` (a GitHub App installation token, for instance) fails every write path — create repo, `git/blobs`, Contents API — with `403`. Deploying needs a classic PAT (`repo` scope) or a fine-grained PAT with Contents write.
 2. **An empty repository cannot take a blob.** With no commits, `git/blobs` and `git/refs` both return `409 Git Repository is empty.` One file has to be written through the Contents API first to create a tree; the script seeds `.nojekyll`.
 3. **Enabling Pages needs `administration: write`.** A fine-grained token with only Pages write fails. Either add Administration write, or set it by hand in **Settings → Pages** → **Deploy from a branch** → `main` → `/ (root)`.
 
@@ -173,11 +173,6 @@ node scripts/bundle-single.mjs
 Inlines styles, data and scripts into a single `dist/index.html` (846 KB) that can be dragged into the GitHub web uploader. It passes the full browser suite as tested.
 
 > One trap worth remembering: in `String.prototype.replace`, `$$` in a **string** replacement collapses to `$`. `app.js` declares both `$` (querySelector) and `$$` (querySelectorAll), so the first version turned `const $$ =` into a second `const $ =` and every `$$(...)` call silently degraded to a single-element query — the page still rendered, multi-element logic was wrong, nothing threw. Switching to a replacement **function** fixed it, and a post-build assertion now requires every source chunk to appear verbatim in the output.
-
-### Repository settings
-
-- **About**: tick **Use your GitHub Pages website** so the homepage field fills itself in. Suggested topics: `awesome-list`, `data-visualization`, `treemap`, `chinese`.
-- **Social preview**: `Settings → General → Social preview` → upload `docs/social-preview.png` (1200×630). Without it, pasting the repo link into a chat app shows GitHub's generic white card.
 
 ## Licence and scope
 

@@ -147,7 +147,7 @@ git remote add origin https://github.com/<用户名>/awesome-atlas.git
 git push -u origin main
 ```
 
-**方式二：纯 REST API**（`github.com` 被代理拦截、只有 `api.github.com` 可达时）
+**方式二：纯 REST API**（`git push` 不可用、但 `api.github.com` 可访问时）
 
 ```bash
 GH_TOKEN=<有 Contents 写权限的令牌> node scripts/deploy-pages.mjs
@@ -155,11 +155,11 @@ GH_TOKEN=<有 Contents 写权限的令牌> node scripts/deploy-pages.mjs
 
 脚本把站点文件传为 Git blob 并**合并为一次原子提交**（`blob → tree → commit → ref`），再尝试启用 Pages 并回显地址。`GH_DRY=1` 只打印清单；`GH_REPO` / `GH_BRANCH` 指定目标仓库与分支。
 
-### 三个实际撞到过的坑
+### 部署脚本的三个约束
 
 脚本里都已处理，改写部署逻辑时不要拆掉：
 
-1. **GitHub App 令牌是只读的。** WorkBuddy 连接器发的 `ghu_` 令牌带 `contents: read`，对任何写入路径（建库、`git/blobs`、Contents API）都返回 `403 Resource not accessible by integration`。部署必须用 classic PAT（`repo` scope）或 fine-grained PAT（Contents 写）。
+1. **只读令牌写不了文件。** 带 `contents: read` 的令牌（例如 GitHub App 安装令牌）对任何写入路径（建库、`git/blobs`、Contents API）都返回 `403`。部署必须用 classic PAT（`repo` scope）或 fine-grained PAT（Contents 写）。
 2. **空仓库不能直接写 blob。** 没有任何提交的仓库，`git/blobs` 与 `git/refs` 一律返回 `409 Git Repository is empty.`。必须先用 Contents API 写一个文件建立第一棵树，脚本用 `.nojekyll` 作种子。
 3. **开启 Pages 需要 `administration: write`。** 只给 Pages 写权限的 fine-grained 令牌会失败。两条路：给令牌加 Administration 写，或在 **Settings → Pages** 手动把 Source 设为 **Deploy from a branch**、分支 `main`、目录 `/ (root)`。
 
@@ -172,11 +172,6 @@ node scripts/bundle-single.mjs
 把样式、数据和脚本内联成单个 `dist/index.html`（846 KB），可直接拖进 GitHub 网页上传，已实测通过全部浏览器检查。
 
 > 内联有个值得记的陷阱：`String.prototype.replace` 的**字符串**替换串里，`$$` 会塌缩成一个 `$`。`app.js` 同时声明了 `$`（querySelector）和 `$$`（querySelectorAll），第一版因此把 `const $$ =` 写成第二个 `const $ =`，全文 `$$(...)` 调用静默退化成单元素查询。改用替换**函数**后解决，并加了「每段内容必须逐字出现在产物里」的构建后断言。
-
-### 仓库主页设置
-
-- **About**：勾选 **Use your GitHub Pages website**，主页地址自动填成线上地址；Topics 建议 `awesome-list`、`data-visualization`、`treemap`、`chinese`。
-- **社交预览图**：`Settings → General → Social preview` 上传 `docs/social-preview.png`（1200×630）。不传的话，把仓库链接发到聊天工具里只会显示 GitHub 自动生成的白底卡片。
 
 ## 许可与边界
 
