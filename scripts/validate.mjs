@@ -370,11 +370,14 @@ add('文档', '页头徽章为 shields.io 动态徽章', dynZh === dynEn && dynZ
   `${dynZh} / ${dynEn} 枚，直读 GitHub 接口，随仓库状态自动更新`);
 add('文档', '徽章标签随语言本地化', /label=%E7%89%88%E6%9C%AC/.test(readmeZh) && /label=version/.test(readmeEn),
   '中文版中文标签，英文版英文标签');
-add('文档', '除 shields.io 外不引用第三方图片',
+/* The CI badge is served by GitHub itself, so it is first-party rather than a
+   third-party image host; every other remote image would still be a new
+   dependency on an external service. */
+add('文档', '除 shields.io 与 Actions 徽章外不引用第三方图片',
   !/badgen\.net|camo\.githubusercontent/.test(readmeZh + readmeEn)
   && !/img\.shields\.io\/(?!github\/)/.test(readmeZh + readmeEn)
-  && !/src="https?:\/\/(?!img\.shields\.io)/.test(readmeZh + readmeEn),
-  '唯一允许的境外图源是 shields.io，其余图片随仓库分发');
+  && !/src="https?:\/\/(?!img\.shields\.io|github\.com\/odin1024\/awesome-atlas\/actions\/)/.test(readmeZh + readmeEn),
+  '允许的图源只有 shields.io 与 GitHub Actions 徽章，其余图片随仓库分发');
 
 /* An English edition that embeds Chinese screenshots of a UI that has an
    English state is simply wrong. shots.py writes the English set to

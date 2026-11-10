@@ -1,5 +1,5 @@
 {
-  "validatedAt": "2026-11-10T09:47:02.987Z",
+  "validatedAt": "2026-11-10T10:39:43.980Z",
   "passed": 95,
   "total": 95,
   "allPassed": true,
@@ -567,9 +567,9 @@
     },
     {
       "group": "文档",
-      "name": "除 shields.io 外不引用第三方图片",
+      "name": "除 shields.io 与 Actions 徽章外不引用第三方图片",
       "ok": true,
-      "detail": "唯一允许的境外图源是 shields.io，其余图片随仓库分发"
+      "detail": "允许的图源只有 shields.io 与 GitHub Actions 徽章，其余图片随仓库分发"
     },
     {
       "group": "文档",

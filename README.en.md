@@ -7,6 +7,7 @@
   <a href="https://github.com/odin1024/awesome-atlas/commits/main"><img src="https://img.shields.io/github/last-commit/odin1024/awesome-atlas?style=flat-square&amp;label=last%20commit&amp;labelColor=141413&amp;color=a82d22" alt="last commit"></a>
   <a href="https://github.com/odin1024/awesome-atlas/stargazers"><img src="https://img.shields.io/github/stars/odin1024/awesome-atlas?style=flat-square&amp;label=stars&amp;labelColor=141413&amp;color=a82d22" alt="stars"></a>
   <a href="https://github.com/odin1024/awesome-atlas/forks"><img src="https://img.shields.io/github/forks/odin1024/awesome-atlas?style=flat-square&amp;label=forks&amp;labelColor=141413&amp;color=a82d22" alt="forks"></a>
+  <a href="https://github.com/odin1024/awesome-atlas/actions/workflows/validate.yml"><img src="https://github.com/odin1024/awesome-atlas/actions/workflows/validate.yml/badge.svg?branch=main" alt="data and browser checks"></a>
 </p>
 
 <p align="center"><strong><a href="https://odin1024.github.io/awesome-atlas/">Open the site → odin1024.github.io/awesome-atlas</a></strong></p>

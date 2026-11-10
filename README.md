@@ -7,6 +7,7 @@
   <a href="https://github.com/odin1024/awesome-atlas/commits/main"><img src="https://img.shields.io/github/last-commit/odin1024/awesome-atlas?style=flat-square&amp;label=%E6%9C%80%E8%BF%91%E6%8F%90%E4%BA%A4&amp;labelColor=141413&amp;color=a82d22" alt="最近提交"></a>
   <a href="https://github.com/odin1024/awesome-atlas/stargazers"><img src="https://img.shields.io/github/stars/odin1024/awesome-atlas?style=flat-square&amp;label=%E6%98%9F%E6%A0%87&amp;labelColor=141413&amp;color=a82d22" alt="星标数"></a>
   <a href="https://github.com/odin1024/awesome-atlas/forks"><img src="https://img.shields.io/github/forks/odin1024/awesome-atlas?style=flat-square&amp;label=fork&amp;labelColor=141413&amp;color=a82d22" alt="派生数"></a>
+  <a href="https://github.com/odin1024/awesome-atlas/actions/workflows/validate.yml"><img src="https://github.com/odin1024/awesome-atlas/actions/workflows/validate.yml/badge.svg?branch=main" alt="数据层与浏览器层校验"></a>
 </p>
 
 <p align="center"><strong><a href="https://odin1024.github.io/awesome-atlas/">在线打开 → odin1024.github.io/awesome-atlas</a></strong></p>
