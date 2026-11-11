@@ -38,6 +38,8 @@ This is not an attempt to typeset the README more prettily. Typography cannot an
 | 04 Timeline | How the index changes | Real diffs across 24 historical README versions, push distribution over the last 18 months for verified repos, repository creation years |
 | 05 Insights | What the global distribution looks like | Category weights, health distribution, language mix, archived and stalled lists |
 
+Design trade-offs, data definitions and implementation limits are written up in [docs/DESIGN.md](docs/DESIGN.md).
+
 Interaction: the map preview on the fold links straight into the workspace; global search (`/` or `Ctrl+K` opens a command palette); URL state sync (view / category / search / sort / selection / language are all shareable, and back-forward does not reload the page); favourites and comparison in localStorage; share the current view; light and dark themes; mobile bottom navigation; a "back to top" control in the footer; keyboard access; `prefers-reduced-motion` fallbacks. Colour never carries information on its own.
 
 ## Screenshots

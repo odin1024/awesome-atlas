@@ -146,6 +146,7 @@
       fav: '收藏', faved: '已收藏', sameCat: '看同分类', metrics: '仓库指标', relations: '来源与关系',
       close: '关闭详情', viewMap: '地图', viewGraph: '图谱', viewTable: '榜单', viewTimeline: '时间', viewInsight: '洞察',
       copyOk: '链接已复制，可直接分享', copyFail: '复制失败，请手动复制地址栏链接',
+      cardBtn: '存为卡片图', cardOk: '卡片图已保存（1200×630 PNG）', cardFail: '卡片图生成失败，请重试',
       exportEmpty: '还没有收藏，先在榜单里点 ☆ 收藏几条吧', exportOk: '收藏清单已导出为 Markdown',
       favAdded: '已加入收藏', favRemoved: '已取消收藏', langZh: '已切换为中文', langEn: '已切换为英文原文',
       legendNote: '健康分只对已验证仓库计算；未命中或已失效的条目始终标注「未采集」，不按 0 分处理。',
@@ -186,6 +187,7 @@
       fav: 'Save', faved: 'Saved', sameCat: 'Same category', metrics: 'Repository metrics', relations: 'Source & relations',
       close: 'Close', viewMap: 'Map', viewGraph: 'Graph', viewTable: 'Table', viewTimeline: 'Time', viewInsight: 'Insight',
       copyOk: 'Link copied', copyFail: 'Copy failed, please copy the address bar manually',
+      cardBtn: 'Save card', cardOk: 'Card saved (1200×630 PNG)', cardFail: 'Could not generate the card',
       exportEmpty: 'No favorites yet — star a few rows first', exportOk: 'Favorites exported as Markdown',
       favAdded: 'Added to favorites', favRemoved: 'Removed from favorites', langZh: 'Switched to Chinese', langEn: 'Switched to English',
       legendNote: 'Health is computed only for verified repositories. Missing entries are labelled, never treated as zero.',
@@ -493,6 +495,101 @@
       };
       requestAnimationFrame(step);
     });
+  }
+
+  /* ---------- changes since this browser last looked ---------- */
+  /* There is no backend, so the only honest baseline is the copy of the
+     catalogue this browser saw last time. One compact record per list is kept
+     under `atlas-seen`; diffing it against the current snapshot answers the four
+     questions a returning reader actually has: what appeared, what disappeared,
+     what got archived, and how far the star total moved. A first visit records
+     the baseline and says so instead of inventing a diff. */
+  const SEEN_KEY = 'atlas-seen';
+  function seenSnapshot() {
+    return {
+      at: DATA.generatedAt,
+      items: DATA.items.map((it) => [
+        it.id, it.name, it.categoryId,
+        it.metrics && it.metrics.stars != null ? it.metrics.stars : null,
+        it.metrics && it.metrics.archived ? 1 : 0,
+        it.url || '',
+      ]),
+    };
+  }
+  function diffSince(prev) {
+    const prevMap = new Map(prev.items.map((r) => [r[0], r]));
+    const current = new Set(DATA.items.map((it) => it.id));
+    const added = [], archived = [];
+    let starDelta = 0;
+    for (const it of DATA.items) {
+      const p = prevMap.get(it.id);
+      if (!p) { added.push(it); continue; }
+      if (!it.metrics) continue;
+      /* A list that was unenriched last time has no baseline star count, and
+         treating null as 0 would report the whole repository as growth. */
+      if (p[3] != null) starDelta += it.metrics.stars - p[3];
+      if (it.metrics.archived && !p[4]) archived.push(it);
+    }
+    const removed = prev.items
+      .filter((r) => !current.has(r[0]))
+      .map((r) => ({ name: r[1], catId: r[2], url: r[5] }));
+    return { added, removed, archived, starDelta };
+  }
+  /* Computed once at boot: reading it again on every re-render would compare the
+     freshly written baseline with itself and report no change. */
+  let SINCE = null;
+  function computeSince() {
+    let prev = null;
+    try { prev = JSON.parse(readStore(SEEN_KEY, 'null')); } catch (_) { /* corrupt payload */ }
+    const first = !prev || !Array.isArray(prev.items) || !prev.at;
+    const newer = !first && Date.parse(DATA.generatedAt) > Date.parse(prev.at);
+    SINCE = first ? { mode: 'first' } : (newer ? { mode: 'diff', prev, diff: diffSince(prev) } : { mode: 'none' });
+    writeStore(SEEN_KEY, JSON.stringify(seenSnapshot()));
+  }
+  function renderSince() {
+    const host = $('#since');
+    if (!host || !SINCE) return;
+    if (SINCE.mode === 'first') {
+      host.hidden = false;
+      host.innerHTML = `<div class="since-row"><span class="since-kicker">${isEn() ? 'Since your last visit' : '自上次查看以来'}</span><span class="since-quiet">${isEn()
+        ? `Snapshot ${dateOnly(DATA.generatedAt)} recorded. Come back after the next data update to see what was added, removed or archived.`
+        : `已记录本次快照（${dateOnly(DATA.generatedAt)}）。下次数据更新后再来，这里会列出新增、移除、新归档与 Star 变化。`}</span></div>`;
+      return;
+    }
+    if (SINCE.mode !== 'diff') { host.hidden = true; return; }
+    const d = SINCE.diff;
+    if (!d.added.length && !d.removed.length && !d.archived.length && !d.starDelta) { host.hidden = true; return; }
+
+    const stat = (value, label, down) => `<li${down ? ' class="is-down"' : ''}><b>${value}</b><span>${label}</span></li>`;
+    const stats = [
+      stat((d.added.length ? '+' : '') + d.added.length, isEn() ? 'added' : '新增'),
+      stat((d.removed.length ? '−' : '') + d.removed.length, isEn() ? 'removed' : '移除', d.removed.length > 0),
+      stat(String(d.archived.length), isEn() ? 'newly archived' : '新归档'),
+    ];
+    if (d.starDelta) {
+      stats.push(stat((d.starDelta > 0 ? '+' : '−') + fmtAbbr(Math.abs(d.starDelta), isEn()),
+        isEn() ? 'stars' : 'Star', d.starDelta < 0));
+    }
+
+    const items = (rows) => rows.slice(0, 6).join('')
+      + (rows.length > 6 ? `<li class="since-more">${isEn() ? `+ ${rows.length - 6} more` : `另有 ${rows.length - 6} 条`}</li>` : '');
+    const openable = (it) => `<li><button type="button" class="since-item" data-action="insight-item" data-id="${esc(it.id)}"><span class="since-name">${esc(it.name)}</span><span class="since-cat">${esc(catName(catById.get(it.categoryId)))}</span></button></li>`;
+    const groups = [
+      d.added.length && `<div class="since-group"><div class="since-group-title">${isEn() ? 'Added' : '新增'}</div><ul class="since-list">${items(d.added.map(openable))}</ul></div>`,
+      d.removed.length && `<div class="since-group"><div class="since-group-title">${isEn() ? 'Removed upstream' : '上游已移除'}</div><ul class="since-list">${items(d.removed.map((r) => {
+        const c = catById.get(r.catId);
+        return `<li><a class="since-item" href="${safeUrl(r.url)}" target="_blank" rel="noopener noreferrer"><span class="since-name">${esc(r.name)}</span><span class="since-cat">${c ? esc(catName(c)) : '—'}</span></a></li>`;
+      }))}</ul></div>`,
+      d.archived.length && `<div class="since-group"><div class="since-group-title">${isEn() ? 'Newly archived' : '新归档'}</div><ul class="since-list">${items(d.archived.map(openable))}</ul></div>`,
+    ].filter(Boolean);
+
+    host.hidden = false;
+    host.innerHTML = `<div class="since-row">
+        <span class="since-kicker">${isEn() ? 'Since your last visit' : '自上次查看以来'}</span>
+        <span class="since-date">${dateOnly(SINCE.prev.at)} → ${dateOnly(DATA.generatedAt)}</span>
+        <ul class="since-stats">${stats.join('')}</ul>
+        ${groups.length ? `<details class="since-details"><summary>${isEn() ? 'Show every change' : '展开全部变化'}</summary><div class="since-groups">${groups.join('')}</div></details>` : ''}
+      </div>`;
   }
 
   /* ---------- insight strip ---------- */
@@ -1101,6 +1198,7 @@
         ${it.url ? `<a href="${safeUrl(it.url)}" target="_blank" rel="noopener noreferrer" title="${isEn() ? 'External link' : '外链：GitHub（境外站点，打开可能较慢）'}">${ui('openGithub')} ↗</a>` : ''}
         ${it.url ? `<button type="button" data-action="copy-link" data-id="${esc(it.id)}">${isEn() ? 'Copy link' : '复制链接'}</button>` : ''}
         <button type="button" data-action="fav" data-id="${esc(it.id)}" class="${favorites.has(it.id) ? 'is-on' : ''}">${favorites.has(it.id) ? '★ ' + ui('faved') : '☆ ' + ui('fav')}</button>
+        <button type="button" data-action="export-card" data-id="${esc(it.id)}">${ui('cardBtn')}</button>
         <button type="button" data-action="focus-cat" data-id="${esc(it.categoryId)}">${ui('sameCat')}</button>
       </div>
       <div class="detail-section"><h4>${ui('metrics')}</h4>${metricsHtml}</div>
@@ -1110,6 +1208,242 @@
         <div class="kv"><div class="kv-label">${isEn() ? 'Parent' : '父条目'}</div><div class="kv-value">${parent ? esc(parent.name) : '—'}</div></div>
         <div class="kv"><div class="kv-label">${isEn() ? 'Children' : '子条目'}</div><div class="kv-value">${children.length} ${ui('countSuffix')}</div></div>
       </div>${children.length ? `<ul class="child-list" style="margin-top:12px">${children.map((c) => `<li><button type="button" data-action="select" data-id="${esc(c.id)}">↳ ${esc(c.name)}</button></li>`).join('')}</ul>` : ''}</div>`;
+  }
+
+  /* ---------- card export ---------- */
+  /* One entry as a 1200×630 PNG, drawn with Canvas 2D in the same paper-and-ink
+     system as the page. No screenshot service and no third-party request: these
+     lists travel as chat attachments, and a card has to still make sense when
+     the page is not around it. */
+  const CARD_W = 1200, CARD_H = 630;
+  const CARD_PAD = 64;
+  const CARD_SANS = '"PingFang SC","HarmonyOS Sans SC","Microsoft YaHei","Noto Sans SC",-apple-system,sans-serif';
+  const CARD_SERIF = '"Songti SC","Source Han Serif SC","Noto Serif SC","SimSun",Georgia,serif';
+  const CARD_MONO = 'ui-monospace,"SF Mono","Cascadia Mono",Consolas,monospace';
+  const CARD_PAPER = '#faf9f5', CARD_INK = '#141413', CARD_INK2 = '#4a4842', CARD_INK3 = '#6e6b63';
+  const CARD_RULE = '#dedad0', CARD_RULE2 = '#c3beb2', CARD_ACCENT = '#a82d22', CARD_WARN = '#7d5210';
+  /* The printed address has to be the public one: a card exported on localhost
+     that says 127.0.0.1 is worse than useless once it is forwarded. */
+  const CARD_SITE = (() => {
+    const h = location.hostname;
+    if (!h || h === 'localhost' || h === '127.0.0.1' || h === '0.0.0.0') return 'odin1024.github.io/awesome-atlas';
+    return (location.host + location.pathname).replace(/index\.html$/, '').replace(/\/$/, '');
+  })();
+
+  /* Canvas has no line-breaking. CJK has no spaces either, so splitting on
+     whitespace would overflow every Chinese description; this tokenises Latin
+     words whole and CJK one glyph at a time. */
+  function wrapCanvasText(g, text, maxWidth, maxLines) {
+    const tokens = String(text).match(/[A-Za-z0-9_.+\-#/@']+|\s+|./g) || [];
+    const lines = [];
+    let line = '';
+    let cut = false;
+    for (let i = 0; i < tokens.length; i += 1) {
+      const tk = tokens[i];
+      if (!line || g.measureText(line + tk).width <= maxWidth) { line += tk; continue; }
+      lines.push(line.trimEnd());
+      line = tk.trimStart();
+      if (lines.length === maxLines) { cut = tokens.slice(i).join('').trim().length > 0; break; }
+    }
+    if (!cut && line.trim()) lines.push(line.trim());
+    if (cut) {
+      let last = lines[maxLines - 1] || '';
+      while (last && g.measureText(last + '…').width > maxWidth) last = last.slice(0, -1);
+      lines[maxLines - 1] = last + '…';
+    }
+    return lines;
+  }
+  function clipCanvasText(g, text, maxWidth) {
+    if (g.measureText(text).width <= maxWidth) return text;
+    let out = text;
+    while (out && g.measureText(out + '…').width > maxWidth) out = out.slice(0, -1);
+    return out + '…';
+  }
+  const cardTrack = (g, on) => { try { g.letterSpacing = on ? '1.6px' : '0px'; } catch (_) { /* older engines */ } };
+  /* The card is always paper, so it samples the light ramp even when the reader
+     has the dark theme on: a PNG is a print artifact, not a screen. */
+  const cardRamp = (v) => {
+    const t = Math.max(0, Math.min(100, v)) / 100 * (RAMP_LIGHT.length - 1);
+    const i = Math.min(RAMP_LIGHT.length - 2, Math.floor(t));
+    const k = t - i;
+    return `rgb(${RAMP_LIGHT[i].map((c, j) => Math.round(c + (RAMP_LIGHT[i + 1][j] - c) * k)).join(',')})`;
+  };
+
+  function drawCard(it) {
+    const en = isEn();
+    const m = it.metrics;
+    const cat = catById.get(it.categoryId);
+    const cv = document.createElement('canvas');
+    cv.width = CARD_W; cv.height = CARD_H;
+    const g = cv.getContext('2d');
+
+    g.fillStyle = CARD_PAPER;
+    g.fillRect(0, 0, CARD_W, CARD_H);
+    /* The hairline frame keeps the page's rule language when the PNG lands on a
+       white slide or a dark chat bubble. */
+    g.strokeStyle = CARD_RULE2; g.lineWidth = 1;
+    g.strokeRect(23.5, 23.5, CARD_W - 47, CARD_H - 47);
+
+    cardTrack(g, true);
+    g.font = `500 12px ${CARD_MONO}`;
+    g.fillStyle = CARD_ACCENT;
+    g.fillRect(CARD_PAD, 66, 26, 2);
+    g.fillText(en ? 'AWESOME ATLAS' : 'AWESOME ATLAS · 精选清单地图', CARD_PAD + 36, 75);
+    g.textAlign = 'right';
+    g.font = `12px ${CARD_MONO}`;
+    g.fillStyle = CARD_INK3;
+    g.fillText(clipCanvasText(g, cat ? catName(cat) : '', 420), CARD_W - CARD_PAD, 75);
+    g.textAlign = 'left';
+    cardTrack(g, false);
+
+    if (m && m.archived) {
+      g.font = `11px ${CARD_MONO}`;
+      const label = en ? 'ARCHIVED' : '已归档';
+      const w = g.measureText(label).width + 20;
+      g.strokeStyle = CARD_WARN;
+      g.strokeRect(CARD_W - CARD_PAD - w + .5, 96.5, w, 24);
+      g.fillStyle = CARD_WARN;
+      g.textAlign = 'right';
+      g.fillText(label, CARD_W - CARD_PAD - 10, 113);
+      g.textAlign = 'left';
+    }
+
+    /* Shrink until the name fits one line, then allow a second line. A 40-glyph
+       repo name at 58px would otherwise run under the frame. */
+    let size = 58;
+    g.font = `700 ${size}px ${CARD_SERIF}`;
+    while (size > 34 && g.measureText(it.name).width > CARD_W - CARD_PAD * 2) {
+      size -= 2;
+      g.font = `700 ${size}px ${CARD_SERIF}`;
+    }
+    const titleLines = wrapCanvasText(g, it.name, CARD_W - CARD_PAD * 2, 2);
+    let y = 162;
+    g.fillStyle = CARD_INK;
+    for (const ln of titleLines) { g.fillText(ln, CARD_PAD, y); y += size * 1.18; }
+
+    const urlText = String(it.url || '').replace(/^https?:\/\//, '').replace(/\/+$/, '');
+    if (urlText) {
+      g.font = `14px ${CARD_MONO}`;
+      g.fillStyle = CARD_INK3;
+      g.fillText(clipCanvasText(g, urlText, CARD_W - CARD_PAD * 2), CARD_PAD, y + 12);
+      y += 46;
+    } else {
+      /* A label entry has no URL. Printing a lone dash there reads like a
+         missing value, so the line is dropped and the description moves up. */
+      y += 18;
+    }
+
+    const desc = (descOf(it).main || '').replace(/\s+/g, ' ').trim();
+    let bottom = y;
+    if (desc) {
+      g.font = `19px ${CARD_SANS}`;
+      g.fillStyle = CARD_INK2;
+      let dy = y + 8;
+      for (const ln of wrapCanvasText(g, desc, CARD_W - CARD_PAD * 2 - 24, 2)) {
+        g.fillText(ln, CARD_PAD, dy);
+        dy += 31;
+      }
+      bottom = dy - 31;
+    }
+
+    /* The three health components, as three thin bars. This fills the plate's
+       middle with the same numbers the detail panel shows instead of leaving
+       200px of blank paper; when a two-line title and description already reach
+       the band it is skipped rather than squeezed. */
+    if (m && m.parts) {
+      const partsTop = bottom + 40;
+      if (partsTop + 46 <= 404) {
+        const cells = [
+          [en ? 'FRESHNESS' : '新鲜度', m.parts.freshness || 0],
+          [en ? 'POPULARITY' : '热度', m.parts.popularity || 0],
+          [en ? 'ACTIVITY' : '活跃度', m.parts.activity || 0],
+        ];
+        const gap = 24;
+        const colW = (CARD_W - CARD_PAD * 2 - gap * 2) / 3;
+        cells.forEach(([label, v], i) => {
+          const x = CARD_PAD + i * (colW + gap);
+          g.font = `11px ${CARD_MONO}`;
+          g.fillStyle = CARD_INK3;
+          g.fillText(label, x, partsTop);
+          g.textAlign = 'right';
+          g.fillStyle = CARD_INK2;
+          g.fillText(String(v), x + colW, partsTop);
+          g.textAlign = 'left';
+          g.fillStyle = CARD_RULE;
+          g.fillRect(x, partsTop + 10, colW, 3);
+          g.fillStyle = cardRamp(v);
+          g.fillRect(x, partsTop + 10, Math.max(2, (colW * Math.max(0, Math.min(100, v))) / 100), 3);
+        });
+      }
+    }
+
+    /* Numbers sit on a fixed band so two cards exported from different entries
+       line up when they are posted side by side. */
+    const bandTop = 430;
+    g.strokeStyle = CARD_RULE; g.lineWidth = 1;
+    g.beginPath(); g.moveTo(CARD_PAD, bandTop + .5); g.lineTo(CARD_W - CARD_PAD, bandTop + .5); g.stroke();
+    if (m) {
+      const cells = [
+        [en ? 'STARS' : 'STAR', fmtAbbr(m.stars, en)],
+        [en ? 'FORKS' : 'FORK', fmtInt(m.forks)],
+        [en ? 'HEALTH' : '健康分', String(m.health)],
+        [en ? 'LAST PUSH' : '最近 PUSH', dateOnly(m.pushedAt)],
+      ];
+      const colW = (CARD_W - CARD_PAD * 2) / cells.length;
+      cells.forEach(([label, value], i) => {
+        const x = CARD_PAD + i * colW + (i ? 24 : 0);
+        if (i) {
+          g.strokeStyle = CARD_RULE;
+          g.beginPath(); g.moveTo(x - 24 + .5, bandTop + 20); g.lineTo(x - 24 + .5, bandTop + 94); g.stroke();
+        }
+        cardTrack(g, true);
+        g.font = `11px ${CARD_MONO}`;
+        g.fillStyle = CARD_INK3;
+        g.fillText(label, x, bandTop + 30);
+        cardTrack(g, false);
+        g.font = `600 30px ${CARD_MONO}`;
+        g.fillStyle = CARD_INK;
+        g.fillText(String(value), x, bandTop + 72);
+      });
+    } else {
+      g.font = `17px ${CARD_SANS}`;
+      g.fillStyle = CARD_INK3;
+      g.fillText(en
+        ? 'No repository metrics: this entry is not a GitHub repository.'
+        : '未采集仓库指标：该条目不是 GitHub 仓库（分组标签或站点页面）。', CARD_PAD, bandTop + 46);
+    }
+
+    const footTop = 552;
+    g.strokeStyle = CARD_RULE;
+    g.beginPath(); g.moveTo(CARD_PAD, footTop + .5); g.lineTo(CARD_W - CARD_PAD, footTop + .5); g.stroke();
+    g.font = `12px ${CARD_MONO}`;
+    g.fillStyle = CARD_INK3;
+    g.fillText(en ? `Snapshot ${dateOnly(DATA.generatedAt)} · sindresorhus/awesome` : `数据快照 ${dateOnly(DATA.generatedAt)} · sindresorhus/awesome`, CARD_PAD, footTop + 30);
+    g.textAlign = 'right';
+    g.fillStyle = CARD_ACCENT;
+    g.fillText(CARD_SITE, CARD_W - CARD_PAD, footTop + 30);
+    g.textAlign = 'left';
+    return cv;
+  }
+
+  function exportCard(it) {
+    let cv;
+    try { cv = drawCard(it); } catch (_) { toast(ui('cardFail')); return; }
+    const name = String(it.name || 'atlas').replace(/[\\/:*?"<>|\s]+/g, '-').replace(/^-+|-+$/g, '').slice(0, 60) || 'atlas';
+    const file = name + '-atlas-card.png';
+    const save = (href, revoke) => {
+      const a = document.createElement('a');
+      a.href = href; a.download = file;
+      document.body.appendChild(a); a.click(); a.remove();
+      if (revoke) setTimeout(() => URL.revokeObjectURL(href), 4000);
+      toast(ui('cardOk'));
+    };
+    if (cv.toBlob) {
+      cv.toBlob((blob) => {
+        if (!blob) { toast(ui('cardFail')); return; }
+        save(URL.createObjectURL(blob), true);
+      }, 'image/png');
+    } else save(cv.toDataURL('image/png'), false);
   }
 
   /* ---------- orchestration ---------- */
@@ -1216,6 +1550,7 @@
     writeStore(LANG_KEY, lang);
     document.documentElement.lang = isEn() ? 'en' : 'zh-CN';
     renderAll(true);
+    renderSince();
     toast(isEn() ? ui('langEn') : ui('langZh'));
   }
 
@@ -1249,6 +1584,11 @@
     if (action === 'copy-link') {
       const it = itemById.get(id);
       if (it && it.url) copyText(it.url, isEn() ? 'Repository link copied' : '仓库链接已复制');
+      return;
+    }
+    if (action === 'export-card') {
+      const it = itemById.get(id);
+      if (it) exportCard(it);
       return;
     }
     if (action === 'fav') {
@@ -1420,6 +1760,8 @@
       : `中文为本站译述，非官方译本；专有名词保留英文原名，方便直接去 GitHub 搜索。466 条原始描述已译为中文，另有 ${Object.keys(I18N.hints).length} 条通用名称补写了中文提示，源清单没有描述的地方都显式标注、绝不编造。时间演化来自 ${HISTORY.summary?.revisions || 0} 个真实 README 历史版本的逐版比对，而非根据提交标题猜测。`;
     $('#aboutStamp').textContent = (isEn() ? 'README sha256 ' : '源 README sha256 ') + String(DATA.source.sha256).slice(0, 16) + '… · ' + (isEn() ? 'parsed ' : '解析于 ') + dateOnly(DATA.generatedAt);
   }
+  computeSince();
+  renderSince();
   renderAll();
   positionGlider();
   /* `history.scrollRestoration = 'manual'` is set inline in <head> so it lands

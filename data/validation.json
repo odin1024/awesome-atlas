@@ -1,5 +1,5 @@
 {
-  "validatedAt": "2026-11-10T11:32:19.310Z",
+  "validatedAt": "2026-11-10T16:45:05.409Z",
   "passed": 95,
   "total": 95,
   "allPassed": true,
@@ -539,7 +539,7 @@
       "group": "文档",
       "name": "两版引用的本地文件全部存在",
       "ok": true,
-      "detail": "22 个引用均可解析"
+      "detail": "23 个引用均可解析"
     },
     {
       "group": "文档",

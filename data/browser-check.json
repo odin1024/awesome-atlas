@@ -111,7 +111,7 @@
     {
       "name": "点预览板真的落到分类地图",
       "ok": true,
-      "detail": "{'y': 791, 'top': 152, 'map': True}"
+      "detail": "{'y': 814, 'top': 152, 'map': True}"
     },
     {
       "name": "分享卡片图指向独立社交卡",
@@ -156,12 +156,12 @@
     {
       "name": "顶栏三个锚点都真的滚到对应区块",
       "ok": true,
-      "detail": "[('#workspace', 152, 791), ('#insights', 152, 587), ('#about', 400, 1428)]"
+      "detail": "[('#workspace', 152, 759), ('#insights', 152, 555), ('#about', 400, 1396)]"
     },
     {
       "name": "刷新后自动回到页面顶部",
       "ok": true,
-      "detail": "scrollY 1428 → 0"
+      "detail": "scrollY 1396 → 0"
     },
     {
       "name": "页脚「回到顶部」按钮生效",
@@ -391,7 +391,7 @@
     {
       "name": "英文模式详情与时间轴无中文字符",
       "ok": true,
-      "detail": "clean · 637 chars"
+      "detail": "clean · 647 chars"
     },
     {
       "name": "语言状态写入 URL",

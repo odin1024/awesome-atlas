@@ -13,3 +13,6 @@ __pycache__/
 
 # 仅保留在本地的工作草稿
 /docs/submission/
+
+# 编辑器临时产物
+/.trae-html-share-packages/
