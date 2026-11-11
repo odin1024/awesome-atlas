@@ -180,8 +180,13 @@ with sync_playwright() as p:
           not any(w in lede['text'] for w in ('四个维度', '层级、热度', '不重复列表')),
           lede['text'][:28] + '…')
 
-    check('顶栏不再放外链按钮', page.locator('.topbar a[href^="http"]').count() == 0,
-          page.locator('.topbar a[href^="http"]').count())
+    gh = page.locator('.topbar a[href^="http"]')
+    check('顶栏只放一个外链图标，指向本站源码',
+          gh.count() == 1
+          and 'github.com/odin1024/awesome-atlas' in (gh.first.get_attribute('href') or '')
+          and gh.first.get_attribute('rel') == 'noopener noreferrer'
+          and bool((gh.first.get_attribute('aria-label') or '').strip()),
+          f"{gh.count()} 个，{gh.first.get_attribute('href') if gh.count() else ''}")
     upstream = page.locator('#upstreamLink')
     check('页脚上游入口指向源仓库且新窗口打开',
           upstream.count() == 1

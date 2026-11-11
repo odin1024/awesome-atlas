@@ -138,6 +138,9 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
 .icon-btn:hover, .share-btn:hover { color: var(--ink); border-color: var(--ink); background: var(--surface-2); }
 /* Only the theme glyphs swap; every other icon button keeps its SVG. */
 .icon-btn svg { display: block; }
+/* The GitHub mark is a solid glyph and reads heavier than the stroked icons
+   beside it at the same size, so it is set one pixel smaller to sit even. */
+.gh-link svg { width: 16px; height: 16px; }
 [data-theme="dark"] .icon-sun { display: none; }
 [data-theme="light"] .icon-moon { display: none; }
 
@@ -761,6 +764,12 @@ td { padding: 10px 10px; vertical-align: middle; }
   .quick-chips { gap: 6px; }
   .quick-chip { padding: 5px 10px; font-size: 11.5px; }
   .iv-bar-row { grid-template-columns: 88px minmax(0, 1fr) 48px; }
+}
+/* Below 380px the wordmark plus four right-hand controls no longer fit on one
+   row; the mark alone still identifies the site, and the h1 right below spells
+   the name out in full. */
+@media (max-width: 380px) {
+  .brand-text { display: none; }
 }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation-duration: .001ms !important; animation-iteration-count: 1 !important; transition-duration: .001ms !important; scroll-behavior: auto !important; }

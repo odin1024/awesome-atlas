@@ -144,9 +144,9 @@
       "detail": "一份 866 行的英文 README，从头滚到尾，才知道…"
     },
     {
-      "name": "顶栏不再放外链按钮",
+      "name": "顶栏只放一个外链图标，指向本站源码",
       "ok": true,
-      "detail": "0"
+      "detail": "1 个，https://github.com/odin1024/awesome-atlas"
     },
     {
       "name": "页脚上游入口指向源仓库且新窗口打开",
